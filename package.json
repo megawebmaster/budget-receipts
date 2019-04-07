@@ -1,0 +1,49 @@
+{
+  "name": "budget-receipts",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/jest": "24.0.11",
+    "@types/node": "11.13.0",
+    "@types/ramda": "^0.26.6",
+    "@types/react": "16.8.12",
+    "@types/react-dom": "16.8.3",
+    "@types/react-intl": "^2.3.17",
+    "@types/react-redux": "^7.0.6",
+    "@types/redux-first-router": "^2.1.1",
+    "@types/redux-first-router-link": "^1.4.4",
+    "prop-types": "^15.7.2",
+    "ramda": "^0.26.1",
+    "re-reselect": "^3.0.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-intl": "^2.8.0",
+    "react-redux": "^6.0.1",
+    "react-scripts": "2.1.8",
+    "redux": "^4.0.1",
+    "redux-first-router": "^2.1.1",
+    "redux-first-router-link": "^2.1.1",
+    "redux-observable": "^1.1.0",
+    "reselect": "^4.0.0",
+    "rxjs": "^6.4.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.86.0",
+    "typesafe-actions": "^4.0.0",
+    "typescript": "3.4.2"
+  },
+  "scripts": {
+    "start": "BROWSER=none react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
