@@ -1,4 +1,19 @@
 .container {
 	margin-top: 5em;
 	padding: 0 2em;
+	position: absolute;
+}
+.navigation-enter {
+	opacity: 0;
+	transform: translateY(-100%);
+}
+.navigation-enter-done {
+	opacity: 1;
+	transform: translateY(0%);
+	transition: all 300ms;
+}
+.navigation-exit {
+	opacity: 0;
+	transform: translateY(-100%);
+	transition: all 500ms;
 }
