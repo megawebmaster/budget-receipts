@@ -1,1 +1,1 @@
-export { MonthList } from './components/month-list';
+export { MonthList } from './components/month-list.container';

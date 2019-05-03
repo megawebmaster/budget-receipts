@@ -3,16 +3,13 @@ import Helmet from "react-helmet"
 import { MonthList } from "../../month-list"
 import { AvailableRoutes } from "../../../routes/routes"
 
-export interface ExpensesProps {
-  items: string[]
-  addItem: () => void
-}
+export type ExpensesProps = {}
 
-export const Expenses: FC<ExpensesProps> = ({addItem, items}) => (
+export const Expenses: FC<ExpensesProps> = () => (
   <Fragment>
     <Helmet>
       <title>Expenses - Simply Budget Receipts</title>
     </Helmet>
-    <MonthList baseRoute={{type: AvailableRoutes.EXPENSES, payload: {year: 2019}}}/>
+    <MonthList route={AvailableRoutes.EXPENSES}/>
   </Fragment>
 )

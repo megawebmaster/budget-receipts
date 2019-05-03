@@ -1,9 +1,9 @@
 import React, { FC, Fragment } from "react"
-import Link from "redux-first-router-link"
+import Link, { NavLink } from "redux-first-router-link"
 import { CSSTransition, TransitionGroup } from "react-transition-group"
 import { Container, Menu } from "semantic-ui-react"
 
-import { AvailableRoutes, routes } from "../../routes/routes"
+import { AvailableRoutes } from "../../routes/routes"
 import { pages } from "../../routes/pages"
 
 import styles from "./page.module.css"
@@ -14,13 +14,19 @@ interface PageProps {
 
 const PageMenu = () => (
   <Menu fixed="top" inverted>
-    <Menu.Item header as={Link} to={routes[AvailableRoutes.HOME]}>SimplyBudget</Menu.Item>
-    <Menu.Item as={Link} to={{type: AvailableRoutes.EXPENSES, payload: {year: 2019, month: 1}}}>Expenses</Menu.Item>
+    <Menu.Item header as={Link} to={{ type: AvailableRoutes.HOME }}>SimplyBudget</Menu.Item>
+    <Menu.Item
+      as={NavLink}
+      to={{ type: AvailableRoutes.EXPENSES, payload: { year: 2019, month: 1 } }}
+      activeClassName="active"
+    >
+      Expenses
+    </Menu.Item>
   </Menu>
 )
 
-export const Page: FC<PageProps> = ({location}) => {
-  const {component: Component} = pages[location]
+export const Page: FC<PageProps> = ({ location }) => {
+  const { component: Component } = pages[location]
 
   return (
     <Fragment>
@@ -33,7 +39,7 @@ export const Page: FC<PageProps> = ({location}) => {
             enterDone: styles["navigation-enter-done"],
             exit: styles["navigation-exit"],
           }}
-          timeout={{enter: 300, exit: 500}}
+          timeout={{ enter: 300, exit: 500 }}
           enter
           exit
           mountOnEnter

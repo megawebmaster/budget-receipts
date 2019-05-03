@@ -7,7 +7,12 @@ type RoutingTable = {
   [k in AvailableRoutes]: string
 }
 
+export type ExpensesRoutePayload = {
+  year: number,
+  month: number,
+}
+
 export const routes: RoutingTable = {
   [AvailableRoutes.HOME]: '/',
-  [AvailableRoutes.EXPENSES]: '/expenses/:year/:month',
+  [AvailableRoutes.EXPENSES]: '/:year/expenses/:month',
 }

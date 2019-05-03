@@ -1,77 +1,72 @@
 import React, { ComponentType, FC, Fragment } from "react"
-import { NavLink } from "redux-first-router-link"
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownItemProps,
-  DropdownMenu,
-  Menu,
-  MenuItem,
-  MenuItemProps,
-  Responsive,
-} from "semantic-ui-react"
+import { NavLink, NavLinkProps } from "redux-first-router-link"
+import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive } from "semantic-ui-react"
 import { flip, times as originalTimes } from "ramda"
 import { AvailableRoutes } from "../../../routes/routes"
 
-type BaseRoutePayload = {
-  year: number
-}
-
-type BaseRoute = {
-  type: AvailableRoutes,
-  payload: BaseRoutePayload
-}
-
 type MonthListProps = {
-  baseRoute: BaseRoute
+  route: AvailableRoutes,
+  year: number,
+  month: number,
+}
+
+type MonthItem = {
+  month: number,
+  key: string,
+  as: ComponentType<NavLinkProps>,
+  activeClassName: string,
+  to: object,
 }
 
 type MonthItemsProps = {
-  baseRoute: BaseRoute,
-  as: ComponentType<MenuItemProps> | ComponentType<DropdownItemProps>
+  route: AvailableRoutes,
+  year: number,
+  children: (props: MonthItem) => JSX.Element
 }
 
 const times = flip(originalTimes)
 
-const MonthItems: FC<MonthItemsProps> = ({ baseRoute, as: Component }) => (
+const MonthItems: FC<MonthItemsProps> = ({ route, year, children }) => (
   <Fragment>
     {times(12, (month) => (
-      <Component
-        key={`month-${month}`}
-        name={`month-${month + 1}`}
-        as={NavLink}
-        activeClassName="active"
-        to={{ ...baseRoute, payload: { ...baseRoute.payload, month: month + 1 } }}
-      >
-        {month + 1}
-      </Component>
+      children({
+        month: month + 1,
+        key: `month-${month + 1}`,
+        as: NavLink,
+        activeClassName: "active",
+        to: { type: route, payload: { year, month: month + 1 } },
+      })
     ))}
   </Fragment>
 )
 
-export const MonthList: FC<MonthListProps> = ({ baseRoute }) => (
+export const MonthList: FC<MonthListProps> = ({ route, year, month }) => (
   <Fragment>
     <Responsive
       as={Fragment}
-      {...Responsive.onlyMobile}
+      maxWidth={Responsive.onlyTablet.maxWidth}
     >
-      <Dropdown
-        text={`Month 1`}
-        button
-        fluid
-      >
+      <Dropdown text={`Month ${month}`} button fluid>
         <DropdownMenu>
-          <MonthItems baseRoute={baseRoute} as={DropdownItem}/>
+          <MonthItems route={route} year={year}>
+            {({ month, ...props }) => (
+              <DropdownItem {...props}>Month {month}</DropdownItem>
+            )}
+          </MonthItems>
         </DropdownMenu>
       </Dropdown>
     </Responsive>
     <Responsive
-      minWidth={Responsive.onlyTablet.minWidth}
-      as={Menu}
-      vertical
-      fluid
+      as={Fragment}
+      {...Responsive.onlyComputer}
     >
-      <MonthItems baseRoute={baseRoute} as={MenuItem}/>
+      <Menu vertical fluid>
+        <MonthItems route={route} year={year}>
+          {({ month, ...props }) => (
+            <MenuItem {...props}>Month {month}</MenuItem>
+          )}
+        </MonthItems>
+      </Menu>
     </Responsive>
   </Fragment>
 )
