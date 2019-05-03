@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { location } from '../../routes/routes.selectors'
-import { AppState } from '../../app.store'
+import { location } from "../../../../routes"
+import { AppState } from '../../../../app.store'
 import { Page } from './page'
 
 const mapStateToProps = (state: AppState) => ({

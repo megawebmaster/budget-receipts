@@ -1,20 +1,20 @@
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
-import { connectRoutes, LocationState } from 'redux-first-router'
-import { createEpicMiddleware } from 'redux-observable'
+import { applyMiddleware, combineReducers, compose, createStore } from "redux"
+import { connectRoutes, LocationState } from "redux-first-router"
+import { createEpicMiddleware } from "redux-observable"
 
-import { ExpensesState, reducer as expensesReducer } from './components/expenses'
-import { routes } from './routes/routes'
-import { appEpic } from './app.epic'
-import { AppAction } from './app.actions'
+import { ExpensesState, reducer as expensesReducer } from "./components/expenses"
+import { routes } from "./routes"
+import { appEpic } from "./app.epic"
+import { AppAction } from "./app.actions"
 
 export type AppState = {
-  location: LocationState<string, any>,
+  location: LocationState<{}, any>,
   expenses: ExpensesState
 }
 
 export const configureStore = () => {
-  const { reducer: locationReducer, middleware, enhancer } = connectRoutes(routes)
-  const epicMiddleware = createEpicMiddleware<AppAction, AppAction, AppState>();
+  const { reducer: locationReducer, middleware, enhancer } = connectRoutes<{}, AppState>(routes)
+  const epicMiddleware = createEpicMiddleware<AppAction, AppAction, AppState>()
 
   const rootReducer = combineReducers<AppState>({
     location: locationReducer,

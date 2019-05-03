@@ -2,7 +2,7 @@ import React, { ComponentType, FC, Fragment } from "react"
 import { NavLink, NavLinkProps } from "redux-first-router-link"
 import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive } from "semantic-ui-react"
 import { flip, times as originalTimes } from "ramda"
-import { AvailableRoutes } from "../../../routes/routes"
+import { AvailableRoutes } from "../../../routes"
 
 type MonthListProps = {
   route: AvailableRoutes,

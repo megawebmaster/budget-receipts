@@ -1,18 +1,23 @@
-export enum AvailableRoutes {
-  HOME = 'ROUTES/Home',
-  EXPENSES = 'ROUTES/Expenses',
-}
+import { redirect, RoutesMap } from "redux-first-router"
+import { AppState } from "../app.store"
+import { expensesYear } from "./routes.selectors"
+import { AvailableRoutes } from "./routes.types"
 
-type RoutingTable = {
-  [k in AvailableRoutes]: string
-}
-
-export type ExpensesRoutePayload = {
-  year: number,
-  month: number,
-}
-
-export const routes: RoutingTable = {
-  [AvailableRoutes.HOME]: '/',
-  [AvailableRoutes.EXPENSES]: '/:year/expenses/:month',
+export const routes: RoutesMap<{}, AppState> = {
+  [AvailableRoutes.HOME]: "/",
+  [AvailableRoutes.EXPENSES]: {
+    path: "/:year/expenses",
+    thunk: (dispatch, getState) => {
+      const state: AppState = getState()
+      const year = expensesYear(state)
+      dispatch(redirect({
+        type: AvailableRoutes.EXPENSES_MONTH,
+        payload: { year, month: new Date().getMonth() + 1 },
+      }))
+    },
+  },
+  [AvailableRoutes.EXPENSES_MONTH]: {
+    path: "/:year/expenses/:month",
+    coerceNumbers: true,
+  },
 }

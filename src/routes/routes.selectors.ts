@@ -1,5 +1,5 @@
 import { AppState } from '../app.store'
-import { AvailableRoutes, ExpensesRoutePayload } from "./routes"
+import { AvailableRoutes, ExpensesRoutePayload } from "./routes.types"
 import { createSelector } from "reselect"
 
 export const location = (state: AppState) => state.location.type as AvailableRoutes
