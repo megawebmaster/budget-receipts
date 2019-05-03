@@ -1,21 +1,15 @@
 import React from "react"
-import { Dispatch } from "redux"
 import { connect } from "react-redux"
 
 import { AppState } from "../../../../app.store"
-import { items } from "../../expenses.selectors"
-import { add } from "../../expenses.actions"
+import { expensesMonth, expensesYear } from "../../../../routes"
 import { Expenses } from "./expenses"
 
-let id = 1
-
 const mapStateToProps = (state: AppState) => ({
-  items: items(state),
-})
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  addItem: () => dispatch(add(`test ${id++}`)),
+  year: expensesYear(state),
+  month: expensesMonth(state),
 })
 
-const ExpensesContainer = connect(mapStateToProps, mapDispatchToProps)(Expenses)
+const ExpensesContainer = connect(mapStateToProps)(Expenses)
 
 export { ExpensesContainer as Expenses }
