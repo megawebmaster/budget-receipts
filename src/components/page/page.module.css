@@ -2,6 +2,7 @@
 	margin-top: 5em;
 	padding: 0 2em;
 	position: absolute;
+	width: 100%;
 }
 .navigation-enter {
 	opacity: 0;

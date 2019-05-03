@@ -9,5 +9,5 @@ type RoutingTable = {
 
 export const routes: RoutingTable = {
   [AvailableRoutes.HOME]: '/',
-  [AvailableRoutes.EXPENSES]: '/expenses',
+  [AvailableRoutes.EXPENSES]: '/expenses/:year/:month',
 }

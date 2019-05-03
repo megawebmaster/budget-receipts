@@ -1,11 +1,11 @@
 import React from 'react'
+import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 
-import { AppState } from '../../app.store'
+import { AppState } from '../../../app.store'
+import { items } from '../expenses.selectors'
+import { add } from '../expenses.actions'
 import { Expenses, ExpensesProps } from './expenses'
-import { items } from './expenses.selectors'
-import { add } from './expenses.actions'
-import { Dispatch } from 'redux'
 
 let id = 1
 
