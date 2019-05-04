@@ -1,0 +1,34 @@
+@media screen and (max-width: 767px) {
+    .header {
+        padding-top: 0!important;
+    }
+    .header [class*="eight wide mobile"]:first-child {
+        padding-right: .25rem !important;
+    }
+
+    .header [class*="eight wide mobile"]:not(:first-child) {
+        padding-left: .25rem !important;
+    }
+
+    .header [class*="sixteen wide mobile"] {
+        padding-top: .5rem !important;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .header {
+        padding-top: 0!important;
+    }
+}
+@media screen and (min-width: 768px) {
+    .header [class*="five wide tablet"]:first-child {
+        padding-right: .25rem !important;
+    }
+    .header [class*="five wide tablet"]:not(:first-child) {
+        padding-left: .25rem !important;
+        padding-right: .25rem !important;
+    }
+
+    .header [class*="six wide tablet"] {
+        padding-left: .25rem !important;
+    }
+}

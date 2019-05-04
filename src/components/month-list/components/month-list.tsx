@@ -46,7 +46,7 @@ export const MonthList: FC<MonthListProps> = ({ route, year, month }) => (
       as={Fragment}
       maxWidth={Responsive.onlyTablet.maxWidth}
     >
-      <Dropdown text={`Expenses: month ${month}`} button fluid>
+      <Dropdown text={`Expenses: month ${month}`} button fluid scrolling>
         <DropdownMenu>
           <MonthItems route={route} year={year}>
             {({ month, ...props }) => (
