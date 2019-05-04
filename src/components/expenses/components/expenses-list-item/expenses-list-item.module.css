@@ -1,0 +1,41 @@
+.item {
+    padding-top: 0!important;
+}
+
+@media screen and (max-width: 767px) {
+    .item [class*="eight wide mobile"]:first-child {
+        padding-right: .25rem !important;
+    }
+
+    .item [class*="eight wide mobile"]:not(:first-child) {
+        padding-left: .25rem !important;
+    }
+
+    .item [class*="twelve wide mobile"] {
+        padding-top: .5rem !important;
+        padding-right: .25rem !important;
+    }
+
+    .item [class*="four wide mobile"] {
+        padding-top: .5rem !important;
+        padding-left: .25rem !important;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .item {
+        padding-top: 0!important;
+    }
+}
+@media screen and (min-width: 768px) {
+    .item [class*="six wide tablet"] {
+        padding-right: .25rem !important;
+    }
+
+    .item [class*="three wide tablet"], .item [class*="five wide tablet"] {
+        padding-left: .25rem !important;
+        padding-right: .25rem !important;
+    }
+    .item [class*="two wide tablet"]:not(:first-child) {
+        padding-left: .25rem !important;
+    }
+}

@@ -1,12 +1,26 @@
+.header {
+    background: #f9fafb;
+    border-bottom: 1px solid rgba(34,36,38,.1);
+    margin-bottom: 1rem;
+}
+.header:last-child {
+    margin-bottom: 0;
+}
+.disabledInput {
+    opacity: 1!important;
+}
+
 @media screen and (max-width: 767px) {
-    .header {
-        padding-top: 0!important;
-    }
-    .header [class*="eight wide mobile"]:first-child {
+    .header [class*="five wide mobile"] {
+        padding-left: .25rem !important;
         padding-right: .25rem !important;
     }
 
-    .header [class*="eight wide mobile"]:not(:first-child) {
+    .header [class*="five wide mobile"]:first-child {
+        padding-left: 1rem !important;
+    }
+
+    .header [class*="six wide mobile"] {
         padding-left: .25rem !important;
     }
 
@@ -14,21 +28,18 @@
         padding-top: .5rem !important;
     }
 }
-@media screen and (min-width: 768px) and (max-width: 991px) {
-    .header {
-        padding-top: 0!important;
-    }
-}
+
 @media screen and (min-width: 768px) {
-    .header [class*="five wide tablet"]:first-child {
-        padding-right: .25rem !important;
-    }
-    .header [class*="five wide tablet"]:not(:first-child) {
+    .header [class*="four wide tablet"] {
         padding-left: .25rem !important;
         padding-right: .25rem !important;
     }
 
-    .header [class*="six wide tablet"] {
-        padding-left: .25rem !important;
+    .header [class*="four wide tablet"]:first-child {
+        padding-left: 1rem !important;
+    }
+
+    .header [class*="four wide tablet"]:last-child {
+        padding-right: 1rem !important;
     }
 }

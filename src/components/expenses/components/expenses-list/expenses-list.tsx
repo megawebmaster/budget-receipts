@@ -1,30 +1,30 @@
 import React, { Fragment } from "react"
-import { Button, ButtonGroup, Dropdown, Grid, Input } from "semantic-ui-react"
+import { Button, Divider, Grid, Responsive, Segment } from "semantic-ui-react"
 import { ExpensesListHeader } from "../expenses-list-header"
+import { ExpensesListItem } from "../expenses-list-item"
+
+import styles from "./expenses-list.module.css"
 
 export const ExpensesList = () => (
   <Fragment>
-    <Grid>
-      <ExpensesListHeader/>
-      {/*<Grid.Row>*/}
-      {/*  <Grid.Column mobile={8} tablet={6} computer={6}>*/}
-      {/*    <Dropdown*/}
-      {/*      fluid*/}
-      {/*      selection*/}
-      {/*      options={[{ text: "Cat 1", value: "c1" }, { text: "Cat 2", value: "c2" }]}*/}
-      {/*      defaultValue="c2"*/}
-      {/*    />*/}
-      {/*  </Grid.Column>*/}
-      {/*  <Grid.Column mobile={8} tablet={3} computer={3}>*/}
-      {/*    <Input fluid placeholder="Price" labelPosition="right" label="PLN"/>*/}
-      {/*  </Grid.Column>*/}
-      {/*  <Grid.Column mobile={12} tablet={5} computer={5}>*/}
-      {/*    <Input fluid placeholder="Description"/>*/}
-      {/*  </Grid.Column>*/}
-      {/*  <Grid.Column mobile={4} tablet={2} computer={2}>*/}
-      {/*    <Button fluid icon="plus" color="green"/>*/}
-      {/*  </Grid.Column>*/}
-      {/*</Grid.Row>*/}
+    <Grid as={Segment} className={styles.container}>
+      <ExpensesListHeader date="20.05" shop="Lidl" total={300} showButtons={false}/>
+      <ExpensesListItem category="c2" price={200} description="Test 1">
+        <Button fluid icon="trash" color="red"/>
+      </ExpensesListItem>
+      <ExpensesListItem category="c1" price={100} description="Test 2">
+        <Button fluid icon="trash" color="red"/>
+      </ExpensesListItem>
+      <Divider className={styles.divider}/>
+      <ExpensesListItem>
+        <Button fluid icon="plus" color="green"/>
+      </ExpensesListItem>
+      <Responsive {...Responsive.onlyMobile} as={Grid.Column} width={16} className={styles.hideButton}>
+        <Button fluid icon="arrow up"/>
+      </Responsive>
+    </Grid>
+    <Grid as={Segment} className={styles.container}>
+      <ExpensesListHeader showButtons={true}/>
     </Grid>
   </Fragment>
 )
