@@ -1,1 +1,0 @@
-export { ExpensesListItem } from './expenses-list-item'

@@ -1,8 +1,7 @@
-import React from "react"
 import { connect } from "react-redux"
 
 import { AppState } from "../../../app.store"
-import { expensesMonth, expensesYear } from "../../../routes/routes.selectors"
+import { expensesMonth, expensesYear } from "../../../routes"
 import { MonthList } from "./month-list"
 
 const mapStateToProps = (state: AppState) => ({

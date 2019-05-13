@@ -1,7 +1,7 @@
 import React, { FC } from "react"
 import { Dropdown, Grid, Input } from "semantic-ui-react"
 
-import styles from "./expenses-list-item.module.css"
+import styles from "./receipt-item.module.css"
 
 export type ExpensesListItemProps = {
   category?: string,
@@ -10,7 +10,7 @@ export type ExpensesListItemProps = {
   children: JSX.Element,
 }
 
-export const ExpensesListItem: FC<ExpensesListItemProps> = ({ category, price, description, children }) => (
+export const ReceiptItem: FC<ExpensesListItemProps> = ({ category, price, description, children }) => (
   <Grid.Row className={styles.item}>
     <Grid.Column mobile={8} tablet={6} computer={6}>
       <Dropdown

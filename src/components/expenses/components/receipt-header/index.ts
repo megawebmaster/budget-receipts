@@ -1,0 +1,1 @@
+export { ReceiptHeader } from './receipt-header'
