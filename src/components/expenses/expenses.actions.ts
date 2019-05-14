@@ -1,5 +1,5 @@
 import { createStandardAction } from 'typesafe-actions'
-import { Receipt, ReceiptItem } from "./receipt"
+import { Receipt, ReceiptItem } from './receipt'
 
 type AddReceiptItem = {
   id: number,

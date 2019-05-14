@@ -10,7 +10,7 @@ export const PageMenu = () => (
     <Menu.Item header as={Link} to={{ type: AvailableRoutes.HOME }}>SimplyBudget</Menu.Item>
     <Menu.Item
       as={NavLink}
-      to={{ type: AvailableRoutes.EXPENSES, payload: { year: 2019 } }}
+      to={{ type: AvailableRoutes.EXPENSES, payload: { budget: 'domowy', year: 2019 } }}
       activeClassName="active"
     >
       Expenses

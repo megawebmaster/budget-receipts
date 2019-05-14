@@ -6,6 +6,7 @@ import { AvailableRoutes } from "../../../routes"
 
 type MonthListProps = {
   route: AvailableRoutes,
+  budget: string,
   year: number,
   month: number,
 }
@@ -20,13 +21,14 @@ type MonthItem = {
 
 type MonthItemsProps = {
   route: AvailableRoutes,
+  budget: string,
   year: number,
   children: (props: MonthItem) => JSX.Element
 }
 
 const times = flip(originalTimes)
 
-const MonthItems: FC<MonthItemsProps> = ({ route, year, children }) => (
+const MonthItems: FC<MonthItemsProps> = ({ route, budget, year, children }) => (
   <Fragment>
     {times(12, (month) => (
       children({
@@ -34,13 +36,13 @@ const MonthItems: FC<MonthItemsProps> = ({ route, year, children }) => (
         key: `month-${month + 1}`,
         as: NavLink,
         activeClassName: "active",
-        to: { type: route, payload: { year, month: month + 1 } },
+        to: { type: route, payload: { budget, year, month: month + 1 } },
       })
     ))}
   </Fragment>
 )
 
-export const MonthList: FC<MonthListProps> = ({ route, year, month }) => (
+export const MonthList: FC<MonthListProps> = ({ route, budget, year, month }) => (
   <Fragment>
     <Responsive
       as={Fragment}
@@ -48,7 +50,7 @@ export const MonthList: FC<MonthListProps> = ({ route, year, month }) => (
     >
       <Dropdown text={`Expenses: month ${month}`} button fluid scrolling>
         <DropdownMenu>
-          <MonthItems route={route} year={year}>
+          <MonthItems route={route} budget={budget} year={year}>
             {({ month, ...props }) => (
               <DropdownItem {...props}>Month {month}</DropdownItem>
             )}
@@ -61,7 +63,7 @@ export const MonthList: FC<MonthListProps> = ({ route, year, month }) => (
       {...Responsive.onlyComputer}
     >
       <Menu vertical fluid>
-        <MonthItems route={route} year={year}>
+        <MonthItems route={route} budget={budget} year={year}>
           {({ month, ...props }) => (
             <MenuItem {...props}>Month {month}</MenuItem>
           )}

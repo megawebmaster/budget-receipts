@@ -1,10 +1,11 @@
 import { connect } from "react-redux"
 
 import { AppState } from "../../../app.store"
-import { expensesMonth, expensesYear } from "../../../routes"
+import { expensesBudget, expensesMonth, expensesYear } from '../../../routes'
 import { MonthList } from "./month-list"
 
 const mapStateToProps = (state: AppState) => ({
+  budget: expensesBudget(state) || 'no-budget',
   year: expensesYear(state),
   month: expensesMonth(state),
 })
