@@ -19,14 +19,14 @@ const DEFAULT_STATE = {
         { id: 2, category: "c1", price: 100, description: "Test 2" },
       ],
     },
-    {
-      id: 2,
-      date: 21,
-      shop: "Biedronka",
-      items: [
-        { id: 3, category: "c1", price: 100.23, description: "Test 3" },
-      ],
-    },
+    // {
+    //   id: 2,
+    //   date: 21,
+    //   shop: "Biedronka",
+    //   items: [
+    //     { id: 3, category: "c1", price: 100.23, description: "Test 3" },
+    //   ],
+    // },
   ],
 }
 
@@ -62,6 +62,15 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
         receipts: state.receipts.map(receipt => (
           receipt.id !== id ? receipt : { ...receipt, items: receipt.items.filter(item => item.id !== itemId) }
         )),
+      }
+    }
+    case getType(Actions.updateReceipts): {
+      const existingReceipts = state.receipts.map(receipt => receipt.id)
+      const newReceipts = action.payload.filter(receipt => !existingReceipts.includes(receipt.id))
+
+      return {
+        ...state,
+        receipts: [...newReceipts, ...state.receipts].sort((a, b) => a.id! - b.id!),
       }
     }
     default:

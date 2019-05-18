@@ -16,6 +16,7 @@ type DeleteReceiptItem = {
 }
 
 export const addReceipt = createStandardAction('EXPENSES/addReceipt')<Receipt>()
+export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<Receipt[]>()
 export const addReceiptItem = createStandardAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
 export const updateReceiptItem = createStandardAction('EXPENSES/updateReceiptItem')<UpdateReceiptItem>()
 export const deleteReceiptItem = createStandardAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()
