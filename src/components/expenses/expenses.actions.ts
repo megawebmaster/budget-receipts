@@ -1,5 +1,6 @@
 import { createStandardAction } from 'typesafe-actions'
 import { Receipt, ReceiptItem } from './receipt'
+import { AppMessage } from '../message-list'
 
 type AddReceiptItem = {
   id: number,
@@ -20,9 +21,10 @@ type UpdateReceipts = {
 }
 type ReceiptsLoading = {
   status: boolean,
-  error?: string
+  error?: AppMessage
 }
 
+export const clearErrors = createStandardAction('EXPENSES/clearErrors')<void>()
 export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<ReceiptsLoading>()
 export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<UpdateReceipts>()
 export const addReceiptItem = createStandardAction('EXPENSES/addReceiptItem')<AddReceiptItem>()

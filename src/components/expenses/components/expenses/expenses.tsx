@@ -1,17 +1,18 @@
 import React, { FC, Fragment } from 'react'
 import Helmet from 'react-helmet'
-import { Grid, GridColumn, Header, Message, Responsive, Segment } from 'semantic-ui-react'
+import { Grid, GridColumn, Header, Responsive, Segment } from 'semantic-ui-react'
 
 import { MonthList } from '../../../month-list'
 import { AvailableRoutes } from '../../../../routes'
 import { ExpensesList } from '../expenses-list'
 
 import styles from './expenses.module.css'
+import { AppMessage, MessageList } from '../../../message-list'
 
 export type ExpensesProps = {
   year: number,
   month: number,
-  errors: string[],
+  errors: AppMessage[],
   loading?: boolean,
 }
 
@@ -31,9 +32,7 @@ export const Expenses: FC<ExpensesProps> = ({ year, month, errors, loading = fal
             {loading && <Segment basic loading size="mini" floated="right" />}
           </Header>
         </Responsive>
-        {errors.map(error => (
-          <Message key={error} error content={error} />
-        ))}
+        <MessageList messages={errors} />
         <ExpensesList />
       </GridColumn>
     </Grid>

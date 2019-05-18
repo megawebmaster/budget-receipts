@@ -1,5 +1,6 @@
 import { Reducer } from "redux"
 import { ActionType, getType } from "typesafe-actions"
+import { AppMessage } from '../message-list'
 import * as Actions from "./expenses.actions"
 import { Receipt } from "./receipt"
 
@@ -7,7 +8,7 @@ export type ExpensesAction = ActionType<typeof Actions>
 export type ExpensesState = {
   receipts: Receipt[],
   loading: boolean,
-  errors: string[],
+  errors: AppMessage[],
 }
 
 const DEFAULT_STATE: ExpensesState = {
@@ -68,6 +69,12 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
         ...state,
         loading: status,
         errors: error ? [...state.errors, error] : state.errors
+      }
+    }
+    case getType(Actions.clearErrors): {
+      return {
+        ...state,
+        errors: state.errors.filter(error => error.sticky),
       }
     }
     default:

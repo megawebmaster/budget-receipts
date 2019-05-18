@@ -5,7 +5,7 @@ import { of } from 'rxjs'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
-import { addReceiptItem, receiptsLoading } from './expenses.actions'
+import { addReceiptItem, clearErrors, receiptsLoading } from './expenses.actions'
 import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
 
@@ -23,6 +23,12 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     mergeAll(),
   )
 
+const clearErrorsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+  action$.pipe(
+    filter(action => Object.values(AvailableRoutes).includes(action.type)),
+    map(() => clearErrors()),
+  )
+
 const addItemEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     filter(isOfType(getType(addReceiptItem))),
@@ -32,5 +38,6 @@ const addItemEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 
 export const expensesEpic = combineEpics(
   pageLoadEpic,
+  clearErrorsEpic,
   addItemEpic,
 )

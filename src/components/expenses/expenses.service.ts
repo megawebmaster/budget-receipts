@@ -1,6 +1,7 @@
 import { AppAction } from '../../app.actions'
 import { Receipt } from './receipt'
 import { receiptsLoading, updateReceipts } from './expenses.actions'
+import { AppMessageType } from '../message-list'
 
 export class ExpensesService {
   static loadFromCache = async (request: Request): Promise<AppAction> => {
@@ -53,7 +54,10 @@ export class ExpensesService {
         source: 'network',
       })
     } catch (err) {
-      return await receiptsLoading({ status: false, error: 'Network connection failed' })
+      return await receiptsLoading({
+        status: false,
+        error: { text: 'Network connection failed', sticky: false, type: AppMessageType.ERROR },
+      })
     }
   }
 }
