@@ -14,9 +14,17 @@ type DeleteReceiptItem = {
   id: number,
   itemId: number,
 }
+type UpdateReceipts = {
+  receipts: Receipt[],
+  source: 'network' | 'cache'
+}
+type ReceiptsLoading = {
+  status: boolean,
+  error?: string
+}
 
-export const addReceipt = createStandardAction('EXPENSES/addReceipt')<Receipt>()
-export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<Receipt[]>()
+export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<ReceiptsLoading>()
+export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<UpdateReceipts>()
 export const addReceiptItem = createStandardAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
 export const updateReceiptItem = createStandardAction('EXPENSES/updateReceiptItem')<UpdateReceiptItem>()
 export const deleteReceiptItem = createStandardAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()

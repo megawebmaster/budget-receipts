@@ -12,13 +12,13 @@ type ExpensesListHeaderProps = {
 
 export const ReceiptHeader: FC<ExpensesListHeaderProps> = ({ date, shop, total, children }) => (
   <Grid.Row className={styles.header}>
-    <Grid.Column mobile={5} tablet={4} computer={4}>
+    <Grid.Column mobile={4} tablet={3} computer={3}>
       <Input fluid placeholder="Date" defaultValue={date}/>
     </Grid.Column>
-    <Grid.Column mobile={5} tablet={4} computer={4}>
+    <Grid.Column mobile={6} tablet={4} computer={4}>
       <Input fluid placeholder="Shop" defaultValue={shop}/>
     </Grid.Column>
-    <Grid.Column mobile={6} tablet={4} computer={4}>
+    <Grid.Column mobile={6} tablet={5} computer={5}>
       <Input fluid placeholder="Total" labelPosition="right" label="PLN" defaultValue={total} disabled
              className={styles.disabledInput}/>
     </Grid.Column>

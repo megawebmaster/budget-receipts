@@ -5,29 +5,15 @@ import { Receipt } from "./receipt"
 
 export type ExpensesAction = ActionType<typeof Actions>
 export type ExpensesState = {
-  receipts: Receipt[]
+  receipts: Receipt[],
+  loading: boolean,
+  errors: string[],
 }
 
-const DEFAULT_STATE = {
-  receipts: [
-    {
-      id: 1,
-      date: 20,
-      shop: "Lidl",
-      items: [
-        { id: 1, category: "c2", price: 200, description: "Test 1" },
-        { id: 2, category: "c1", price: 100, description: "Test 2" },
-      ],
-    },
-    // {
-    //   id: 2,
-    //   date: 21,
-    //   shop: "Biedronka",
-    //   items: [
-    //     { id: 3, category: "c1", price: 100.23, description: "Test 3" },
-    //   ],
-    // },
-  ],
+const DEFAULT_STATE: ExpensesState = {
+  receipts: [],
+  loading: false,
+  errors: []
 }
 
 export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_STATE, action) => {
@@ -62,15 +48,26 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
         receipts: state.receipts.map(receipt => (
           receipt.id !== id ? receipt : { ...receipt, items: receipt.items.filter(item => item.id !== itemId) }
         )),
+        loading: false,
       }
     }
     case getType(Actions.updateReceipts): {
       const existingReceipts = state.receipts.map(receipt => receipt.id)
-      const newReceipts = action.payload.filter(receipt => !existingReceipts.includes(receipt.id))
+      const newReceipts = action.payload.receipts.filter(receipt => !existingReceipts.includes(receipt.id))
 
       return {
         ...state,
         receipts: [...newReceipts, ...state.receipts].sort((a, b) => a.id! - b.id!),
+        loading: action.payload.source !== 'network'
+      }
+    }
+    case getType(Actions.receiptsLoading): {
+      const { status, error } = action.payload
+
+      return {
+        ...state,
+        loading: status,
+        errors: error ? [...state.errors, error] : state.errors
       }
     }
     default:

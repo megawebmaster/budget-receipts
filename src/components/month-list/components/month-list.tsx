@@ -1,6 +1,6 @@
 import React, { ComponentType, FC, Fragment } from "react"
 import { NavLink, NavLinkProps } from "redux-first-router-link"
-import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive } from "semantic-ui-react"
+import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive, Segment } from 'semantic-ui-react'
 import { flip, times as originalTimes } from "ramda"
 import { AvailableRoutes } from "../../../routes"
 
@@ -9,6 +9,7 @@ type MonthListProps = {
   budget: string,
   year: number,
   month: number,
+  showSpinner?: boolean,
 }
 
 type MonthItem = {
@@ -42,7 +43,7 @@ const MonthItems: FC<MonthItemsProps> = ({ route, budget, year, children }) => (
   </Fragment>
 )
 
-export const MonthList: FC<MonthListProps> = ({ route, budget, year, month }) => (
+export const MonthList: FC<MonthListProps> = ({ route, budget, year, month, showSpinner = false }) => (
   <Fragment>
     <Responsive
       as={Fragment}
@@ -57,6 +58,7 @@ export const MonthList: FC<MonthListProps> = ({ route, budget, year, month }) =>
           </MonthItems>
         </DropdownMenu>
       </Dropdown>
+      { showSpinner && <Segment basic loading size="mini" />}
     </Responsive>
     <Responsive
       as={Fragment}

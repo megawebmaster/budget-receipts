@@ -5,7 +5,7 @@ import { of } from 'rxjs'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
-import { addReceiptItem } from './expenses.actions'
+import { addReceiptItem, receiptsLoading } from './expenses.actions'
 import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
 
@@ -16,6 +16,7 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/${month}/receipts`)
     )),
     mergeMap((request) => of(
+      Promise.resolve(receiptsLoading({ status: true })),
       ExpensesService.fetchFromNetwork(request),
       ExpensesService.loadFromCache(request),
     )),
