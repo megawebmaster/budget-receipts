@@ -2,16 +2,16 @@ import { createStandardAction } from 'typesafe-actions'
 import { Receipt, ReceiptItem } from './receipt'
 import { AppMessage } from '../message-list'
 
-type AddReceiptItem = {
+export type AddReceiptItem = {
   id: number,
   value: ReceiptItem
 }
-type UpdateReceiptItem = {
+export type UpdateReceiptItem = {
   id: number,
   itemId: number,
   value: ReceiptItem
 }
-type DeleteReceiptItem = {
+export type DeleteReceiptItem = {
   id: number,
   itemId: number,
 }

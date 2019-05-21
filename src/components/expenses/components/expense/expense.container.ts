@@ -1,15 +1,24 @@
-import { connect } from "react-redux"
-import { Expense } from "./expense"
-import { addReceiptItem, deleteReceiptItem } from "../../expenses.actions"
-import { Receipt, ReceiptItem } from "../../receipt"
+import { connect } from 'react-redux'
+import { Expense } from './components/expense'
+import {
+  AddReceiptItem,
+  addReceiptItem,
+  DeleteReceiptItem,
+  deleteReceiptItem,
+  updateReceiptItem,
+  UpdateReceiptItem,
+} from '../../expenses.actions'
+import { Receipt } from '../../receipt'
 
 type DispatchProps = {
-  addItem: (item: { id: number, value: ReceiptItem }) => void,
-  deleteItem: (item: { id: number, itemId: number }) => void,
+  addItem: (item: AddReceiptItem) => void,
+  updateItem: (item: UpdateReceiptItem) => void,
+  deleteItem: (item: DeleteReceiptItem) => void,
 }
 
 const mapDispatchToProps = {
   addItem: addReceiptItem,
+  updateItem: updateReceiptItem,
   deleteItem: deleteReceiptItem,
 }
 
