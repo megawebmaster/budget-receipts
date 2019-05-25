@@ -9,5 +9,11 @@ export type Receipt = {
   id: number
   date: number
   shop?: string
+}
+
+export type ApiReceipt = {
+  id: number
+  date: number
+  shop?: string
   items: ReceiptItem[]
 }

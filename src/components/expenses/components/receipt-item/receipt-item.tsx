@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Dropdown, Grid, Input } from 'semantic-ui-react'
 
 import styles from './receipt-item.module.css'
-import { ReceiptItem as ItemType } from '../../receipt'
+import { ReceiptItem as ItemType } from '../../receipt.types'
 
 export type ExpensesListItemProps = {
   category?: string,

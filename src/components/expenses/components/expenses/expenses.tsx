@@ -16,25 +16,27 @@ export type ExpensesProps = {
   loading?: boolean,
 }
 
-export const Expenses: FC<ExpensesProps> = ({ year, month, errors, loading = false }) => (
-  <Fragment>
-    <Helmet>
-      <title>Expenses - Simply Budget Receipts</title>
-    </Helmet>
-    <Grid className={styles.container}>
-      <GridColumn mobile={16} tablet={16} computer={3}>
-        <MonthList route={AvailableRoutes.EXPENSES_MONTH} showSpinner={loading} />
-      </GridColumn>
-      <GridColumn mobile={16} tablet={16} computer={13}>
-        <Responsive as={Segment} {...Responsive.onlyComputer}>
-          <Header as="h3">
-            Expenses: {month}.{year}
-            {loading && <Segment basic loading size="mini" floated="right" />}
-          </Header>
-        </Responsive>
-        <MessageList messages={errors} />
-        <ExpensesList />
-      </GridColumn>
-    </Grid>
-  </Fragment>
+export const Expenses: FC<ExpensesProps> = React.memo(
+  ({ year, month, errors, loading = false }) => (
+    <Fragment>
+      <Helmet>
+        <title>Expenses - Simply Budget Receipts</title>
+      </Helmet>
+      <Grid className={styles.container}>
+        <GridColumn mobile={16} tablet={16} computer={3}>
+          <MonthList route={AvailableRoutes.EXPENSES_MONTH} showSpinner={loading} />
+        </GridColumn>
+        <GridColumn mobile={16} tablet={16} computer={13}>
+          <Responsive as={Segment} {...Responsive.onlyComputer}>
+            <Header as="h3">
+              Expenses: {month}.{year}
+              {loading && <Segment basic loading size="mini" floated="right" />}
+            </Header>
+          </Responsive>
+          <MessageList messages={errors} />
+          <ExpensesList />
+        </GridColumn>
+      </Grid>
+    </Fragment>
+  ),
 )

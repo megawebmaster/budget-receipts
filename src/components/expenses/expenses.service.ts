@@ -1,5 +1,5 @@
 import { AppAction } from '../../app.actions'
-import { Receipt } from './receipt'
+import { ApiReceipt } from './receipt.types'
 import { receiptsLoading, updateReceipts } from './expenses.actions'
 import { AppMessageType } from '../message-list'
 
@@ -9,7 +9,7 @@ export class ExpensesService {
 
     if (cached) {
       const response = cached.clone()
-      const content = await response.json() as { receipts: Receipt[] }
+      const content = await response.json() as { receipts: ApiReceipt[] }
 
       return updateReceipts({
         receipts: content.receipts,
@@ -47,7 +47,7 @@ export class ExpensesService {
       const cache = await caches.open('SimplyBudget')
       cache.put(request, response.clone())
 
-      const content = await response.json() as { receipts: Receipt[] }
+      const content = await response.json() as { receipts: ApiReceipt[] }
 
       return await updateReceipts({
         receipts: content.receipts,

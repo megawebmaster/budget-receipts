@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react'
 import { ReceiptItem } from '../../receipt-item'
-import { ReceiptItem as ItemType } from '../../../receipt'
+import { ReceiptItem as ItemType } from '../../../receipt.types'
 
 type NewReceiptItemProps = {
   children: (item: ItemType, reset: () => void) => JSX.Element

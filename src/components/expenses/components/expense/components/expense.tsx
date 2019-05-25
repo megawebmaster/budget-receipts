@@ -5,7 +5,7 @@ import cx from 'classnames'
 
 import { ReceiptHeader } from '../../receipt-header'
 import styles from '../expense.module.css'
-import { Receipt } from '../../../receipt'
+import { Receipt, ReceiptItem as ItemType } from '../../../receipt.types'
 import { AddReceiptItem, DeleteReceiptItem, UpdateReceiptItem } from '../../../expenses.actions'
 import { ReceiptItem } from './receipt-item'
 import { NewReceiptItem } from './new-receipt-item'
@@ -32,6 +32,7 @@ const CreateButton = React.memo(
 )
 
 type ExpenseProps = {
+  items: ItemType[],
   addItem: (item: AddReceiptItem) => void
   updateItem: (item: UpdateReceiptItem) => void
   deleteItem: (item: DeleteReceiptItem) => void

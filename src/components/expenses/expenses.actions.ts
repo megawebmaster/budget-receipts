@@ -1,5 +1,5 @@
 import { createStandardAction } from 'typesafe-actions'
-import { Receipt, ReceiptItem } from './receipt'
+import { ApiReceipt, ReceiptItem } from './receipt.types'
 import { AppMessage } from '../message-list'
 
 export type AddReceiptItem = {
@@ -16,7 +16,7 @@ export type DeleteReceiptItem = {
   itemId: number,
 }
 type UpdateReceipts = {
-  receipts: Receipt[],
+  receipts: ApiReceipt[],
   source: 'network' | 'cache'
 }
 type ReceiptsLoading = {

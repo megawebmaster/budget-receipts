@@ -8,7 +8,17 @@ import {
   updateReceiptItem,
   UpdateReceiptItem,
 } from '../../expenses.actions'
-import { Receipt } from '../../receipt'
+import { Receipt, ReceiptItem } from '../../receipt.types'
+import { expenseItems } from '../../expenses.selectors'
+import { AppState } from '../../../../app.store'
+
+type StateProps = {
+  items: ReceiptItem[]
+}
+
+const mapStateToProps = (state: AppState, { id }: Receipt) => ({
+  items: expenseItems(state, id),
+})
 
 type DispatchProps = {
   addItem: (item: AddReceiptItem) => void,
@@ -22,6 +32,6 @@ const mapDispatchToProps = {
   deleteItem: deleteReceiptItem,
 }
 
-const ExpenseContainer = connect<Receipt, DispatchProps>(null, mapDispatchToProps)(Expense)
+const ExpenseContainer = connect<StateProps, DispatchProps, Receipt, AppState>(mapStateToProps, mapDispatchToProps)(Expense)
 
 export { ExpenseContainer as Expense }
