@@ -1,4 +1,5 @@
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
+import { applyMiddleware, combineReducers, createStore } from 'redux'
+import { composeWithDevTools } from 'redux-devtools-extension'
 import { connectRoutes, LocationState } from 'redux-first-router'
 import { createEpicMiddleware } from 'redux-observable'
 
@@ -23,7 +24,7 @@ export const configureStore = () => {
     location: locationReducer,
     expenses: expensesReducer,
   })
-  const enhancers = compose(
+  const enhancers = composeWithDevTools(
     enhancer,
     applyMiddleware(middleware, epicMiddleware),
   )
