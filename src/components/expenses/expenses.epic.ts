@@ -1,11 +1,10 @@
 import { combineEpics, Epic, ofType } from 'redux-observable'
-import { getType, isOfType } from 'typesafe-actions'
-import { filter, ignoreElements, map, mergeAll, mergeMap, tap } from 'rxjs/operators'
+import { filter, map, mergeAll, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
-import { addReceiptItem, clearErrors, receiptsLoading } from './expenses.actions'
+import { clearErrors, receiptsLoading } from './expenses.actions'
 import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
 
@@ -29,15 +28,7 @@ const clearErrorsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     map(() => clearErrors()),
   )
 
-const addItemEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
-  action$.pipe(
-    filter(isOfType(getType(addReceiptItem))),
-    tap(({ payload }) => console.log('add receipt item action', payload)),
-    ignoreElements(),
-  )
-
 export const expensesEpic = combineEpics(
   pageLoadEpic,
   clearErrorsEpic,
-  addItemEpic,
 )
