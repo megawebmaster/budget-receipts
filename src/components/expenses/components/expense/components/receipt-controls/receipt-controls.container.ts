@@ -1,15 +1,18 @@
 import { AppState } from '../../../../../../app.store'
-import { deleteReceipt } from '../../../../expenses.actions'
+import { deleteReceipt, updateReceipt } from '../../../../expenses.actions'
 import { connect } from 'react-redux'
 import { ReceiptControlProps, ReceiptControls } from './receipt-controls'
 import { Omit } from 'ramda'
+import { Receipt } from '../../../../receipt.types'
 
 
 type DispatchProps = {
-  deleteReceipt: (item: number) => void,
+  updateReceipt: (item: Receipt) => void
+  deleteReceipt: (item: number) => void
 }
 
 const mapDispatchToProps = {
+  updateReceipt,
   deleteReceipt,
 }
 

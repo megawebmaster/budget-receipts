@@ -28,7 +28,7 @@ export const ExpensesList: FC<ExpensesListProps> = React.memo(
           <Expense key={receipt.id} id={receipt.id} date={receipt.date} shop={receipt.shop} />
         ))}
         <Grid as={Segment} className={styles.container}>
-          <ReceiptHeader>
+          <ReceiptHeader onUpdate={() => {}}>
             {renderControls}
           </ReceiptHeader>
           <Responsive {...Responsive.onlyMobile} as={Grid.Column} width={16} className={styles.hideButton}>

@@ -11,11 +11,6 @@ type UpdateReceipts = {
   source: 'network' | 'cache'
 }
 
-export type UpdateReceipt = {
-  id: number
-  receipt: Receipt
-}
-
 export type AddReceiptItem = {
   id: number
   value: ReceiptItem
@@ -35,7 +30,7 @@ export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<
 export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<UpdateReceipts>()
 
 export const addReceipt = createStandardAction('EXPENSES/addReceipt')<Receipt>()
-export const updateReceipt = createStandardAction('EXPENSES/updateReceipt')<UpdateReceipt>()
+export const updateReceipt = createStandardAction('EXPENSES/updateReceipt')<Receipt>()
 export const deleteReceipt = createStandardAction('EXPENSES/deleteReceipt')<number>()
 
 export const addReceiptItem = createStandardAction('EXPENSES/addReceiptItem')<AddReceiptItem>()

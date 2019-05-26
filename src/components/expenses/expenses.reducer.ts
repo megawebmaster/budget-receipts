@@ -66,6 +66,14 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
         },
       }
     }
+    case getType(Actions.updateReceipt): {
+      const { id, date, shop } = action.payload
+
+      return {
+        ...state,
+        receipts: state.receipts.map(receipt => receipt.id === id ? { ...receipt, date, shop } : receipt),
+      }
+    }
     case getType(Actions.deleteReceipt): {
       return {
         ...state,

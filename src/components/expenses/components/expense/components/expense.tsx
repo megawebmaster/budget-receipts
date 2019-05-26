@@ -2,13 +2,13 @@ import React, { FC, Fragment, useCallback, useState } from 'react'
 import { Button, ButtonGroup, Divider, Grid, Responsive, Segment } from 'semantic-ui-react'
 import { sum } from 'ramda'
 
-import { ReceiptHeader } from '../../receipt-header'
 import styles from '../expense.module.css'
 import { Receipt, ReceiptItem as ItemType } from '../../../receipt.types'
 import { AddReceiptItem, DeleteReceiptItem, UpdateReceiptItem } from '../../../expenses.actions'
 import { ReceiptItem } from './receipt-item'
 import { NewReceiptItem } from './new-receipt-item'
 import { ReceiptControls } from './receipt-controls'
+import { ReceiptHeader } from '../../receipt-header'
 
 type ItemButtonsProps = {
   id: number
@@ -53,8 +53,21 @@ type ExpenseProps = {
 } & Receipt
 
 export const Expense: FC<ExpenseProps> = React.memo(
-  ({ id, date, shop, items, addItem, updateItem, deleteItem }) => {
+  ({ id, date: originalDate, shop: originalShop, items, addItem, updateItem, deleteItem }) => {
     const [expanded, setExpanded] = useState(false)
+    const [date, setDate] = useState(originalDate)
+    const [shop, setShop] = useState(originalShop)
+
+    const update = useCallback((field, value) => {
+      switch (field) {
+        case 'date':
+          return setDate(value)
+        case 'shop':
+          return setShop(value)
+        default:
+          throw new Error(`Invalid field passed to ReceiptHeader update: ${field}`)
+      }
+    }, [setDate, setShop])
 
     const renderItemButtons = useCallback((item) => (
       <ItemButtons id={id} item={item} updateItem={updateItem} deleteItem={deleteItem} />
@@ -65,12 +78,12 @@ export const Expense: FC<ExpenseProps> = React.memo(
     ), [id, addItem])
 
     const renderControls = useCallback(() => (
-      <ReceiptControls id={id} expanded={expanded} setExpanded={setExpanded} />
-    ), [id, expanded, setExpanded])
+      <ReceiptControls item={{ id, date, shop }} expanded={expanded} setExpanded={setExpanded} />
+    ), [id, date, shop, expanded, setExpanded])
 
     return (
       <Grid as={Segment} className={styles.container}>
-        <ReceiptHeader date={date.toString()} shop={shop} total={sum(items.map(item => item.price))}>
+        <ReceiptHeader date={date.toString()} shop={shop} total={sum(items.map(item => item.price))} onUpdate={update}>
           {renderControls}
         </ReceiptHeader>
         {expanded && (
