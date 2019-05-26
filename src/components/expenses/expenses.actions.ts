@@ -30,7 +30,7 @@ export type DeleteReceiptItem = {
   itemId: number
 }
 
-export const clearErrors = createStandardAction('EXPENSES/clearErrors')<void>()
+export const clearMessages = createStandardAction('EXPENSES/clearMessages')<void>()
 export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<ReceiptsLoading>()
 export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<UpdateReceipts>()
 
@@ -41,11 +41,3 @@ export const deleteReceipt = createStandardAction('EXPENSES/deleteReceipt')<numb
 export const addReceiptItem = createStandardAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
 export const updateReceiptItem = createStandardAction('EXPENSES/updateReceiptItem')<UpdateReceiptItem>()
 export const deleteReceiptItem = createStandardAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()
-// export const reset = createStandardAction('EXPENSES/update').map(
-//   (title: string) => ({
-//     payload: {
-//       title,
-//       updatedAt: new Date(),
-//     },
-//   }),
-// )

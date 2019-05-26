@@ -12,12 +12,12 @@ import { AppMessage, MessageList } from '../../../message-list'
 export type ExpensesProps = {
   year: number,
   month: number,
-  errors: AppMessage[],
+  messages: AppMessage[],
   loading?: boolean,
 }
 
 export const Expenses: FC<ExpensesProps> = React.memo(
-  ({ year, month, errors, loading = false }) => (
+  ({ year, month, messages, loading = false }) => (
     <Fragment>
       <Helmet>
         <title>Expenses - Simply Budget Receipts</title>
@@ -33,7 +33,7 @@ export const Expenses: FC<ExpensesProps> = React.memo(
               {loading && <Segment basic loading size="mini" floated="right" />}
             </Header>
           </Responsive>
-          <MessageList messages={errors} />
+          <MessageList messages={messages} />
           <ExpensesList />
         </GridColumn>
       </Grid>

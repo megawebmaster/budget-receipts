@@ -12,14 +12,14 @@ export type ExpensesState = {
     [key: string]: ReceiptItem[]
   }
   loading: boolean,
-  errors: AppMessage[],
+  messages: AppMessage[],
 }
 
 const DEFAULT_STATE: ExpensesState = {
   receipts: [],
   items: {},
   loading: false,
-  errors: [],
+  messages: [],
 }
 
 export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_STATE, action) => {
@@ -30,13 +30,13 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
       return {
         ...state,
         loading: status,
-        errors: error ? [...state.errors, error] : state.errors,
+        messages: error ? [...state.messages, error] : state.messages,
       }
     }
-    case getType(Actions.clearErrors): {
+    case getType(Actions.clearMessages): {
       return {
         ...state,
-        errors: state.errors.filter(error => error.sticky),
+        messages: state.messages.filter(message => message.sticky),
       }
     }
     case getType(Actions.updateReceipts): {
