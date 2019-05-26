@@ -9,6 +9,7 @@ export type Receipt = {
   id: number
   date: number
   shop?: string
+  expanded?: boolean
 }
 
 export type ApiReceipt = {

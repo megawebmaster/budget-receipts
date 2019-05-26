@@ -39,6 +39,18 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
         messages: state.messages.filter(message => message.sticky),
       }
     }
+    case getType(Actions.replaceReceipts): {
+      // TODO: Improve this reducer with ramda
+      const newItems: Record<number, ReceiptItem[]> = {}
+      action.payload.receipts.forEach(receipt => newItems[receipt.id] = receipt.items)
+
+      return {
+        ...state,
+        receipts: action.payload.receipts,
+        items: newItems,
+        loading: false, // action.payload.source !== 'network',
+      }
+    }
     case getType(Actions.updateReceipts): {
       // TODO: Improve this reducer with ramda
       const existingReceipts = state.receipts.map(receipt => receipt.id)
@@ -53,7 +65,7 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
           ...state.items,
           ...newItems,
         },
-        loading: action.payload.source !== 'network',
+        loading: false, // action.payload.source !== 'network',
       }
     }
     case getType(Actions.addReceipt): {

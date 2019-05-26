@@ -53,8 +53,8 @@ type ExpenseProps = {
 } & Receipt
 
 export const Expense: FC<ExpenseProps> = React.memo(
-  ({ id, date: originalDate, shop: originalShop, items, addItem, updateItem, deleteItem }) => {
-    const [expanded, setExpanded] = useState(false)
+  ({ id, date: originalDate, shop: originalShop, expanded: originalExpanded, items, addItem, updateItem, deleteItem }) => {
+    const [expanded, setExpanded] = useState(originalExpanded || false)
     const [date, setDate] = useState(originalDate)
     const [shop, setShop] = useState(originalShop)
 

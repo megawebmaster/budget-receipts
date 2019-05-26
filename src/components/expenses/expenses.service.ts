@@ -1,6 +1,6 @@
 import { AppAction } from '../../app.actions'
 import { ApiReceipt } from './receipt.types'
-import { receiptsLoading, updateReceipts } from './expenses.actions'
+import { receiptsLoading, replaceReceipts, updateReceipts } from './expenses.actions'
 import { AppMessageType } from '../message-list'
 
 export class ExpensesService {
@@ -11,13 +11,13 @@ export class ExpensesService {
       const response = cached.clone()
       const content = await response.json() as { receipts: ApiReceipt[] }
 
-      return updateReceipts({
+      return replaceReceipts({
         receipts: content.receipts,
         source: 'cache',
       })
     }
 
-    return await updateReceipts({
+    return await replaceReceipts({
       receipts: [
         {
           id: 1,

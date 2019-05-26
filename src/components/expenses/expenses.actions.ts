@@ -27,6 +27,7 @@ export type DeleteReceiptItem = {
 
 export const clearMessages = createStandardAction('EXPENSES/clearMessages')<void>()
 export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<ReceiptsLoading>()
+export const replaceReceipts = createStandardAction('EXPENSES/replaceReceipts')<UpdateReceipts>()
 export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<UpdateReceipts>()
 
 export const addReceipt = createStandardAction('EXPENSES/addReceipt')<Receipt>()
