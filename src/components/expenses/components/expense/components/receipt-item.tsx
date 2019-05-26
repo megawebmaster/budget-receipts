@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useCallback, useState } from 'react'
 import { ReceiptItem as ReceiptItemComponent } from '../../receipt-item'
 import { ReceiptItem as ItemType } from '../../../receipt.types'
 
@@ -7,19 +7,24 @@ type ReceiptItemProps = {
   children: (item: ItemType) => JSX.Element
 }
 
-export const ReceiptItem: FC<ReceiptItemProps> = ({ item, children }) => {
-  const [receiptItem] = useState<ItemType>(item)
+// TODO: Figure out a way to use useReducer instead of useState
+export const ReceiptItem: FC<ReceiptItemProps> = React.memo(
+  ({ item, children }) => {
+    const [receiptItem] = useState<ItemType>(item)
+    const update = useCallback((field, value) => {
+      // @ts-ignore
+      receiptItem[field] = value
+    }, [receiptItem])
 
-  return (
-    <ReceiptItemComponent
-      category={receiptItem.category}
-      description={receiptItem.description}
-      price={receiptItem.price}
-      onUpdate={(field, value) => {
-        receiptItem[field] = value
-      }}
-    >
-      {children(receiptItem)}
-    </ReceiptItemComponent>
-  )
-}
+    return (
+      <ReceiptItemComponent
+        category={receiptItem.category}
+        description={receiptItem.description}
+        price={receiptItem.price}
+        onUpdate={update}
+      >
+        {children(receiptItem)}
+      </ReceiptItemComponent>
+    )
+  },
+)

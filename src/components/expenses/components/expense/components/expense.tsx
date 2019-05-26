@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from 'react'
+import React, { FC, Fragment, useCallback, useState } from 'react'
 import { Button, ButtonGroup, Divider, Grid, Responsive, Segment } from 'semantic-ui-react'
 import { sum } from 'ramda'
 
@@ -10,8 +10,43 @@ import { ReceiptItem } from './receipt-item'
 import { NewReceiptItem } from './new-receipt-item'
 import { ReceiptControls } from './receipt-controls'
 
+type ItemButtonsProps = {
+  id: number
+  item: ItemType
+  updateItem: (item: UpdateReceiptItem) => void
+  deleteItem: (item: DeleteReceiptItem) => void
+}
+
+const ItemButtons: FC<ItemButtonsProps> = ({ id, item, updateItem, deleteItem }) => {
+  const save = useCallback(() => updateItem({ id, itemId: item.id, value: item }), [id, item, updateItem])
+  const remove = useCallback(() => deleteItem({ id, itemId: item.id }), [id, item, deleteItem])
+
+  return (
+    <ButtonGroup fluid>
+      <Button icon="save" color="blue" onClick={save} />
+      <Button icon="trash" color="red" onClick={remove} />
+    </ButtonGroup>
+  )
+}
+
+type NewItemButtonsProps = {
+  id: number
+  item: ItemType
+  reset: () => void
+  addItem: (item: AddReceiptItem) => void
+}
+
+const NewItemButtons: FC<NewItemButtonsProps> = React.memo(
+  ({ id, item, reset, addItem }) => (
+    <Button fluid icon="plus" color="green" onClick={() => {
+      addItem({ id, value: item })
+      reset()
+    }} />
+  ),
+)
+
 type ExpenseProps = {
-  items: ItemType[],
+  items: ItemType[]
   addItem: (item: AddReceiptItem) => void
   updateItem: (item: UpdateReceiptItem) => void
   deleteItem: (item: DeleteReceiptItem) => void
@@ -21,37 +56,39 @@ export const Expense: FC<ExpenseProps> = React.memo(
   ({ id, date, shop, items, addItem, updateItem, deleteItem }) => {
     const [expanded, setExpanded] = useState(false)
 
+    const renderItemButtons = useCallback((item) => (
+      <ItemButtons id={id} item={item} updateItem={updateItem} deleteItem={deleteItem} />
+    ), [id, updateItem, deleteItem])
+
+    const renderNewItemButtons = useCallback((item, reset) => (
+      <NewItemButtons id={id} item={item} reset={reset} addItem={addItem} />
+    ), [id, addItem])
+
+    const renderControls = useCallback(() => (
+      <ReceiptControls id={id} expanded={expanded} setExpanded={setExpanded} />
+    ), [id, expanded, setExpanded])
+
     return (
       <Grid as={Segment} className={styles.container}>
         <ReceiptHeader date={date.toString()} shop={shop} total={sum(items.map(item => item.price))}>
-          <ReceiptControls id={id} expanded={expanded} setExpanded={setExpanded} />
+          {renderControls}
         </ReceiptHeader>
         {expanded && (
           <Fragment>
             {items.map(item => (
               <ReceiptItem key={item.id} item={item}>
-                {(item) => (
-                  <ButtonGroup fluid>
-                    <Button icon="save" color="blue" onClick={() => updateItem({ id, itemId: item.id, value: item })} />
-                    <Button icon="trash" color="red" onClick={() => deleteItem({ id, itemId: item.id })} />
-                  </ButtonGroup>
-                )}
+                {renderItemButtons}
               </ReceiptItem>
             ))}
             {items.length > 0 && <Divider className={styles.divider} />}
             <NewReceiptItem>
-              {(item, reset) => (
-                <Button fluid icon="plus" color="green" onClick={() => {
-                  addItem({ id, value: item })
-                  reset()
-                }} />
-              )}
+              {renderNewItemButtons}
             </NewReceiptItem>
           </Fragment>
         )}
         <Responsive {...Responsive.onlyMobile} as={Grid.Column} width={16} className={styles.hideButton}>
           {expanded && <Divider className={styles.innerDivider} />}
-          <ReceiptControls id={id} expanded={expanded} setExpanded={setExpanded} />
+          {renderControls()}
         </Responsive>
       </Grid>
     )

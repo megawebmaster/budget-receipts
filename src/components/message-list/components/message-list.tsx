@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from 'react'
+import React, { FC, Fragment, useCallback, useState } from 'react'
 import { Message } from 'semantic-ui-react'
 import { AppMessage, AppMessageType } from '../app-message'
 
@@ -12,6 +12,7 @@ type DismissableMessageProps = {
 
 const DismissableMessage: FC<DismissableMessageProps> = ({ message }) => {
   const [visible, setVisible] = useState(true)
+  const dismiss = useCallback(() => setVisible(false), [])
 
   if (!visible) {
     return null
@@ -24,16 +25,18 @@ const DismissableMessage: FC<DismissableMessageProps> = ({ message }) => {
       success={message.type === AppMessageType.SUCCESS}
       info={message.type === AppMessageType.INFO}
       content={message.text}
-      onDismiss={() => setVisible(false)}
+      onDismiss={dismiss}
     />
   )
 }
 
-export const MessageList: FC<MessageListProps> = ({ messages }) => (
-  <Fragment>
-    {messages.map((message, idx) => (
-      <DismissableMessage key={`${idx}-${message.text}`} message={message} />
-    ))}
-  </Fragment>
+export const MessageList: FC<MessageListProps> = React.memo(
+  ({ messages }) => (
+    <Fragment>
+      {messages.map((message, idx) => (
+        <DismissableMessage key={`${idx}-${message.text}`} message={message} />
+      ))}
+    </Fragment>
+  ),
 )
 

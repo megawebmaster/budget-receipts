@@ -4,10 +4,10 @@ import { Grid, Input, Responsive } from 'semantic-ui-react'
 import styles from './receipt-header.module.css'
 
 type ExpensesListHeaderProps = {
-  date?: string,
-  shop?: string,
-  total?: number,
-  children?: JSX.Element | JSX.Element[]
+  date?: string
+  shop?: string
+  total?: number
+  children: () => JSX.Element | JSX.Element[]
 }
 
 export const ReceiptHeader: FC<ExpensesListHeaderProps> = React.memo(
@@ -31,7 +31,7 @@ export const ReceiptHeader: FC<ExpensesListHeaderProps> = React.memo(
         />
       </Grid.Column>
       <Responsive minWidth={Responsive.onlyTablet.minWidth} as={Grid.Column} width={4}>
-        {children}
+        {children()}
       </Responsive>
     </Grid.Row>
   ),

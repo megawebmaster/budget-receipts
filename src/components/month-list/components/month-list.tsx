@@ -1,4 +1,4 @@
-import React, { ComponentType, FC, Fragment } from 'react'
+import React, { ComponentType, FC, Fragment, useCallback } from 'react'
 import { NavLink, NavLinkProps } from 'redux-first-router-link'
 import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive, Segment } from 'semantic-ui-react'
 import { flip, times as originalTimes } from 'ramda'
@@ -46,35 +46,40 @@ const MonthItems: FC<MonthItemsProps> = React.memo(
 )
 
 export const MonthList: FC<MonthListProps> = React.memo(
-  ({ route, budget, year, month, showSpinner = false }) => (
-    <Fragment>
-      <Responsive
-        as={Fragment}
-        maxWidth={Responsive.onlyTablet.maxWidth}
-      >
-        <Dropdown text={`Expenses: month ${month}`} button fluid scrolling>
-          <DropdownMenu>
+  ({ route, budget, year, month, showSpinner = false }) => {
+    const renderDropdownItem = useCallback(({ month, ...props }) => (
+      <DropdownItem {...props}>Month {month}</DropdownItem>
+    ), [])
+    const renderMenuItem = useCallback(({ month, ...props }) => (
+      <MenuItem {...props}>Month {month}</MenuItem>
+    ), [])
+
+    return (
+      <Fragment>
+        <Responsive
+          as={Fragment}
+          maxWidth={Responsive.onlyTablet.maxWidth}
+        >
+          <Dropdown text={`Expenses: month ${month}`} button fluid scrolling>
+            <DropdownMenu>
+              <MonthItems route={route} budget={budget} year={year}>
+                {renderDropdownItem}
+              </MonthItems>
+            </DropdownMenu>
+          </Dropdown>
+          {showSpinner && <Segment basic loading size="mini" />}
+        </Responsive>
+        <Responsive
+          as={Fragment}
+          {...Responsive.onlyComputer}
+        >
+          <Menu vertical fluid>
             <MonthItems route={route} budget={budget} year={year}>
-              {({ month, ...props }) => (
-                <DropdownItem {...props}>Month {month}</DropdownItem>
-              )}
+              {renderMenuItem}
             </MonthItems>
-          </DropdownMenu>
-        </Dropdown>
-        {showSpinner && <Segment basic loading size="mini" />}
-      </Responsive>
-      <Responsive
-        as={Fragment}
-        {...Responsive.onlyComputer}
-      >
-        <Menu vertical fluid>
-          <MonthItems route={route} budget={budget} year={year}>
-            {({ month, ...props }) => (
-              <MenuItem {...props}>Month {month}</MenuItem>
-            )}
-          </MonthItems>
-        </Menu>
-      </Responsive>
-    </Fragment>
-  ),
+          </Menu>
+        </Responsive>
+      </Fragment>
+    )
+  },
 )
