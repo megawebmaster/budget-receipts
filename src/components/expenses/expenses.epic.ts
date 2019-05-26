@@ -15,7 +15,7 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/${month}/receipts`)
     )),
     mergeMap((request) => of(
-      Promise.resolve(receiptsLoading({ status: true })),
+      Promise.resolve(receiptsLoading()),
       ExpensesService.fetchFromNetwork(request),
       ExpensesService.loadFromCache(request),
     )),

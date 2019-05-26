@@ -1,6 +1,6 @@
 import { AppAction } from '../../app.actions'
 import { ApiReceipt } from './receipt.types'
-import { receiptsLoading, replaceReceipts, updateReceipts } from './expenses.actions'
+import { receiptsLoadingError, updateReceipts } from './expenses.actions'
 import { AppMessageType } from '../message-list'
 
 export class ExpensesService {
@@ -11,13 +11,13 @@ export class ExpensesService {
       const response = cached.clone()
       const content = await response.json() as { receipts: ApiReceipt[] }
 
-      return replaceReceipts({
+      return updateReceipts({
         receipts: content.receipts,
         source: 'cache',
       })
     }
 
-    return await replaceReceipts({
+    return await updateReceipts({
       receipts: [
         {
           id: 1,
@@ -54,9 +54,26 @@ export class ExpensesService {
         source: 'network',
       })
     } catch (err) {
-      return await receiptsLoading({
-        status: false,
-        error: { text: 'Network connection failed', sticky: false, type: AppMessageType.ERROR },
+      // return new Promise<AppAction>(resolve => {
+      //   setTimeout(() => resolve(updateReceipts({
+      //     receipts: [
+      //       {
+      //         id: 3,
+      //         date: 20,
+      //         shop: 'Lidl',
+      //         items: [
+      //           { id: 1, category: 'c2', price: 200, description: 'Test 1' },
+      //           { id: 2, category: 'c1', price: 100, description: 'Test 2' },
+      //         ],
+      //       }],
+      //     source: 'network',
+      //   })), 1000)
+      // })
+
+      return await receiptsLoadingError({
+        text: 'Network connection failed',
+        sticky: false,
+        type: AppMessageType.ERROR,
       })
     }
   }

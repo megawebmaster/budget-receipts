@@ -2,10 +2,6 @@ import { createStandardAction } from 'typesafe-actions'
 import { ApiReceipt, Receipt, ReceiptItem } from './receipt.types'
 import { AppMessage } from '../message-list'
 
-type ReceiptsLoading = {
-  status: boolean
-  error?: AppMessage
-}
 type UpdateReceipts = {
   receipts: ApiReceipt[]
   source: 'network' | 'cache'
@@ -26,8 +22,8 @@ export type DeleteReceiptItem = {
 }
 
 export const clearMessages = createStandardAction('EXPENSES/clearMessages')<void>()
-export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<ReceiptsLoading>()
-export const replaceReceipts = createStandardAction('EXPENSES/replaceReceipts')<UpdateReceipts>()
+export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<void>()
+export const receiptsLoadingError = createStandardAction('EXPENSES/receiptsLoadingError')<AppMessage>()
 export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<UpdateReceipts>()
 
 export const addReceipt = createStandardAction('EXPENSES/addReceipt')<Receipt>()

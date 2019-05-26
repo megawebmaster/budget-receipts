@@ -2,8 +2,8 @@ import { Reducer } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 import { AppMessage } from '../message-list'
 import * as Actions from './expenses.actions'
-import { Receipt, ReceiptItem } from './receipt.types'
-import { omit } from 'ramda'
+import { ApiReceipt, Receipt, ReceiptItem } from './receipt.types'
+import { complement, filter, includes, map, omit, pipe, prop, zipObj, toString } from 'ramda'
 
 export type ExpensesAction = ActionType<typeof Actions>
 export type ExpensesState = {
@@ -22,15 +22,29 @@ const DEFAULT_STATE: ExpensesState = {
   messages: [],
 }
 
+const makeItems = (receipts: ApiReceipt[]): Record<string, ReceiptItem[]> => zipObj(
+  map(pipe(prop('id'), toString), receipts),
+  map(prop('items'), receipts),
+)
+
+const notIncludes: <S, T extends { id: S }> (list: S[]) => (value: T) => boolean =
+  (list) => (value) => complement(includes(prop('id', value)))(list)
+
 export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case getType(Actions.receiptsLoading): {
-      const { status, error } = action.payload
-
       return {
         ...state,
-        loading: status,
-        messages: error ? [...state.messages, error] : state.messages,
+        receipts: [],
+        items: {},
+        loading: true
+      }
+    }
+    case getType(Actions.receiptsLoadingError): {
+      return {
+        ...state,
+        loading: false,
+        messages: [...state.messages, action.payload]
       }
     }
     case getType(Actions.clearMessages): {
@@ -39,33 +53,21 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
         messages: state.messages.filter(message => message.sticky),
       }
     }
-    case getType(Actions.replaceReceipts): {
-      // TODO: Improve this reducer with ramda
-      const newItems: Record<number, ReceiptItem[]> = {}
-      action.payload.receipts.forEach(receipt => newItems[receipt.id] = receipt.items)
-
-      return {
-        ...state,
-        receipts: action.payload.receipts,
-        items: newItems,
-        loading: false, // action.payload.source !== 'network',
-      }
-    }
     case getType(Actions.updateReceipts): {
-      // TODO: Improve this reducer with ramda
-      const existingReceipts = state.receipts.map(receipt => receipt.id)
-      const newReceipts = action.payload.receipts.filter(receipt => !existingReceipts.includes(receipt.id))
-      const newItems: Record<number, ReceiptItem[]> = {}
-      newReceipts.forEach(receipt => newItems[receipt.id] = receipt.items)
+      const { receipts } = action.payload
+      const existingReceipts = map(prop('id'), state.receipts)
+      const newReceipts = filter(notIncludes(existingReceipts), receipts)
+      const newItems = makeItems(newReceipts)
 
+      // TODO: Update existing items with new elements too!
       return {
         ...state,
-        receipts: [...state.receipts, ...newReceipts].sort((a, b) => a.id! - b.id!),
+        receipts: [...state.receipts, ...newReceipts].sort((a, b) => a.id - b.id),
         items: {
           ...state.items,
           ...newItems,
         },
-        loading: false, // action.payload.source !== 'network',
+        loading: state.loading && action.payload.source !== 'network',
       }
     }
     case getType(Actions.addReceipt): {
