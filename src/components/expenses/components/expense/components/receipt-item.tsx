@@ -7,23 +7,33 @@ type ReceiptItemProps = {
   children: (item: ItemType) => JSX.Element
 }
 
-// TODO: Figure out a way to use useReducer instead of useState
 export const ReceiptItem: FC<ReceiptItemProps> = React.memo(
   ({ item, children }) => {
-    const [receiptItem] = useState<ItemType>(item)
+    const [category, setCategory] = useState(item.category)
+    const [description, setDescription] = useState(item.description)
+    const [price, setPrice] = useState<number>(item.price)
+
     const update = useCallback((field, value) => {
-      // @ts-ignore
-      receiptItem[field] = value
-    }, [receiptItem])
+      switch(field) {
+        case 'category':
+          return setCategory(value)
+        case 'description':
+          return setDescription(value)
+        case 'price':
+          return setPrice(value)
+        default:
+          throw new Error(`Invalid field passed to ReceiptItem update: ${field}`)
+      }
+    }, [setCategory, setDescription, setPrice])
 
     return (
       <ReceiptItemComponent
-        category={receiptItem.category}
-        description={receiptItem.description}
-        price={receiptItem.price}
+        category={category}
+        description={description}
+        price={price}
         onUpdate={update}
       >
-        {children(receiptItem)}
+        {children({ id: item.id, category, description, price })}
       </ReceiptItemComponent>
     )
   },
