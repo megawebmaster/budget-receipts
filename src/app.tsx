@@ -1,3 +1,4 @@
+import 'image-capture'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { addLocaleData, IntlProvider } from 'react-intl'

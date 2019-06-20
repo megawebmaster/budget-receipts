@@ -4,6 +4,7 @@ import { ReceiptHeader } from '../../receipt-header'
 import { Receipt } from '../../../receipt.types'
 
 import styles from '../expense.module.css'
+import { PhotoButton } from './photo-button'
 
 const emptyReceipt = (): Receipt => ({
   id: Date.now(),
@@ -28,7 +29,7 @@ export const NewExpense: FC<NewReceiptProps> = React.memo(
 
     const renderControls = useCallback(() => (
       <ButtonGroup fluid>
-        <Button color="blue" icon="photo" />
+        <PhotoButton />
         <Button.Or />
         <Button color="green" icon="plus" onClick={() => {
           addReceipt({ ...item, expanded: true })
