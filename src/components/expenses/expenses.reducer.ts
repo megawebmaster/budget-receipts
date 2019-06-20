@@ -7,12 +7,13 @@ import { complement, filter, includes, map, omit, pipe, prop, zipObj, toString }
 
 export type ExpensesAction = ActionType<typeof Actions>
 export type ExpensesState = {
-  receipts: Receipt[],
+  receipts: Receipt[]
   items: {
     [key: string]: ReceiptItem[]
   }
   loading: boolean,
-  messages: AppMessage[],
+  messages: AppMessage[]
+  processingImage: boolean
 }
 
 const DEFAULT_STATE: ExpensesState = {
@@ -20,6 +21,7 @@ const DEFAULT_STATE: ExpensesState = {
   items: {},
   loading: false,
   messages: [],
+  processingImage: false
 }
 
 const makeItems = (receipts: ApiReceipt[]): Record<string, ReceiptItem[]> => zipObj(
@@ -126,6 +128,19 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
           ...state.items,
           [id]: state.items[id].filter(item => item.id !== itemId),
         },
+      }
+    }
+    case getType(Actions.processReceiptImage): {
+      return {
+        ...state,
+        processingImage: true
+      }
+    }
+    case getType(Actions.processParsedImage): {
+      // TODO: Process results of extraction ;)
+      return {
+        ...state,
+        processingImage: false
       }
     }
     default:

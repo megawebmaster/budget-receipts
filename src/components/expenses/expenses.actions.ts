@@ -1,5 +1,5 @@
 import { createStandardAction } from 'typesafe-actions'
-import { ApiReceipt, Receipt, ReceiptItem } from './receipt.types'
+import { ApiReceipt, ParsingResult, Receipt, ReceiptItem } from './receipt.types'
 import { AppMessage } from '../message-list'
 
 type UpdateReceipts = {
@@ -33,3 +33,7 @@ export const deleteReceipt = createStandardAction('EXPENSES/deleteReceipt')<numb
 export const addReceiptItem = createStandardAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
 export const updateReceiptItem = createStandardAction('EXPENSES/updateReceiptItem')<UpdateReceiptItem>()
 export const deleteReceiptItem = createStandardAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()
+
+export const processReceiptImage = createStandardAction('EXPENSES/processReceiptImage')<Blob>()
+export const checkProcessingStatus = createStandardAction('EXPENSES/checkProcessingStatus')<string>()
+export const processParsedImage = createStandardAction('EXPENSES/processParsedImage')<ParsingResult>()

@@ -18,3 +18,19 @@ export type ApiReceipt = {
   shop?: string
   items: ReceiptItem[]
 }
+
+export type ParsingResultItem = {
+  description: string
+  total: number
+  supplementaryLineItems?: {
+    above: ParsingResultItem[]
+    below: ParsingResultItem[]
+  }
+}
+
+export type ParsingResult = {
+  establishment: string
+  date: string
+  total: number
+  lineItems: ParsingResultItem[]
+}

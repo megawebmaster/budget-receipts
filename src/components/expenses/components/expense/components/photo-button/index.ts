@@ -1,1 +1,1 @@
-export { PhotoButton } from './photo-button'
+export { PhotoButton } from './photo-button.container'
