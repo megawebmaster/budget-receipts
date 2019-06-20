@@ -1,51 +1,28 @@
-import React, { FC, useCallback, useState } from 'react'
-import { ImageCapture } from 'image-capture'
+import React, { FC, Fragment, useCallback, useState } from 'react'
 import { Button } from 'semantic-ui-react'
+import { Camera } from '../camera'
 
 type PhotoButtonProps = {
   processingImage: boolean
-  processImage: (photo: Blob) => void
 }
 
 export const PhotoButton: FC<PhotoButtonProps> = React.memo(
-  ({ processingImage, processImage }) => {
-    const [processing, setProcessing] = useState(false)
-    const takePhoto = useCallback(async () => {
-      // TODO: Show view to shoot picture
-      setProcessing(true)
-      try {
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            width: { min: 1280 },
-            height: { min: 720 },
-          },
-        })
-        const videoDevice = mediaStream.getVideoTracks()[0]
-        const captureDevice = new ImageCapture(videoDevice)
+  ({ processingImage }) => {
+    const [cameraVisible, setCameraVisible] = useState(false)
 
-        if (!captureDevice) {
-          videoDevice.stop()
-          return
-        }
+    const showCamera = useCallback(() => {
+      setCameraVisible(true)
+    }, [setCameraVisible])
 
-        try {
-          const photo = await captureDevice.takePhoto()
-          processImage(photo)
-          // console.log('image taken!', URL.createObjectURL(photo))
-        } catch (e) {
-          alert('Unable to take a picture: ' + e.message)
-        } finally {
-          videoDevice.stop()
-        }
-      } catch (e) {
-        alert('Your device does not support taking pictures')
-      } finally {
-        setProcessing(false)
-      }
-    }, [setProcessing, processImage])
+    const closeCamera = useCallback(() => {
+      setCameraVisible(false)
+    }, [setCameraVisible])
 
     return (
-      <Button color="blue" icon="photo" onClick={takePhoto} loading={processing || processingImage} />
+      <Fragment>
+        <Camera visible={cameraVisible} close={closeCamera} />
+        <Button color="blue" icon="photo" onClick={showCamera} loading={processingImage} />
+      </Fragment>
     )
   },
 )
