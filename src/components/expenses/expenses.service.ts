@@ -1,5 +1,5 @@
 import { AppAction } from '../../app.actions'
-import { ApiReceipt, ParsingResult, ParsingResultItem } from './receipt.types'
+import { ApiReceipt, ParsingResult } from './receipt.types'
 import { receiptsLoadingError, updateReceipts } from './expenses.actions'
 import { AppMessageType } from '../message-list'
 

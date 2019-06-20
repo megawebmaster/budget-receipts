@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useState } from 'react'
 import { ImageCapture } from 'image-capture'
 import { Button } from 'semantic-ui-react'
-import { ExpensesService } from '../../../../expenses.service'
 
 type PhotoButtonProps = {
   processingImage: boolean
@@ -18,11 +17,11 @@ export const PhotoButton: FC<PhotoButtonProps> = React.memo(
         const mediaStream = await navigator.mediaDevices.getUserMedia({
           video: {
             width: { min: 1280 },
-            height: { min: 720 }
+            height: { min: 720 },
           },
         })
         const videoDevice = mediaStream.getVideoTracks()[0]
-        const captureDevice = new ImageCapture(videoDevice);
+        const captureDevice = new ImageCapture(videoDevice)
 
         if (!captureDevice) {
           videoDevice.stop()
@@ -33,7 +32,7 @@ export const PhotoButton: FC<PhotoButtonProps> = React.memo(
           const photo = await captureDevice.takePhoto()
           processImage(photo)
           // console.log('image taken!', URL.createObjectURL(photo))
-        } catch(e) {
+        } catch (e) {
           alert('Unable to take a picture: ' + e.message)
         } finally {
           videoDevice.stop()
