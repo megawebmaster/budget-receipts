@@ -1,12 +1,14 @@
 import { combineEpics, Epic, ofType } from 'redux-observable'
-import { catchError, delay, filter, map, mergeAll, mergeMap, switchMap } from 'rxjs/operators'
-import { from, of } from 'rxjs'
+import { catchError, delay, filter, ignoreElements, map, mergeAll, mergeMap, switchMap, tap } from 'rxjs/operators'
+import { from, Observable, of } from 'rxjs'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
+import WebWorker from '../../web-worker'
 import {
+  addReceiptItem,
   checkProcessingStatus,
-  clearMessages,
+  clearMessages, imageParsed,
   processParsedImage,
   processReceiptImage,
   receiptsLoading,
@@ -14,6 +16,10 @@ import {
 import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
 import { getType, isOfType } from 'typesafe-actions'
+import { ParsingMessage } from './receipt.types'
+import { ParsingWorker } from './expense-parsing-worker'
+
+const parsingWorker = WebWorker.build(ParsingWorker)
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
@@ -51,9 +57,39 @@ const checkImageProcessingStatusEpic: Epic<AppAction, AppAction, AppState> = (ac
     )),
   )
 
+const processParsedImageEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+  action$.pipe(
+    filter(isOfType(getType(processParsedImage))),
+    tap(result => parsingWorker.postMessage(result.payload.lineItems)),
+    ignoreElements(),
+  )
+
+const receiveExpenseMatchesEpic: Epic<AppAction, AppAction, AppState> = () => new Observable((observer) => {
+  parsingWorker.onmessage = (message: MessageEvent) => {
+    const response = message.data as ParsingMessage
+
+    if (response.type === 'item') {
+      observer.next(addReceiptItem({
+        id: 20,
+        value: {
+          id: Date.now(),
+          price: response.value.price,
+          description: response.value.description,
+          category: response.value.category,
+        },
+      }))
+    }
+    if (response.type === 'done') {
+      observer.next(imageParsed())
+    }
+  }
+})
+
 export const expensesEpic = combineEpics(
   pageLoadEpic,
   clearErrorsEpic,
   processImageEpic,
-  checkImageProcessingStatusEpic
+  checkImageProcessingStatusEpic,
+  processParsedImageEpic,
+  receiveExpenseMatchesEpic,
 )

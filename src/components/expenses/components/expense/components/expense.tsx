@@ -52,6 +52,12 @@ type ExpenseProps = {
   deleteItem: (item: DeleteReceiptItem) => void
 } & Receipt
 
+const round = (number: number, precision: number) => {
+  const p = Math.pow(10, precision)
+
+  return Math.round(number * p) / p
+}
+
 export const Expense: FC<ExpenseProps> = React.memo(
   ({ id, date: originalDate, shop: originalShop, expanded: originalExpanded, items, addItem, updateItem, deleteItem }) => {
     const [expanded, setExpanded] = useState(originalExpanded || false)
@@ -81,9 +87,11 @@ export const Expense: FC<ExpenseProps> = React.memo(
       <ReceiptControls item={{ id, date, shop }} expanded={expanded} setExpanded={setExpanded} />
     ), [id, date, shop, expanded, setExpanded])
 
+    const total = round(sum(items.map(item => item.price)), 2)
+
     return (
       <Grid as={Segment} className={styles.container}>
-        <ReceiptHeader date={date.toString()} shop={shop} total={sum(items.map(item => item.price))} onUpdate={update}>
+        <ReceiptHeader date={date.toString()} shop={shop} total={total} onUpdate={update}>
           {renderControls}
         </ReceiptHeader>
         {expanded && (

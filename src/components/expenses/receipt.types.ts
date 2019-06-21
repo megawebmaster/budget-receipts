@@ -1,3 +1,5 @@
+import { Omit } from 'ramda'
+
 export type ReceiptItem = {
   id: number
   category: string
@@ -33,4 +35,13 @@ export type ParsingResult = {
   date: string
   total: number
   lineItems: ParsingResultItem[]
+}
+
+export type ParsingMessage = ParsingMessageItem | ParsingMessageDone
+export type ParsingMessageDone = {
+  type: 'done'
+}
+export type ParsingMessageItem = {
+  type: 'item' | 'done',
+  value: Omit<ReceiptItem, 'id'>
 }

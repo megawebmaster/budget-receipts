@@ -37,3 +37,4 @@ export const deleteReceiptItem = createStandardAction('EXPENSES/deleteReceiptIte
 export const processReceiptImage = createStandardAction('EXPENSES/processReceiptImage')<Blob>()
 export const checkProcessingStatus = createStandardAction('EXPENSES/checkProcessingStatus')<string>()
 export const processParsedImage = createStandardAction('EXPENSES/processParsedImage')<ParsingResult>()
+export const imageParsed = createStandardAction('EXPENSES/imageParsed')<void>()

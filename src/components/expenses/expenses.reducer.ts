@@ -137,7 +137,24 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
       }
     }
     case getType(Actions.processParsedImage): {
-      // TODO: Process results of extraction ;)
+      // TODO: Support parsing status indicator
+      const date = new Date(action.payload.date)
+      const id = 20
+      return {
+        ...state,
+        receipts: [...state.receipts, {
+          id,
+          date: date.getDate(),
+          shop: action.payload.establishment,
+          expanded: true,
+        }],
+        items: {
+          ...state.items,
+          [id]: [],
+        }
+      }
+    }
+    case getType(Actions.imageParsed): {
       return {
         ...state,
         processingImage: false
