@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useState } from 'react'
+import React, { FC, Fragment, useCallback, useState } from 'react'
 import { Button, ButtonGroup, Grid, Responsive, Segment } from 'semantic-ui-react'
 import { ReceiptHeader } from '../../receipt-header'
 import { Receipt } from '../../../receipt.types'
@@ -28,14 +28,26 @@ export const NewExpense: FC<NewReceiptProps> = React.memo(
     }, [item])
 
     const renderControls = useCallback(() => (
-      <ButtonGroup fluid>
-        <PhotoButton />
-        <Button.Or />
-        <Button color="green" icon="plus" onClick={() => {
-          addReceipt({ ...item, expanded: true })
-          reset()
-        }} />
-      </ButtonGroup>
+      <Fragment>
+        <Responsive maxWidth={Responsive.onlyTablet.maxWidth} as={ButtonGroup} fluid>
+          <PhotoButton />
+          <Button.Or />
+          <Button color="green" icon="plus" onClick={() => {
+            addReceipt({ ...item, expanded: true })
+            reset()
+          }} />
+        </Responsive>
+        <Responsive
+          {...Responsive.onlyComputer}
+          as={Button}
+          fluid
+          color="green"
+          icon="plus"
+          onClick={() => {
+            addReceipt({ ...item, expanded: true })
+            reset()
+          }} />
+      </Fragment>
     ), [item, addReceipt, reset])
 
     return (

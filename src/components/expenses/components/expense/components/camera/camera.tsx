@@ -1,6 +1,9 @@
 import React, { FC, useCallback, useEffect, useRef } from 'react'
 import { ImageCapture } from 'image-capture'
-import { Button, Modal } from 'semantic-ui-react'
+import cx from 'classnames'
+import { Icon } from 'semantic-ui-react'
+
+import styles from './camera.module.css'
 
 type CameraProps = {
   close: () => void
@@ -15,11 +18,18 @@ export const Camera: FC<CameraProps> = React.memo(
     const videoElement = useRef<HTMLVideoElement>(null)
 
     const closeModal = useCallback(() => {
-      videoStream.getVideoTracks()[0].stop()
+      if (videoStream) {
+        videoStream.getVideoTracks()[0].stop()
+      }
       close()
     }, [close])
 
     const takePhoto = useCallback(async () => {
+      if (!videoStream) {
+        alert('We need access to your camera to take pictures')
+        closeModal()
+        return
+      }
       try {
         const videoDevice = videoStream.getVideoTracks()[0]
         const captureDevice = new ImageCapture(videoDevice)
@@ -29,9 +39,11 @@ export const Camera: FC<CameraProps> = React.memo(
           processImage(photo)
           console.log('image taken!', URL.createObjectURL(photo))
         } catch (e) {
+          console.error(e)
           alert('Unable to take a picture: ' + e.message)
         }
       } catch (e) {
+        console.error(e)
         alert('Your device does not support taking pictures')
       }
       closeModal()
@@ -56,21 +68,24 @@ export const Camera: FC<CameraProps> = React.memo(
             videoElement.current.srcObject = stream
           }
         } catch (e) {
-          alert('Your device does not support taking pictures' + e.message)
+          console.error(e)
+          alert('Your device does not support taking pictures')
         }
       })()
     }, [videoElement, visible])
 
     return (
-      <Modal open={visible} size="large">
-        <Modal.Content>
-          <video id="camera" autoPlay ref={videoElement} style={{ width: '100%', height: 'calc(100% - 130px)' }} />
-        </Modal.Content>
-        <Modal.Actions>
-          <Button onClick={closeModal}>Cancel</Button>
-          <Button color="green" onClick={takePhoto}>Take photo</Button>
-        </Modal.Actions>
-      </Modal>
+      <div className={cx(styles.camera, { [styles.visible]: visible })}>
+        <div className={styles.container}>
+          <video id="camera" autoPlay ref={videoElement} className={styles.video} />
+          <button onClick={takePhoto} className={styles.capture}>
+            <Icon name="photo" circular inverted />
+          </button>
+          <button onClick={closeModal} className={styles.cancel}>
+            <Icon name="arrow left" inverted />
+          </button>
+        </div>
+      </div>
     )
   },
 )
