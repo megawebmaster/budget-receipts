@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef } from 'react'
+import React, { FC, useCallback, useEffect, useRef, useState, Fragment } from 'react'
 import { ImageCapture } from 'image-capture'
 import cx from 'classnames'
 import { Icon } from 'semantic-ui-react'
@@ -16,13 +16,15 @@ let videoStream: MediaStream
 export const Camera: FC<CameraProps> = React.memo(
   ({ close, processImage, visible }) => {
     const videoElement = useRef<HTMLVideoElement>(null)
+    const [photo, setPhoto] = useState<Blob | null>(null)
 
     const closeModal = useCallback(() => {
       if (videoStream) {
         videoStream.getVideoTracks()[0].stop()
       }
+      setPhoto(null)
       close()
-    }, [close])
+    }, [close, setPhoto])
 
     const takePhoto = useCallback(async () => {
       if (!videoStream) {
@@ -36,8 +38,7 @@ export const Camera: FC<CameraProps> = React.memo(
 
         try {
           const photo = await captureDevice.takePhoto()
-          processImage(photo)
-          console.log('image taken!', URL.createObjectURL(photo))
+          setPhoto(photo)
         } catch (e) {
           console.error(e)
           alert('Unable to take a picture: ' + e.message)
@@ -46,8 +47,18 @@ export const Camera: FC<CameraProps> = React.memo(
         console.error(e)
         alert('Your device does not support taking pictures')
       }
+    }, [setPhoto, closeModal])
+
+    const acceptPhoto = useCallback(() => {
+      if (photo !== null) {
+        processImage(photo)
+      }
       closeModal()
-    }, [processImage, closeModal])
+    }, [processImage, photo, closeModal])
+
+    const resetPhoto = useCallback(() => {
+      setPhoto(null)
+    }, [setPhoto])
 
     useEffect(() => {
       (async () => {
@@ -77,13 +88,27 @@ export const Camera: FC<CameraProps> = React.memo(
     return (
       <div className={cx(styles.camera, { [styles.visible]: visible })}>
         <div className={styles.container}>
-          <video id="camera" autoPlay ref={videoElement} className={styles.video} />
-          <button onClick={takePhoto} className={styles.capture}>
-            <Icon name="photo" circular inverted />
-          </button>
-          <button onClick={closeModal} className={styles.cancel}>
-            <Icon name="arrow left" inverted />
-          </button>
+          <video autoPlay ref={videoElement} className={cx(styles.video, { [styles.hidden]: photo })} />
+          {photo === null ? (
+            <Fragment>
+              <button onClick={takePhoto} className={styles.capture}>
+                <Icon name="photo" circular inverted />
+              </button>
+              <button onClick={closeModal} className={styles.cancel}>
+                <Icon name="arrow left" inverted />
+              </button>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <img className={styles.video} src={URL.createObjectURL(photo)} alt="" />
+              <button onClick={acceptPhoto} className={styles.capture}>
+                <Icon name="check" circular inverted />
+              </button>
+              <button onClick={resetPhoto} className={styles.cancel}>
+                <Icon name="redo" inverted />
+              </button>
+            </Fragment>
+          )}
         </div>
       </div>
     )
