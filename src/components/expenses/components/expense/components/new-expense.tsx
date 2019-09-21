@@ -16,7 +16,6 @@ type NewReceiptProps = {
   addReceipt: (item: Receipt) => void
 }
 
-// TODO: Add support for taking photos
 export const NewExpense: FC<NewReceiptProps> = React.memo(
   ({ addReceipt }) => {
     const [item, setItem] = useState<Receipt>(emptyReceipt())
@@ -27,15 +26,17 @@ export const NewExpense: FC<NewReceiptProps> = React.memo(
       item[field] = value
     }, [item])
 
+    const saveReceipt = useCallback(() => {
+      addReceipt({ ...item, expanded: true })
+      reset()
+    }, [addReceipt, reset, item])
+
     const renderControls = useCallback(() => (
       <Fragment>
         <Responsive maxWidth={Responsive.onlyTablet.maxWidth} as={ButtonGroup} fluid>
           <PhotoButton />
           <Button.Or />
-          <Button color="green" icon="plus" onClick={() => {
-            addReceipt({ ...item, expanded: true })
-            reset()
-          }} />
+          <Button color="green" icon="plus" onClick={saveReceipt} />
         </Responsive>
         <Responsive
           {...Responsive.onlyComputer}
@@ -43,12 +44,9 @@ export const NewExpense: FC<NewReceiptProps> = React.memo(
           fluid
           color="green"
           icon="plus"
-          onClick={() => {
-            addReceipt({ ...item, expanded: true })
-            reset()
-          }} />
+          onClick={saveReceipt} />
       </Fragment>
-    ), [item, addReceipt, reset])
+    ), [saveReceipt])
 
     return (
       <Grid as={Segment} className={styles.container}>

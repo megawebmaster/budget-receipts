@@ -1,5 +1,5 @@
 import { AppAction } from '../../app.actions'
-import { ApiReceipt, ParsingResult } from './receipt.types'
+import { ApiReceipt, ImageParsingResult } from './receipt.types'
 import { receiptsLoadingError, updateReceipts } from './expenses.actions'
 import { AppMessageType } from '../message-list'
 
@@ -82,7 +82,7 @@ export class ExpensesService {
     return await 'the_token'
   }
 
-  static getReceiptParsingResult = async (token: string): Promise<ParsingResult> => {
+  static getReceiptParsingResult = async (token: string): Promise<ImageParsingResult> => {
     return await {
       establishment: 'Lidl sp. z o.o. sp. k.',
       date: '2019-05-20 00:00:00',

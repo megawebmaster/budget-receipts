@@ -2,12 +2,10 @@ import React, { FC, Fragment, useCallback, useState } from 'react'
 import { Button } from 'semantic-ui-react'
 import { Camera } from '../camera'
 
-type PhotoButtonProps = {
-  processingImage: boolean
-}
+type PhotoButtonProps = {}
 
 export const PhotoButton: FC<PhotoButtonProps> = React.memo(
-  ({ processingImage }) => {
+  () => {
     const [cameraVisible, setCameraVisible] = useState(false)
 
     const showCamera = useCallback(() => {
@@ -21,7 +19,7 @@ export const PhotoButton: FC<PhotoButtonProps> = React.memo(
     return (
       <Fragment>
         <Camera visible={cameraVisible} close={closeCamera} />
-        <Button color="blue" icon="photo" onClick={showCamera} loading={processingImage} />
+        <Button color="blue" icon="photo" onClick={showCamera} />
       </Fragment>
     )
   },

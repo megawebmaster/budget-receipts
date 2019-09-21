@@ -12,6 +12,7 @@ export type Receipt = {
   date: number
   shop?: string
   expanded?: boolean
+  processing?: boolean
 }
 
 export type ApiReceipt = {
@@ -21,27 +22,35 @@ export type ApiReceipt = {
   items: ReceiptItem[]
 }
 
-export type ParsingResultItem = {
+type ParsedItem = {
   description: string
   total: number
   supplementaryLineItems?: {
-    above: ParsingResultItem[]
-    below: ParsingResultItem[]
+    above: ParsedItem[]
+    below: ParsedItem[]
   }
 }
 
-export type ParsingResult = {
+export type ImageParsingResult = {
   establishment: string
   date: string
   total: number
-  lineItems: ParsingResultItem[]
+  lineItems: ParsedItem[]
 }
 
-export type ParsingMessage = ParsingMessageItem | ParsingMessageDone
-export type ParsingMessageDone = {
-  type: 'done'
+export type ProcessRequestMessage = {
+  id: number
+  categories: any[]
+  items: ParsedItem[]
 }
-export type ParsingMessageItem = {
-  type: 'item' | 'done',
+
+export type ProcessingMessage = ProcessingItemMessage | ProcessingDoneMessage
+type ProcessingDoneMessage = {
+  type: 'done'
+  id: number
+}
+type ProcessingItemMessage = {
+  type: 'item'
+  id: number
   value: Omit<ReceiptItem, 'id'>
 }

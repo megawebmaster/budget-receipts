@@ -8,7 +8,8 @@ import WebWorker from '../../web-worker'
 import {
   addReceiptItem,
   checkProcessingStatus,
-  clearMessages, imageParsed,
+  clearMessages,
+  imageParsed,
   processParsedImage,
   processReceiptImage,
   receiptsLoading,
@@ -16,7 +17,7 @@ import {
 import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
 import { getType, isOfType } from 'typesafe-actions'
-import { ParsingMessage } from './receipt.types'
+import { ProcessingMessage } from './receipt.types'
 import { ParsingWorker } from './expense-parsing-worker'
 
 const parsingWorker = WebWorker.build(ParsingWorker)
@@ -48,39 +49,45 @@ const processImageEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     map(token => checkProcessingStatus(token)),
   )
 
-const checkImageProcessingStatusEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+const checkImageProcessingStatusEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isOfType(getType(checkProcessingStatus))),
-    switchMap(({ payload }) => from(ExpensesService.getReceiptParsingResult(payload)).pipe(
-      map(result => processParsedImage(result)),
-      catchError(() => of(checkProcessingStatus(payload)).pipe(delay(10000))),
+    switchMap(({ payload: token }) => from(ExpensesService.getReceiptParsingResult(token)).pipe(
+      map(result => processParsedImage({ id: Date.now(), categories: [], parsingResult: result })),
+      catchError(() => of(checkProcessingStatus(token)).pipe(delay(10000))),
     )),
   )
 
 const processParsedImageEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     filter(isOfType(getType(processParsedImage))),
-    tap(result => parsingWorker.postMessage(result.payload.lineItems)),
+    tap(({ payload: { id, categories, parsingResult } }) => parsingWorker.postMessage({
+      id,
+      categories,
+      items: parsingResult.lineItems,
+    })),
     ignoreElements(),
   )
 
 const receiveExpenseMatchesEpic: Epic<AppAction, AppAction, AppState> = () => new Observable((observer) => {
   parsingWorker.onmessage = (message: MessageEvent) => {
-    const response = message.data as ParsingMessage
+    const response = message.data as ProcessingMessage
 
-    if (response.type === 'item') {
-      observer.next(addReceiptItem({
-        id: 20,
-        value: {
-          id: Date.now(),
-          price: response.value.price,
-          description: response.value.description,
-          category: response.value.category,
-        },
-      }))
-    }
-    if (response.type === 'done') {
-      observer.next(imageParsed())
+    switch (response.type) {
+      case 'item': {
+        observer.next(addReceiptItem({
+          id: response.id,
+          value: {
+            id: Date.now(),
+            price: response.value.price,
+            description: response.value.description,
+            category: response.value.category,
+          },
+        }))
+        break
+      }
+      case 'done':
+        observer.next(imageParsed(response.id))
     }
   }
 })

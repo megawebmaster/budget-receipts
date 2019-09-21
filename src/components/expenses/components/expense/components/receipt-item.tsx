@@ -3,12 +3,13 @@ import { ReceiptItem as ReceiptItemComponent } from '../../receipt-item'
 import { ReceiptItem as ItemType } from '../../../receipt.types'
 
 type ReceiptItemProps = {
+  disabled: boolean
   item: ItemType
   children: (item: ItemType) => JSX.Element
 }
 
 export const ReceiptItem: FC<ReceiptItemProps> = React.memo(
-  ({ item, children }) => {
+  ({ disabled, item, children }) => {
     const [category, setCategory] = useState(item.category)
     const [description, setDescription] = useState(item.description)
     const [price, setPrice] = useState<number>(item.price)
@@ -29,6 +30,7 @@ export const ReceiptItem: FC<ReceiptItemProps> = React.memo(
     return (
       <ReceiptItemComponent
         category={category}
+        disabled={disabled}
         description={description}
         price={price}
         onUpdate={update}

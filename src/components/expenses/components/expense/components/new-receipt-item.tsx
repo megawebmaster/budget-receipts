@@ -28,6 +28,7 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = React.memo(
         key={item.id}
         category={item.category}
         description={item.description}
+        disabled={false}
         price={item.price}
         onUpdate={update}
       >

@@ -16,6 +16,9 @@ const mapDispatchToProps = {
   deleteReceipt,
 }
 
-const ReceiptControlsContainer = connect<{}, DispatchProps, Omit<ReceiptControlProps, keyof DispatchProps>, AppState>(null, mapDispatchToProps)(ReceiptControls)
+const ReceiptControlsContainer = connect<{}, DispatchProps, Omit<ReceiptControlProps, keyof DispatchProps>, AppState>(
+  null,
+  mapDispatchToProps
+)(ReceiptControls)
 
 export { ReceiptControlsContainer as ReceiptControls }

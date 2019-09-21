@@ -1,10 +1,10 @@
-import { ParsingMessage, ParsingResultItem } from './receipt.types'
+import { ProcessingMessage, ProcessRequestMessage } from './receipt.types'
 
 export function ParsingWorker(this: Worker) {
   this.onmessage = function (event: MessageEvent) {
-    const data = event.data as ParsingResultItem[]
+    const data = event.data as ProcessRequestMessage
 
-    data.forEach(item => {
+    data.items.forEach(item => {
       // TODO: Make it parse!
       let description = item.description
       if (item.supplementaryLineItems) {
@@ -17,14 +17,15 @@ export function ParsingWorker(this: Worker) {
       }
       this.postMessage({
         type: 'item',
+        id: data.id,
         value: {
-          price: item.total,
           description,
+          price: item.total,
           category: 'c1',
         },
-      } as ParsingMessage)
+      } as ProcessingMessage)
     })
 
-    this.postMessage({ type: 'done' } as ParsingMessage)
+    this.postMessage({ type: 'done', id: data.id } as ProcessingMessage)
   }
 }

@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useCallback, useState } from 'react'
-import { Button, ButtonGroup, Divider, Grid, Responsive, Segment } from 'semantic-ui-react'
+import { Divider, Grid, Responsive, Segment } from 'semantic-ui-react'
 import { sum } from 'ramda'
 
 import styles from '../expense.module.css'
@@ -9,48 +9,16 @@ import { ReceiptItem } from './receipt-item'
 import { NewReceiptItem } from './new-receipt-item'
 import { ReceiptControls } from './receipt-controls'
 import { ReceiptHeader } from '../../receipt-header'
-
-type ItemButtonsProps = {
-  id: number
-  item: ItemType
-  updateItem: (item: UpdateReceiptItem) => void
-  deleteItem: (item: DeleteReceiptItem) => void
-}
-
-const ItemButtons: FC<ItemButtonsProps> = ({ id, item, updateItem, deleteItem }) => {
-  const save = useCallback(() => updateItem({ id, itemId: item.id, value: item }), [id, item, updateItem])
-  const remove = useCallback(() => deleteItem({ id, itemId: item.id }), [id, item, deleteItem])
-
-  return (
-    <ButtonGroup fluid>
-      <Button icon="save" color="blue" onClick={save} />
-      <Button icon="trash" color="red" onClick={remove} />
-    </ButtonGroup>
-  )
-}
-
-type NewItemButtonsProps = {
-  id: number
-  item: ItemType
-  reset: () => void
-  addItem: (item: AddReceiptItem) => void
-}
-
-const NewItemButtons: FC<NewItemButtonsProps> = React.memo(
-  ({ id, item, reset, addItem }) => (
-    <Button fluid icon="plus" color="green" onClick={() => {
-      addItem({ id, value: item })
-      reset()
-    }} />
-  ),
-)
+import { ItemButtons } from './item-buttons'
+import { NewItemButtons } from './new-item-buttons'
 
 type ExpenseProps = {
+  receipt: Receipt
   items: ItemType[]
   addItem: (item: AddReceiptItem) => void
   updateItem: (item: UpdateReceiptItem) => void
   deleteItem: (item: DeleteReceiptItem) => void
-} & Receipt
+}
 
 const round = (number: number, precision: number) => {
   const p = Math.pow(10, precision)
@@ -59,10 +27,11 @@ const round = (number: number, precision: number) => {
 }
 
 export const Expense: FC<ExpenseProps> = React.memo(
-  ({ id, date: originalDate, shop: originalShop, expanded: originalExpanded, items, addItem, updateItem, deleteItem }) => {
-    const [expanded, setExpanded] = useState(originalExpanded || false)
-    const [date, setDate] = useState(originalDate)
-    const [shop, setShop] = useState(originalShop)
+  ({ receipt, items, addItem, updateItem, deleteItem }) => {
+    const processing = receipt.processing || false
+    const [expanded, setExpanded] = useState(receipt.expanded || false)
+    const [date, setDate] = useState(receipt.date)
+    const [shop, setShop] = useState(receipt.shop)
 
     const update = useCallback((field, value) => {
       switch (field) {
@@ -76,16 +45,21 @@ export const Expense: FC<ExpenseProps> = React.memo(
     }, [setDate, setShop])
 
     const renderItemButtons = useCallback((item) => (
-      <ItemButtons id={id} item={item} updateItem={updateItem} deleteItem={deleteItem} />
-    ), [id, updateItem, deleteItem])
+      <ItemButtons receipt={receipt} item={item} updateItem={updateItem} deleteItem={deleteItem} />
+    ), [receipt, updateItem, deleteItem])
 
     const renderNewItemButtons = useCallback((item, reset) => (
-      <NewItemButtons id={id} item={item} reset={reset} addItem={addItem} />
-    ), [id, addItem])
+      <NewItemButtons receipt={receipt} item={item} reset={reset} addItem={addItem} />
+    ), [receipt, addItem])
 
     const renderControls = useCallback(() => (
-      <ReceiptControls item={{ id, date, shop }} expanded={expanded} setExpanded={setExpanded} />
-    ), [id, date, shop, expanded, setExpanded])
+      <ReceiptControls
+        item={{ id: receipt.id, date, shop }}
+        expanded={expanded}
+        processing={processing}
+        setExpanded={setExpanded}
+      />
+    ), [receipt, date, shop, expanded, processing, setExpanded])
 
     const total = round(sum(items.map(item => item.price)), 2)
 
@@ -97,7 +71,7 @@ export const Expense: FC<ExpenseProps> = React.memo(
         {expanded && (
           <Fragment>
             {items.map(item => (
-              <ReceiptItem key={item.id} item={item}>
+              <ReceiptItem key={item.id} disabled={processing} item={item}>
                 {renderItemButtons}
               </ReceiptItem>
             ))}

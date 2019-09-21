@@ -13,15 +13,13 @@ export type ExpensesState = {
   }
   loading: boolean,
   messages: AppMessage[]
-  processingImage: boolean
 }
 
 const DEFAULT_STATE: ExpensesState = {
   receipts: [],
   items: {},
   loading: false,
-  messages: [],
-  processingImage: false
+  messages: []
 }
 
 const makeItems = (receipts: ApiReceipt[]): Record<string, ReceiptItem[]> => zipObj(
@@ -130,23 +128,18 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
         },
       }
     }
-    case getType(Actions.processReceiptImage): {
-      return {
-        ...state,
-        processingImage: true
-      }
-    }
     case getType(Actions.processParsedImage): {
-      // TODO: Support parsing status indicator
-      const date = new Date(action.payload.date)
-      const id = 20
+      const { id, parsingResult } = action.payload;
+      const date = new Date(parsingResult.date)
+
       return {
         ...state,
         receipts: [...state.receipts, {
           id,
           date: date.getDate(),
-          shop: action.payload.establishment,
+          shop: parsingResult.establishment,
           expanded: true,
+          processing: true
         }],
         items: {
           ...state.items,
@@ -155,9 +148,11 @@ export const reducer: Reducer<ExpensesState, ExpensesAction> = (state = DEFAULT_
       }
     }
     case getType(Actions.imageParsed): {
+      const id = action.payload;
+
       return {
         ...state,
-        processingImage: false
+        receipts: state.receipts.map(receipt => receipt.id === id ? { ...receipt, processing: false } : receipt),
       }
     }
     default:

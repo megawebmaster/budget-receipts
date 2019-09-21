@@ -16,8 +16,8 @@ type StateProps = {
   items: ReceiptItem[]
 }
 
-const mapStateToProps = (state: AppState, { id }: Receipt) => ({
-  items: expenseItems(state, id),
+const mapStateToProps = (state: AppState, { receipt }: OwnProps) => ({
+  items: expenseItems(state, receipt.id),
 })
 
 type DispatchProps = {
@@ -32,6 +32,10 @@ const mapDispatchToProps = {
   deleteItem: deleteReceiptItem,
 }
 
-const ExpenseContainer = connect<StateProps, DispatchProps, Receipt, AppState>(mapStateToProps, mapDispatchToProps)(Expense)
+type OwnProps = {
+  receipt: Receipt
+}
+
+const ExpenseContainer = connect<StateProps, DispatchProps, OwnProps, AppState>(mapStateToProps, mapDispatchToProps)(Expense)
 
 export { ExpenseContainer as Expense }
