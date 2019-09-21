@@ -21,7 +21,7 @@ export function ParsingWorker(this: Worker) {
         value: {
           description,
           price: item.total,
-          category: 'c1',
+          category: 1,
         },
       } as ProcessingMessage)
     })

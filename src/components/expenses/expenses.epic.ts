@@ -19,6 +19,7 @@ import { ExpensesService } from './expenses.service'
 import { getType, isOfType } from 'typesafe-actions'
 import { ProcessingMessage } from './receipt.types'
 import { ParsingWorker } from './expense-parsing-worker'
+import { categories } from '../categories/categories.selectors'
 
 const parsingWorker = WebWorker.build(ParsingWorker)
 
@@ -53,7 +54,11 @@ const checkImageProcessingStatusEpic: Epic<AppAction, AppAction, AppState> = (ac
   action$.pipe(
     filter(isOfType(getType(checkProcessingStatus))),
     switchMap(({ payload: token }) => from(ExpensesService.getReceiptParsingResult(token)).pipe(
-      map(result => processParsedImage({ id: Date.now(), categories: [], parsingResult: result })),
+      map(result => processParsedImage({
+        id: Date.now(),
+        categories: categories(state$.value),
+        parsingResult: result,
+      })),
       catchError(() => of(checkProcessingStatus(token)).pipe(delay(10000))),
     )),
   )

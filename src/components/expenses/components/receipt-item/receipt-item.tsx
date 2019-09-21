@@ -1,11 +1,12 @@
 import React, { FC, useCallback } from 'react'
-import { Dropdown, Grid, Input } from 'semantic-ui-react'
+import { Dropdown, DropdownItemProps, Grid, Input } from 'semantic-ui-react'
 
 import styles from './receipt-item.module.css'
 import { ReceiptItem as ItemType } from '../../receipt.types'
 
 export type ExpensesListItemProps = {
-  category?: string
+  category?: number
+  categories: DropdownItemProps[]
   children: JSX.Element
   description?: string
   disabled: boolean
@@ -13,11 +14,8 @@ export type ExpensesListItemProps = {
   onUpdate: (key: keyof ItemType, value: any) => void
 }
 
-// TODO: Extract categories
-const categories = [{ text: 'Cat 1', value: 'c1' }, { text: 'Cat 2', value: 'c2' }]
-
 export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
-  ({ category, description, disabled, price, onUpdate, children }) => {
+  ({ category, categories, description, disabled, price, onUpdate, children }) => {
     const updateCategory = useCallback((event, data) => onUpdate('category', data.value), [onUpdate])
     const updatePrice = useCallback((event) => onUpdate('price', event.target.value), [onUpdate])
     const updateDescription = useCallback((event) => onUpdate('description', event.target.value), [onUpdate])

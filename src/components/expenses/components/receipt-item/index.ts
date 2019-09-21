@@ -1,1 +1,1 @@
-export { ReceiptItem } from './receipt-item'
+export { ReceiptItem } from './receipt-item.container'

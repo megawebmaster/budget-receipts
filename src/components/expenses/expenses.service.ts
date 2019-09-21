@@ -24,8 +24,8 @@ export class ExpensesService {
           date: 20,
           shop: 'Lidl',
           items: [
-            { id: 1, category: 'c2', price: 200, description: 'Test 1' },
-            { id: 2, category: 'c1', price: 100, description: 'Test 2' },
+            { id: 1, category: 2, price: 200, description: 'Test 1' },
+            { id: 2, category: 1, price: 100, description: 'Test 2' },
           ],
         },
         {
@@ -33,7 +33,7 @@ export class ExpensesService {
           date: 21,
           shop: 'Biedronka',
           items: [
-            { id: 3, category: 'c1', price: 100.23, description: 'Test 3' },
+            { id: 3, category: 1, price: 100.23, description: 'Test 3' },
           ],
         },
       ],
@@ -62,8 +62,8 @@ export class ExpensesService {
       //         date: 20,
       //         shop: 'Lidl',
       //         items: [
-      //           { id: 1, category: 'c2', price: 200, description: 'Test 1' },
-      //           { id: 2, category: 'c1', price: 100, description: 'Test 2' },
+      //           { id: 1, category: 2, price: 200, description: 'Test 1' },
+      //           { id: 2, category: 1, price: 100, description: 'Test 2' },
       //         ],
       //       }],
       //     source: 'network',
