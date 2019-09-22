@@ -1,6 +1,7 @@
 import React, { FC, Fragment, useCallback, useState } from 'react'
 import { Divider, Grid, Responsive, Segment } from 'semantic-ui-react'
 import { sum } from 'ramda'
+import cx from 'classnames'
 
 import styles from '../expense.module.css'
 import { Receipt, ReceiptItem as ItemType } from '../../../receipt.types'
@@ -15,6 +16,7 @@ import { NewItemButtons } from './new-item-buttons'
 type ExpenseProps = {
   receipt: Receipt
   items: ItemType[]
+  onSave: (receipt: Receipt) => void
   addItem: (item: AddReceiptItem) => void
   updateItem: (item: UpdateReceiptItem) => void
   deleteItem: (item: DeleteReceiptItem) => void
@@ -27,7 +29,7 @@ const round = (number: number, precision: number) => {
 }
 
 export const Expense: FC<ExpenseProps> = React.memo(
-  ({ receipt, items, addItem, updateItem, deleteItem }) => {
+  ({ receipt, items, onSave, addItem, updateItem, deleteItem }) => {
     const processing = receipt.processing || false
     const [expanded, setExpanded] = useState(receipt.expanded || false)
     const [date, setDate] = useState(receipt.date)
@@ -68,12 +70,20 @@ export const Expense: FC<ExpenseProps> = React.memo(
       updateItem({ id: receipt.id, itemId: item.id, value: item })
     ), [updateItem, receipt])
 
+    const save = useCallback((date, shop) => {
+      onSave({
+        ...receipt,
+        date,
+        shop
+      })
+    }, [onSave, receipt]);
+
     const total = round(sum(items.map(item => item.price)), 2)
 
     // TODO: Work on expanding speed improvements - it shouldn't take more than 100 ms on a phone!
     return (
-      <Grid as={Segment} className={styles.container}>
-        <ReceiptHeader date={date.toString()} shop={shop} total={total} onUpdate={update}>
+      <Grid as={Segment} className={cx(styles.container)}>
+        <ReceiptHeader date={date.toString()} shop={shop} total={total} onSave={save} onUpdate={update}>
           {renderControls}
         </ReceiptHeader>
         {expanded && (

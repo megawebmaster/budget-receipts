@@ -50,7 +50,7 @@ export const NewExpense: FC<NewReceiptProps> = React.memo(
 
     return (
       <Grid as={Segment} className={styles.container}>
-        <ReceiptHeader key={item.id} date={item.date.toString()} shop={item.shop} onUpdate={update}>
+        <ReceiptHeader key={item.id} date={item.date.toString()} shop={item.shop} onSave={saveReceipt} onUpdate={update}>
           {renderControls}
         </ReceiptHeader>
         <Responsive {...Responsive.onlyMobile} as={Grid.Column} width={16} className={styles.hideButton}>
