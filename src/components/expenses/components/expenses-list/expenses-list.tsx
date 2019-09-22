@@ -8,9 +8,9 @@ type ExpensesListProps = {
 
 export const ExpensesList: FC<ExpensesListProps> = ({ receipts }) => (
   <Fragment>
+    <NewExpense />
     {receipts.map(receipt => (
       <Expense key={receipt.id} receipt={receipt} />
     ))}
-    <NewExpense />
   </Fragment>
 )

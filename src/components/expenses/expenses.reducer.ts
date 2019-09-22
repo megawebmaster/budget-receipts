@@ -21,6 +21,7 @@ import {
   values,
   when,
   zipObj,
+  prepend,
 } from 'ramda'
 
 import { AppMessage } from '../message-list'
@@ -58,7 +59,7 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], ExpensesAction> = (sta
       )
     }
     case getType(Actions.addReceipt):
-      return append(action.payload, state)
+      return prepend(action.payload, state)
     case getType(Actions.updateReceipt): {
       const { id, date, shop } = action.payload
 

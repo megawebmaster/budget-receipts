@@ -85,8 +85,12 @@ export const Camera: FC<CameraProps> = React.memo(
       })()
     }, [videoElement, visible])
 
+    if (!visible) {
+      return null
+    }
+
     return (
-      <div className={cx(styles.camera, { [styles.visible]: visible })}>
+      <div className={cx(styles.camera, styles.visible)}>
         <div className={styles.container}>
           <video autoPlay ref={videoElement} className={cx(styles.video, { [styles.hidden]: photo })} />
           {photo === null ? (
