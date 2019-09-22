@@ -1,4 +1,4 @@
-import { applyMiddleware, combineReducers, createStore } from 'redux'
+import { applyMiddleware, combineReducers, createStore, Store, StoreEnhancer } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { connectRoutes, LocationState } from 'redux-first-router'
 import { createEpicMiddleware } from 'redux-observable'
@@ -28,7 +28,7 @@ export const configureStore = () => {
     categories: categoriesReducer,
   })
   const enhancers = composeWithDevTools(
-    enhancer,
+    enhancer as unknown as StoreEnhancer<Store<any, AppAction>, {}>,
     applyMiddleware(middleware, epicMiddleware),
   )
 

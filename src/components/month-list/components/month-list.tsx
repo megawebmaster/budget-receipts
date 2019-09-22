@@ -1,7 +1,7 @@
 import React, { ComponentType, FC, Fragment, useCallback } from 'react'
 import { NavLink, NavLinkProps } from 'redux-first-router-link'
 import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive, Segment } from 'semantic-ui-react'
-import { flip, times as originalTimes } from 'ramda'
+import { times } from 'ramda'
 import { AvailableRoutes } from '../../../routes'
 
 type MonthListProps = {
@@ -27,12 +27,10 @@ type MonthItemsProps = {
   children: (props: MonthItem) => JSX.Element
 }
 
-const times = flip(originalTimes)
-
 const MonthItems: FC<MonthItemsProps> = React.memo(
   ({ route, budget, year, children }) => (
     <Fragment>
-      {times(12, (month) => (
+      {times((month) => (
         children({
           month: month + 1,
           key: `month-${month + 1}`,
@@ -40,7 +38,7 @@ const MonthItems: FC<MonthItemsProps> = React.memo(
           activeClassName: 'active',
           to: { type: route, payload: { budget, year, month: month + 1 } },
         })
-      ))}
+      ), 12)}
     </Fragment>
   ),
 )
