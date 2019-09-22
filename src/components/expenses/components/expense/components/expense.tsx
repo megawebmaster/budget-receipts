@@ -63,6 +63,7 @@ export const Expense: FC<ExpenseProps> = React.memo(
 
     const total = round(sum(items.map(item => item.price)), 2)
 
+    // TODO: Work on expanding speed improvements - it shouldn't take more than 100 ms on a phone!
     return (
       <Grid as={Segment} className={styles.container}>
         <ReceiptHeader date={date.toString()} shop={shop} total={total} onUpdate={update}>
@@ -70,15 +71,15 @@ export const Expense: FC<ExpenseProps> = React.memo(
         </ReceiptHeader>
         {expanded && (
           <Fragment>
+            <NewReceiptItem>
+              {renderNewItemButtons}
+            </NewReceiptItem>
+            {items.length > 0 && <Divider className={styles.divider} />}
             {items.map(item => (
               <ReceiptItem key={item.id} disabled={processing} item={item}>
                 {renderItemButtons}
               </ReceiptItem>
             ))}
-            {items.length > 0 && <Divider className={styles.divider} />}
-            <NewReceiptItem>
-              {renderNewItemButtons}
-            </NewReceiptItem>
           </Fragment>
         )}
         <Responsive {...Responsive.onlyMobile} as={Grid.Column} width={16} className={styles.hideButton}>

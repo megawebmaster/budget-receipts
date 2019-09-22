@@ -14,6 +14,7 @@ import {
   omit,
   over,
   pipe,
+  prepend,
   prop,
   propEq,
   set,
@@ -21,7 +22,6 @@ import {
   values,
   when,
   zipObj,
-  prepend,
 } from 'ramda'
 
 import { AppMessage } from '../message-list'
@@ -117,7 +117,7 @@ const itemsReducer: Reducer<ExpensesState['items'], ExpensesAction> = (state = {
     case getType(Actions.addReceiptItem): {
       const { id, value } = action.payload
 
-      return over(lensProp(id.toString()), append(value), state)
+      return over(lensProp(id.toString()), prepend(value), state)
     }
     case getType(Actions.updateReceiptItem): {
       const { id, itemId, value } = action.payload
