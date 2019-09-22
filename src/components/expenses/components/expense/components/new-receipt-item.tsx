@@ -9,7 +9,7 @@ type NewReceiptItemProps = {
 const emptyItem = (): ItemType => ({
   id: Date.now(),
   description: '',
-  category: 0,
+  category: undefined,
   price: 0,
 })
 

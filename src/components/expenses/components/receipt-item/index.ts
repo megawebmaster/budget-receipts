@@ -1,1 +1,1 @@
-export { ReceiptItem } from './receipt-item.container'
+export { ReceiptItem } from './components/receipt-item'

@@ -1,12 +1,12 @@
 import React, { FC, useCallback } from 'react'
-import { Dropdown, DropdownItemProps, Grid, Input } from 'semantic-ui-react'
+import { Grid, Input } from 'semantic-ui-react'
 
-import styles from './receipt-item.module.css'
-import { ReceiptItem as ItemType } from '../../receipt.types'
+import styles from '../receipt-item.module.css'
+import { ReceiptItem as ItemType } from '../../../receipt.types'
+import { CategoryField } from './category-field'
 
 export type ExpensesListItemProps = {
   category?: number
-  categories: DropdownItemProps[]
   children: JSX.Element
   description?: string
   disabled: boolean
@@ -15,7 +15,7 @@ export type ExpensesListItemProps = {
 }
 
 export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
-  ({ category, categories, description, disabled, price, onUpdate, children }) => {
+  ({ category, description, disabled, price, onUpdate, children }) => {
     const updateCategory = useCallback((event, data) => onUpdate('category', data.value), [onUpdate])
     const updatePrice = useCallback((event) => onUpdate('price', event.target.value), [onUpdate])
     const updateDescription = useCallback((event) => onUpdate('description', event.target.value), [onUpdate])
@@ -23,15 +23,7 @@ export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
     return (
       <Grid.Row className={styles.item}>
         <Grid.Column mobile={8} tablet={6} computer={6}>
-          <Dropdown
-            fluid
-            selection
-            disabled={disabled}
-            placeholder="Category"
-            options={categories}
-            defaultValue={category}
-            onChange={updateCategory}
-          />
+          <CategoryField value={category} onChange={updateCategory} />
         </Grid.Column>
         <Grid.Column mobile={8} tablet={3} computer={3}>
           <Input
