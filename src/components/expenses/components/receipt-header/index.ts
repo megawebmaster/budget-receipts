@@ -1,1 +1,1 @@
-export { ReceiptHeader } from './receipt-header'
+export { ReceiptHeader } from './components/receipt-header'

@@ -1,8 +1,9 @@
 import React, { FC, useCallback } from 'react'
 import { Grid, Input, Responsive } from 'semantic-ui-react'
 
-import styles from './receipt-header.module.css'
-import { Receipt } from '../../receipt.types'
+import styles from '../receipt-header.module.css'
+import { Receipt } from '../../../receipt.types'
+import { DayField } from './day-field'
 
 type ExpensesListHeaderProps = {
   date?: string
@@ -14,13 +15,13 @@ type ExpensesListHeaderProps = {
 
 export const ReceiptHeader: FC<ExpensesListHeaderProps> = React.memo(
   ({ date, shop, total, onUpdate, children }) => {
-    const updateDate = useCallback((event) => onUpdate('date', event.target.value), [onUpdate])
+    const updateDate = useCallback((day) => onUpdate('date', day), [onUpdate])
     const updateShop = useCallback((event) => onUpdate('shop', event.target.value), [onUpdate])
 
     return (
       <Grid.Row className={styles.header}>
         <Grid.Column mobile={4} tablet={3} computer={3}>
-          <Input fluid placeholder="Date" defaultValue={date} onChange={updateDate} />
+          <DayField value={date || ''} onChange={updateDate} />
         </Grid.Column>
         <Grid.Column mobile={6} tablet={4} computer={4}>
           <Input fluid placeholder="Shop" defaultValue={shop} onChange={updateShop} />
