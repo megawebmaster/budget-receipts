@@ -61,6 +61,13 @@ export const Expense: FC<ExpenseProps> = React.memo(
       />
     ), [receipt, date, shop, expanded, processing, setExpanded])
 
+    const addNewItem = useCallback((item) => (
+      addItem({ id: receipt.id, value: item })
+    ), [addItem, receipt])
+    const updateExistingItem = useCallback((item) => (
+      updateItem({ id: receipt.id, itemId: item.id, value: item })
+    ), [updateItem, receipt])
+
     const total = round(sum(items.map(item => item.price)), 2)
 
     // TODO: Work on expanding speed improvements - it shouldn't take more than 100 ms on a phone!
@@ -71,12 +78,12 @@ export const Expense: FC<ExpenseProps> = React.memo(
         </ReceiptHeader>
         {expanded && (
           <Fragment>
-            <NewReceiptItem>
+            <NewReceiptItem onSave={addNewItem}>
               {renderNewItemButtons}
             </NewReceiptItem>
             {items.length > 0 && <Divider className={styles.divider} />}
             {items.map(item => (
-              <ReceiptItem key={item.id} disabled={processing} item={item}>
+              <ReceiptItem key={item.id} disabled={processing} item={item} onUpdate={updateExistingItem}>
                 {renderItemButtons}
               </ReceiptItem>
             ))}

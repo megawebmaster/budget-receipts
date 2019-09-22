@@ -3,6 +3,7 @@ import { ReceiptItem } from '../../receipt-item'
 import { ReceiptItem as ItemType } from '../../../receipt.types'
 
 type NewReceiptItemProps = {
+  onSave: (item: ItemType) => void
   children: (item: ItemType, reset: () => void) => JSX.Element
 }
 
@@ -14,7 +15,7 @@ const emptyItem = (): ItemType => ({
 })
 
 export const NewReceiptItem: FC<NewReceiptItemProps> = React.memo(
-  ({ children }) => {
+  ({ onSave, children }) => {
     const [item, setItem] = useState<ItemType>(emptyItem())
 
     const reset = useCallback(() => setItem(emptyItem()), [setItem])
@@ -22,6 +23,10 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = React.memo(
       // @ts-ignore
       item[field] = value
     }, [item])
+    const save = useCallback(() => {
+      onSave(item)
+      reset()
+    }, [onSave, reset, item])
 
     return (
       <ReceiptItem
@@ -31,6 +36,7 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = React.memo(
         disabled={false}
         price={item.price}
         onUpdate={update}
+        onSave={save}
       >
         {children(item, reset)}
       </ReceiptItem>

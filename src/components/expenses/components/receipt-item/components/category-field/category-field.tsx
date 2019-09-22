@@ -1,5 +1,5 @@
-import React, { FC, SyntheticEvent } from 'react'
-import { Dropdown, DropdownItemProps, DropdownProps } from 'semantic-ui-react'
+import React, { FC, SyntheticEvent, useCallback } from 'react'
+import { Dropdown, DropdownItemProps, DropdownProps, DropdownSearchInput } from 'semantic-ui-react'
 
 export type CategoryFieldProps = {
   value?: number
@@ -9,18 +9,23 @@ export type CategoryFieldProps = {
 
 
 export const CategoryField: FC<CategoryFieldProps> = React.memo(
-  ({ value, categories, onChange }) => (
-    <Dropdown
-      fluid
-      selection
-      // search
-      value={value}
-      options={categories}
-      openOnFocus={false}
-      placeholder="Select category…"
-      // error={error}
-      // disabled={disabled}
-      onChange={onChange}
-    />
-  ),
+  ({ value, categories, onChange }) => {
+    const blockKeyDown = useCallback((event: SyntheticEvent) => event.stopPropagation(), [])
+
+    return (
+      <Dropdown
+        fluid
+        selection
+        search
+        value={value}
+        options={categories}
+        openOnFocus={false}
+        placeholder="Select category…"
+        // error={error}
+        // disabled={disabled}
+        onChange={onChange}
+        searchInput={<DropdownSearchInput onKeyDown={blockKeyDown} />}
+      />
+    )
+  },
 )
