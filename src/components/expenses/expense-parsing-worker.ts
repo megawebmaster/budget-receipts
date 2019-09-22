@@ -1,6 +1,7 @@
 import { ProcessingMessage, ProcessRequestMessage } from './receipt.types'
 
 export function ParsingWorker(this: Worker) {
+  // TODO: Fetch data required to process information
   this.onmessage = function (event: MessageEvent) {
     const data = event.data as ProcessRequestMessage
 
