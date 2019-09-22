@@ -19,8 +19,8 @@ export const ReceiptControls: FC<ReceiptControlProps> =
 
     return (
       <ButtonGroup fluid>
-        {expanded && !processing && <Button color="blue" icon="save" onClick={saveItem} />}
-        {expanded && !processing && <Button color="red" icon="trash" onClick={deleteItem} />}
+        {!processing && <Button color="blue" icon="save" onClick={saveItem} />}
+        {!processing && <Button color="red" icon="trash" onClick={deleteItem} />}
         {processing && <Button basic disabled loading />}
         <ExpandButton expanded={expanded} setExpanded={setExpanded} />
       </ButtonGroup>
