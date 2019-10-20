@@ -2,8 +2,15 @@ import { Omit } from 'ramda'
 
 export type ReceiptItem = {
   id: number
-  category?: number
+  category: number
   price: number
+  description?: string
+}
+
+export type NewReceiptItem = {
+  id: number
+  category?: number
+  price?: number
   description?: string
 }
 

@@ -4,6 +4,7 @@ import { Grid, Input } from 'semantic-ui-react'
 import styles from '../receipt-item.module.css'
 import { ReceiptItem as ItemType } from '../../../receipt.types'
 import { CategoryField } from './category-field'
+import { PriceInput } from '../../price-input'
 
 export type ExpensesListItemProps = {
   category?: number
@@ -18,7 +19,7 @@ export type ExpensesListItemProps = {
 export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
   ({ category, description, disabled, price, onSave, onUpdate, children }) => {
     const updateCategory = useCallback((event, data) => onUpdate('category', data.value), [onUpdate])
-    const updatePrice = useCallback((event) => onUpdate('price', parseInt(event.target.value, 10)), [onUpdate])
+    const updatePrice = useCallback((value: number) => onUpdate('price', value), [onUpdate])
     const updateDescription = useCallback((event) => onUpdate('description', event.target.value), [onUpdate])
     const handleSaving = useCallback((event: KeyboardEvent) => {
       if (event.key === 'Enter') {
@@ -33,16 +34,7 @@ export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
           <CategoryField value={category} onChange={updateCategory} />
         </Grid.Column>
         <Grid.Column mobile={8} tablet={3} computer={3}>
-          <Input
-            fluid
-            disabled={disabled}
-            type="number"
-            placeholder="Price"
-            labelPosition="right"
-            label="PLN"
-            defaultValue={price !== 0 ? price : ''}
-            onChange={updatePrice}
-          />
+          <PriceInput editable={!disabled} placeholder="Price" onUpdate={updatePrice} value={price} />
         </Grid.Column>
         <Grid.Column mobile={12} tablet={5} computer={5}>
           <Input

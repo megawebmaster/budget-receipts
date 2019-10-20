@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from 'react'
 import { ReceiptItem } from '../../receipt-item'
-import { ReceiptItem as ItemType } from '../../../receipt.types'
+import { NewReceiptItem as ItemType } from '../../../receipt.types'
 
 type NewReceiptItemProps = {
   onSave: (item: ItemType) => void
@@ -11,7 +11,7 @@ const emptyItem = (): ItemType => ({
   id: Date.now(),
   description: '',
   category: undefined,
-  price: 0,
+  price: undefined,
 })
 
 export const NewReceiptItem: FC<NewReceiptItemProps> = React.memo(
