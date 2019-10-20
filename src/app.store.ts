@@ -3,6 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import { connectRoutes, LocationState } from 'redux-first-router'
 import { createEpicMiddleware } from 'redux-observable'
 
+import { BudgetState, reducer as budgetReducer } from './components/budget'
 import { ExpensesState, reducer as expensesReducer } from './components/expenses'
 import { CategoriesState, reducer as categoriesReducer } from './components/categories'
 import { routes } from './routes'
@@ -10,6 +11,7 @@ import { appEpic } from './app.epic'
 import { AppAction } from './app.actions'
 
 export type AppState = {
+  budget: BudgetState
   categories: CategoriesState
   expenses: ExpensesState
   location: LocationState<{}, any>
@@ -24,6 +26,7 @@ export const configureStore = () => {
 
   const rootReducer = combineReducers<AppState>({
     location: locationReducer,
+    budget: budgetReducer,
     expenses: expensesReducer,
     categories: categoriesReducer,
   })

@@ -1,3 +1,4 @@
+import { BudgetAction } from './components/budget'
 import { ExpensesAction } from './components/expenses'
 import { RouteAction } from './routes'
 
@@ -11,4 +12,4 @@ export const noop = (): NoopAction => ({
   payload: {}
 })
 
-export type AppAction = ExpensesAction | RouteAction | NoopAction
+export type AppAction = BudgetAction | ExpensesAction | RouteAction | NoopAction

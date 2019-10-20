@@ -4,6 +4,14 @@ export enum AvailableRoutes {
   HOME = 'ROUTES/Home',
   EXPENSES = 'ROUTES/Expenses',
   EXPENSES_MONTH = 'ROUTES/ExpensesMonth',
+  BUDGET = 'ROUTES/Budget',
+  BUDGET_MONTH = 'ROUTES/BudgetMonth',
+}
+
+export type BudgetRoutePayload = {
+  budget: string,
+  year: number,
+  month: number,
 }
 
 export type ExpensesRoutePayload = {
@@ -17,4 +25,9 @@ export type ExpenseRouteAction = Action & {
   payload: ExpensesRoutePayload
 }
 
-export type RouteAction = ExpenseRouteAction
+export type BudgetRouteAction = Action & {
+  type: AvailableRoutes.BUDGET_MONTH,
+  payload: BudgetRoutePayload
+}
+
+export type RouteAction = ExpenseRouteAction | BudgetRouteAction

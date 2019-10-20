@@ -4,6 +4,7 @@ import { Menu } from 'semantic-ui-react'
 
 import { AvailableRoutes } from '../../../../routes'
 
+const year = new Date().getFullYear();
 
 export const PageMenu = React.memo(
   () => (
@@ -11,7 +12,14 @@ export const PageMenu = React.memo(
       <Menu.Item header as={Link} to={{ type: AvailableRoutes.HOME }}>SimplyBudget</Menu.Item>
       <Menu.Item
         as={NavLink}
-        to={{ type: AvailableRoutes.EXPENSES, payload: { budget: 'domowy', year: 2019 } }}
+        to={{ type: AvailableRoutes.BUDGET, payload: { year, budget: 'domowy' } }}
+        activeClassName="active"
+      >
+        Budget
+      </Menu.Item>
+      <Menu.Item
+        as={NavLink}
+        to={{ type: AvailableRoutes.EXPENSES, payload: { year, budget: 'domowy' } }}
         activeClassName="active"
       >
         Expenses

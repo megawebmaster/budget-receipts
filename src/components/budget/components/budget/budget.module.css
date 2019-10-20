@@ -1,0 +1,5 @@
+@media screen and (max-width: 991px) {
+    .container > [class*="sixteen wide mobile"]:not(:first-child) {
+        padding-top: 0 !important;
+    }
+}

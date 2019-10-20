@@ -1,5 +1,5 @@
 import { AppState } from '../app.store'
-import { AvailableRoutes, ExpensesRoutePayload } from './routes.types'
+import { AvailableRoutes, BudgetRoutePayload, ExpensesRoutePayload } from './routes.types'
 import { createSelector } from 'reselect'
 
 export const location = (state: AppState) => state.location.type as AvailableRoutes
@@ -18,5 +18,22 @@ export const expensesYear = createSelector(
 
 export const expensesMonth = createSelector(
   expensesPayload,
+  (payload) => payload.month as number || new Date().getMonth() + 1,
+)
+
+const budgetPayload = (state: AppState) => state.location.payload as BudgetRoutePayload
+
+export const budgetBudget = createSelector(
+  budgetPayload,
+  (payload) => payload.budget,
+)
+
+export const budgetYear = createSelector(
+  budgetPayload,
+  (payload) => payload.year as number || new Date().getFullYear(),
+)
+
+export const budgetMonth = createSelector(
+  budgetPayload,
   (payload) => payload.month as number || new Date().getMonth() + 1,
 )
