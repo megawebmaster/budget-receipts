@@ -1,10 +1,10 @@
-import { combineEpics, Epic } from 'redux-observable'
-import { filter, map } from 'rxjs/operators'
+import { combineEpics, Epic, ofType } from 'redux-observable'
+import { map } from 'rxjs/operators'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
 import { clearMessages } from './budget.actions'
-import { AvailableRoutes } from '../../routes'
+import { AvailableRoutes, RouteAction } from '../../routes'
 
 // const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 //   action$.pipe(
@@ -22,7 +22,7 @@ import { AvailableRoutes } from '../../routes'
 
 const clearErrorsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
-    filter(action => Object.values(AvailableRoutes).includes(action.type)),
+    ofType<AppAction, RouteAction>(...Object.values(AvailableRoutes)),
     map(() => clearMessages()),
   )
 

@@ -1,6 +1,6 @@
-import { createStandardAction } from 'typesafe-actions'
+import { createAction } from 'typesafe-actions'
 import { Category } from './category.types'
 
-export const addCategory = createStandardAction('CATEGORIES/add')<Category>()
-// export const updateCategory = createStandardAction('CATEGORIES/update')<void>()
-// export const deleteCategory = createStandardAction('CATEGORIES/delete')<void>()
+export const addCategory = createAction('CATEGORIES/add')<Category>()
+// export const updateCategory = createAction('CATEGORIES/update')<void>()
+// export const deleteCategory = createAction('CATEGORIES/delete')<void>()

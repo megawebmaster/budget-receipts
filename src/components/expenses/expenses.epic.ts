@@ -14,7 +14,7 @@ import {
   processReceiptImage,
   receiptsLoading,
 } from './expenses.actions'
-import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
+import { AvailableRoutes, ExpenseRouteAction, RouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
 import { getType, isOfType } from 'typesafe-actions'
 import { ProcessingMessage } from './receipt.types'
@@ -39,7 +39,7 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 
 const clearErrorsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
-    filter(action => Object.values(AvailableRoutes).includes(action.type)),
+    ofType<AppAction, RouteAction>(...Object.values(AvailableRoutes)),
     map(() => clearMessages()),
   )
 

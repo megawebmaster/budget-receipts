@@ -1,5 +1,3 @@
-import { Omit } from 'ramda'
-
 export type ReceiptItem = {
   id: number
   category: number

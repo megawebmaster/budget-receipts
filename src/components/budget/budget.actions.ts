@@ -1,6 +1,6 @@
-import { createStandardAction } from 'typesafe-actions'
+import { createAction } from 'typesafe-actions'
 import { AppMessage } from '../message-list'
 
-export const clearMessages = createStandardAction('EXPENSES/clearMessages')<void>()
-export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<void>()
-export const receiptsLoadingError = createStandardAction('EXPENSES/receiptsLoadingError')<AppMessage>()
+export const clearMessages = createAction('EXPENSES/clearMessages')<void>()
+export const receiptsLoading = createAction('EXPENSES/receiptsLoading')<void>()
+export const receiptsLoadingError = createAction('EXPENSES/receiptsLoadingError')<AppMessage>()

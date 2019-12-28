@@ -1,4 +1,4 @@
-import { createStandardAction } from 'typesafe-actions'
+import { createAction } from 'typesafe-actions'
 import { ApiReceipt, ImageParsingResult, Receipt, ReceiptItem } from './receipt.types'
 import { AppMessage } from '../message-list'
 
@@ -26,20 +26,20 @@ type ImageProcessingRequest = {
   parsingResult: ImageParsingResult
 }
 
-export const clearMessages = createStandardAction('EXPENSES/clearMessages')<void>()
-export const receiptsLoading = createStandardAction('EXPENSES/receiptsLoading')<void>()
-export const receiptsLoadingError = createStandardAction('EXPENSES/receiptsLoadingError')<AppMessage>()
-export const updateReceipts = createStandardAction('EXPENSES/updateReceipts')<UpdateReceipts>()
+export const clearMessages = createAction('EXPENSES/clearMessages')<void>()
+export const receiptsLoading = createAction('EXPENSES/receiptsLoading')<void>()
+export const receiptsLoadingError = createAction('EXPENSES/receiptsLoadingError')<AppMessage>()
+export const updateReceipts = createAction('EXPENSES/updateReceipts')<UpdateReceipts>()
 
-export const addReceipt = createStandardAction('EXPENSES/addReceipt')<Receipt>()
-export const updateReceipt = createStandardAction('EXPENSES/updateReceipt')<Receipt>()
-export const deleteReceipt = createStandardAction('EXPENSES/deleteReceipt')<number>()
+export const addReceipt = createAction('EXPENSES/addReceipt')<Receipt>()
+export const updateReceipt = createAction('EXPENSES/updateReceipt')<Receipt>()
+export const deleteReceipt = createAction('EXPENSES/deleteReceipt')<number>()
 
-export const addReceiptItem = createStandardAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
-export const updateReceiptItem = createStandardAction('EXPENSES/updateReceiptItem')<UpdateReceiptItem>()
-export const deleteReceiptItem = createStandardAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()
+export const addReceiptItem = createAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
+export const updateReceiptItem = createAction('EXPENSES/updateReceiptItem')<UpdateReceiptItem>()
+export const deleteReceiptItem = createAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()
 
-export const processReceiptImage = createStandardAction('EXPENSES/processReceiptImage')<Blob>()
-export const checkProcessingStatus = createStandardAction('EXPENSES/checkProcessingStatus')<string>()
-export const processParsedImage = createStandardAction('EXPENSES/processParsedImage')<ImageProcessingRequest>()
-export const imageParsed = createStandardAction('EXPENSES/imageParsed')<number>()
+export const processReceiptImage = createAction('EXPENSES/processReceiptImage')<Blob>()
+export const checkProcessingStatus = createAction('EXPENSES/checkProcessingStatus')<string>()
+export const processParsedImage = createAction('EXPENSES/processParsedImage')<ImageProcessingRequest>()
+export const imageParsed = createAction('EXPENSES/imageParsed')<number>()

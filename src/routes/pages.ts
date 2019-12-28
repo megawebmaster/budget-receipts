@@ -7,26 +7,21 @@ import { Expenses } from '../components/expenses'
 import { NotFound } from '../components/not-found'
 
 type Page = { component: ComponentType }
-type PageTable = {
-  [k in AvailableRoutes]: Page
-} & {
-  [NOT_FOUND]: Page
-}
 
-export const pages: PageTable = {
-  [AvailableRoutes.HOME]: {
+export const pages: Record<AvailableRoutes, Page> = {
+  'ROUTES/Home': {
     component: Home
   },
-  [AvailableRoutes.BUDGET_MONTH]: {
+  'ROUTES/BudgetMonth': {
     component: Budget
   },
-  [AvailableRoutes.BUDGET]: {
-    component: NotFound
-  },
-  [AvailableRoutes.EXPENSES_MONTH]: {
+  'ROUTES/ExpensesMonth': {
     component: Expenses
   },
-  [AvailableRoutes.EXPENSES]: {
+  'ROUTES/Budget': {
+    component: NotFound
+  },
+  'ROUTES/Expenses': {
     component: NotFound
   },
   [NOT_FOUND]: {
