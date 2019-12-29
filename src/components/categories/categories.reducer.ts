@@ -7,6 +7,7 @@ import { Category } from './category.types'
 export type CategoriesAction = ActionType<typeof Actions>
 export type CategoriesState = Category[]
 
+// TODO: Load categories using epics
 const DEFAULT_STATE: CategoriesState = [{
   'id': 1,
   'name': 'Wynagrodzenie Adi',

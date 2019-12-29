@@ -23,8 +23,6 @@ import {
   when,
   zipObj,
 } from 'ramda'
-
-import { AppMessage } from '../message-list'
 import * as Actions from './expenses.actions'
 import { ApiReceipt, Receipt, ReceiptItem } from './receipt.types'
 
@@ -34,7 +32,6 @@ export type ExpensesState = {
     [key: string]: ReceiptItem[]
   }
   loading: boolean,
-  messages: AppMessage[]
   receipts: Receipt[]
 }
 
@@ -45,7 +42,7 @@ const makeItems = (receipts: ApiReceipt[]): Record<string, ReceiptItem[]> => zip
 
 const receiptsReducer: Reducer<ExpensesState['receipts'], ExpensesAction> = (state = [], action) => {
   switch (action.type) {
-    case getType(Actions.receiptsLoading):
+    case getType(Actions.loadReceipts):
       return []
     case getType(Actions.updateReceipts): {
       const { receipts } = action.payload
@@ -91,7 +88,7 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], ExpensesAction> = (sta
 
 const itemsReducer: Reducer<ExpensesState['items'], ExpensesAction> = (state = {}, action) => {
   switch (action.type) {
-    case getType(Actions.receiptsLoading):
+    case getType(Actions.loadReceipts):
       return {}
     case getType(Actions.updateReceipts): {
       const { receipts } = action.payload
@@ -138,23 +135,10 @@ const itemsReducer: Reducer<ExpensesState['items'], ExpensesAction> = (state = {
   }
 }
 
-const messagesReducer: Reducer<ExpensesState['messages'], ExpensesAction> = (state = [], action) => {
-  switch (action.type) {
-    case getType(Actions.receiptsLoadingError):
-      return append(action.payload, state)
-    case getType(Actions.clearMessages):
-      return filter(propEq('sticky', true), state)
-    default:
-      return state
-  }
-}
-
 const loadingReducer: Reducer<ExpensesState['loading'], ExpensesAction> = (state = false, action) => {
   switch (action.type) {
-    case getType(Actions.receiptsLoading):
+    case getType(Actions.loadReceipts):
       return true
-    case getType(Actions.receiptsLoadingError):
-      return false
     case getType(Actions.updateReceipts):
       return state && action.payload.source !== 'network'
     default:
@@ -165,6 +149,5 @@ const loadingReducer: Reducer<ExpensesState['loading'], ExpensesAction> = (state
 export const reducer = combineReducers({
   receipts: receiptsReducer,
   items: itemsReducer,
-  messages: messagesReducer,
   loading: loadingReducer,
 })

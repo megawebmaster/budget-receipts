@@ -1,4 +1,4 @@
 import { AppState } from '../../app.store'
 
 export const budgetLoading = (state: AppState) => state.budget.loading
-export const budgetMessages = (state: AppState) => state.budget.messages
+export const budgetEntries = (state: AppState) => state.budget.entries

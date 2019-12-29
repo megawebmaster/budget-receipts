@@ -1,22 +1,28 @@
 import { combineReducers, Reducer } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
-import { append, filter, propEq } from 'ramda'
+import { indexBy, mergeRight, mergeWith, pipe, prop, toString, values } from 'ramda'
 
-import { AppMessage } from '../message-list'
 import * as Actions from './budget.actions'
+import { BudgetEntry } from './budget-entry.types'
 
 export type BudgetAction = ActionType<typeof Actions>
 export type BudgetState = {
-  loading: boolean,
-  messages: AppMessage[]
+  entries: BudgetEntry[]
+  loading: boolean
 }
 
-const messagesReducer: Reducer<BudgetState['messages'], BudgetAction> = (state = [], action) => {
+const entriesReducer: Reducer<BudgetState['entries'], BudgetAction> = (state = [], action) => {
   switch (action.type) {
-    case getType(Actions.receiptsLoadingError):
-      return append(action.payload, state)
-    case getType(Actions.clearMessages):
-      return filter(propEq('sticky', true), state)
+    case getType(Actions.loadEntries):
+      return []
+    case getType(Actions.updateEntries):
+      return values(
+        mergeWith(
+          mergeRight,
+          indexBy(pipe(prop('id'), toString), state),
+          indexBy(pipe(prop('id'), toString), action.payload.entries),
+        ),
+      )
     default:
       return state
   }
@@ -24,16 +30,16 @@ const messagesReducer: Reducer<BudgetState['messages'], BudgetAction> = (state =
 
 const loadingReducer: Reducer<BudgetState['loading'], BudgetAction> = (state = false, action) => {
   switch (action.type) {
-    case getType(Actions.receiptsLoading):
+    case getType(Actions.loadEntries):
       return true
-    case getType(Actions.receiptsLoadingError):
-      return false
+    case getType(Actions.updateEntries):
+      return action.payload.source !== 'network'
     default:
       return state
   }
 }
 
 export const reducer = combineReducers({
-  messages: messagesReducer,
+  entries: entriesReducer,
   loading: loadingReducer,
 })

@@ -1,6 +1,10 @@
 import { createAction } from 'typesafe-actions'
-import { AppMessage } from '../message-list'
+import { BudgetEntry } from './budget-entry.types'
 
-export const clearMessages = createAction('EXPENSES/clearMessages')<void>()
-export const receiptsLoading = createAction('EXPENSES/receiptsLoading')<void>()
-export const receiptsLoadingError = createAction('EXPENSES/receiptsLoadingError')<AppMessage>()
+type UpdateBudgetEntries = {
+  entries: BudgetEntry[]
+  source: 'network' | 'cache'
+}
+
+export const loadEntries = createAction('BUDGET/LoadBudgetEntries')<void>()
+export const updateEntries = createAction('BUDGET/UpdateBudgetEntries')<UpdateBudgetEntries>()

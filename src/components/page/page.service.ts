@@ -36,7 +36,7 @@ export class PageService {
     try {
       const response = await fetch(request)
       const cache = await caches.open('SimplyBudget')
-      cache.put(request, response.clone())
+      await cache.put(request, response.clone())
 
       const budgets = await response.json() as Budget[]
 

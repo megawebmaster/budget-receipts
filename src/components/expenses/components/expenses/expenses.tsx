@@ -5,9 +5,10 @@ import { Grid, GridColumn, Header, Responsive, Segment } from 'semantic-ui-react
 
 import { MonthList } from '../../../month-list'
 import { AvailableRoutes, month as monthSelector, year as yearSelector } from '../../../../routes'
+import { pageMessages } from '../../../page/page.selectors'
 import { ExpensesList } from '../expenses-list'
 import { MessageList } from '../../../message-list'
-import { expensesLoading, expensesMessages } from '../../expenses.selectors'
+import { expensesLoading } from '../../expenses.selectors'
 
 import styles from './expenses.module.css'
 
@@ -15,7 +16,7 @@ export const Expenses = React.memo(
   () => {
     const year = useSelector(yearSelector)
     const month = useSelector(monthSelector)
-    const messages = useSelector(expensesMessages)
+    const messages = useSelector(pageMessages)
     const loading = useSelector(expensesLoading)
 
     return (

@@ -8,11 +8,10 @@ import WebWorker from '../../web-worker'
 import {
   addReceiptItem,
   checkProcessingStatus,
-  clearMessages,
   imageParsed,
   processParsedImage,
   processReceiptImage,
-  receiptsLoading,
+  loadReceipts,
 } from './expenses.actions'
 import { AvailableRoutes, ExpenseRouteAction, RouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
@@ -31,17 +30,11 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/${month}/receipts`)
     )),
     mergeMap((request) => of(
-      Promise.resolve(receiptsLoading()),
+      Promise.resolve(loadReceipts()),
       ExpensesService.fetchFromNetwork(request),
       ExpensesService.loadFromCache(request),
     )),
     mergeAll(),
-  )
-
-const clearErrorsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
-  action$.pipe(
-    ofType<AppAction, RouteAction>(...Object.values(AvailableRoutes)),
-    map(() => clearMessages()),
   )
 
 const processImageEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
@@ -100,7 +93,6 @@ const receiveExpenseMatchesEpic: Epic<AppAction, AppAction, AppState> = () => ne
 
 export const expensesEpic = combineEpics(
   pageLoadEpic,
-  clearErrorsEpic,
   processImageEpic,
   checkImageProcessingStatusEpic,
   processParsedImageEpic,

@@ -1,7 +1,8 @@
 import { AppAction, noop } from '../../app.actions'
 import { ApiReceipt, ImageParsingResult } from './receipt.types'
-import { receiptsLoadingError, updateReceipts } from './expenses.actions'
+import { updateReceipts } from './expenses.actions'
 import { AppMessageType } from '../message-list'
+import { pageError } from '../page'
 
 export class ExpensesService {
   static loadFromCache = async (request: Request): Promise<AppAction> => {
@@ -24,7 +25,7 @@ export class ExpensesService {
     try {
       const response = await fetch(request)
       const cache = await caches.open('SimplyBudget')
-      cache.put(request, response.clone())
+      await cache.put(request, response.clone())
 
       const content = await response.json() as { receipts: ApiReceipt[] }
 
@@ -59,7 +60,7 @@ export class ExpensesService {
         })), 1000)
       })
 
-      return receiptsLoadingError({
+      return pageError({
         text: 'Network connection failed',
         sticky: false,
         type: AppMessageType.ERROR,

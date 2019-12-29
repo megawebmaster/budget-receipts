@@ -1,6 +1,5 @@
 import { createAction } from 'typesafe-actions'
 import { ApiReceipt, ImageParsingResult, Receipt, ReceiptItem } from './receipt.types'
-import { AppMessage } from '../message-list'
 
 type UpdateReceipts = {
   receipts: ApiReceipt[]
@@ -26,9 +25,7 @@ type ImageProcessingRequest = {
   parsingResult: ImageParsingResult
 }
 
-export const clearMessages = createAction('EXPENSES/clearMessages')<void>()
-export const receiptsLoading = createAction('EXPENSES/receiptsLoading')<void>()
-export const receiptsLoadingError = createAction('EXPENSES/receiptsLoadingError')<AppMessage>()
+export const loadReceipts = createAction('EXPENSES/loadReceipts')<void>()
 export const updateReceipts = createAction('EXPENSES/updateReceipts')<UpdateReceipts>()
 
 export const addReceipt = createAction('EXPENSES/addReceipt')<Receipt>()

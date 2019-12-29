@@ -15,6 +15,7 @@ type BudgetTableProps = {
 }
 
 // TODO: Extract sub-components
+// TODO: Calculate real and plan summary
 
 export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categories, editable }) =>
   categories.length === 0 ? null : (
@@ -33,6 +34,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categories, ed
       <Segment className={styles.content}>
         {categories.map(category => {
           const hasChildren = category.children && category.children.length > 0
+          // TODO: Fetch entries for each category using budgetEntries
 
           return (
             <Table
