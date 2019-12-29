@@ -8,7 +8,7 @@ import { AvailableRoutes, RouteAction } from '../../routes'
 
 // const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 //   action$.pipe(
-//     ofType<AppAction, ExpenseRouteAction>(AvailableRoutes.BUDGET_MONTH),
+//     ofType<AppAction, BudgetRouteAction>(AvailableRoutes.BUDGET_MONTH),
 //     map(({ payload: { budget, year, month } }) => (
 //       new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/${month}/receipts`)
 //     )),

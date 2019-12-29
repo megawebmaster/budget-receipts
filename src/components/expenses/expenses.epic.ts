@@ -16,13 +16,14 @@ import {
 } from './expenses.actions'
 import { AvailableRoutes, ExpenseRouteAction, RouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
-import { getType, isOfType } from 'typesafe-actions'
+import { isActionOf } from 'typesafe-actions'
 import { ProcessingMessage } from './receipt.types'
 import { ParsingWorker } from './expense-parsing-worker'
-import { categories } from '../categories/categories.selectors'
+import { categories } from '../categories'
 
 const parsingWorker = WebWorker.build(ParsingWorker)
 
+// TODO: Why is this loading?
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     ofType<AppAction, ExpenseRouteAction>(AvailableRoutes.EXPENSES_MONTH),
@@ -45,14 +46,14 @@ const clearErrorsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 
 const processImageEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
-    filter(isOfType(getType(processReceiptImage))),
+    filter(isActionOf(processReceiptImage)),
     mergeMap(({ payload }) => ExpensesService.parseReceiptImage(payload)),
     map(token => checkProcessingStatus(token)),
   )
 
 const checkImageProcessingStatusEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
-    filter(isOfType(getType(checkProcessingStatus))),
+    filter(isActionOf(checkProcessingStatus)),
     switchMap(({ payload: token }) => from(ExpensesService.getReceiptParsingResult(token)).pipe(
       map(result => processParsedImage({
         id: Date.now(),
@@ -65,7 +66,7 @@ const checkImageProcessingStatusEpic: Epic<AppAction, AppAction, AppState> = (ac
 
 const processParsedImageEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
-    filter(isOfType(getType(processParsedImage))),
+    filter(isActionOf(processParsedImage)),
     tap(({ payload: { id, categories, parsingResult } }) => parsingWorker.postMessage({
       id,
       categories,

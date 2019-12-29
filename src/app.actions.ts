@@ -1,6 +1,7 @@
+import { RouteAction } from './routes'
 import { BudgetAction } from './components/budget'
 import { ExpensesAction } from './components/expenses'
-import { RouteAction } from './routes'
+import { PageAction } from './components/page'
 
 type NoopAction = {
   type: 'noop',
@@ -9,7 +10,7 @@ type NoopAction = {
 
 export const noop = (): NoopAction => ({
   type: 'noop',
-  payload: {}
+  payload: {},
 })
 
-export type AppAction = BudgetAction | ExpensesAction | RouteAction | NoopAction
+export type AppAction = RouteAction | BudgetAction | ExpensesAction | PageAction | NoopAction

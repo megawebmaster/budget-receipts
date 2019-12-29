@@ -1,4 +1,4 @@
-import { AppAction } from '../../app.actions'
+import { AppAction, noop } from '../../app.actions'
 import { ApiReceipt, ImageParsingResult } from './receipt.types'
 import { receiptsLoadingError, updateReceipts } from './expenses.actions'
 import { AppMessageType } from '../message-list'
@@ -17,28 +17,7 @@ export class ExpensesService {
       })
     }
 
-    return await updateReceipts({
-      receipts: [
-        {
-          id: 1,
-          date: 20,
-          shop: 'Lidl',
-          items: [
-            { id: 1, category: 2, price: 200, description: 'Test 1' },
-            { id: 2, category: 1, price: 100, description: 'Test 2' },
-          ],
-        },
-        {
-          id: 2,
-          date: 21,
-          shop: 'Biedronka',
-          items: [
-            { id: 3, category: 1, price: 100.23, description: 'Test 3' },
-          ],
-        },
-      ],
-      source: 'cache',
-    })
+    return noop()
   }
 
   static fetchFromNetwork = async (request: Request): Promise<AppAction> => {
@@ -54,23 +33,33 @@ export class ExpensesService {
         source: 'network',
       })
     } catch (err) {
-      // return new Promise<AppAction>(resolve => {
-      //   setTimeout(() => resolve(updateReceipts({
-      //     receipts: [
-      //       {
-      //         id: 3,
-      //         date: 20,
-      //         shop: 'Lidl',
-      //         items: [
-      //           { id: 1, category: 2, price: 200, description: 'Test 1' },
-      //           { id: 2, category: 1, price: 100, description: 'Test 2' },
-      //         ],
-      //       }],
-      //     source: 'network',
-      //   })), 1000)
-      // })
+      // TODO: Restore error catching
+      return new Promise<AppAction>(resolve => {
+        setTimeout(() => resolve(updateReceipts({
+          receipts: [
+            {
+              id: 1,
+              date: 20,
+              shop: 'Lidl',
+              items: [
+                { id: 1, category: 2, price: 200, description: 'Test 1' },
+                { id: 2, category: 1, price: 100, description: 'Test 2' },
+              ],
+            },
+            {
+              id: 2,
+              date: 21,
+              shop: 'Biedronka',
+              items: [
+                { id: 3, category: 1, price: 100.23, description: 'Test 3' },
+              ],
+            },
+          ],
+          source: 'network',
+        })), 1000)
+      })
 
-      return await receiptsLoadingError({
+      return receiptsLoadingError({
         text: 'Network connection failed',
         sticky: false,
         type: AppMessageType.ERROR,

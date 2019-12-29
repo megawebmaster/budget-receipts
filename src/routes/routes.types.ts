@@ -34,7 +34,7 @@ export type ExpenseRouteAction = Action & {
 }
 
 export type BudgetRouteAction = Action & {
-  type: 'ROUTES/BudgetMonth',
+  type: AvailableRoutes,
   payload: BudgetRoutePayload
 }
 
