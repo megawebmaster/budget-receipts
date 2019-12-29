@@ -9,11 +9,11 @@ import {
   addReceiptItem,
   checkProcessingStatus,
   imageParsed,
+  loadReceipts,
   processParsedImage,
   processReceiptImage,
-  loadReceipts,
 } from './expenses.actions'
-import { AvailableRoutes, ExpenseRouteAction, RouteAction } from '../../routes'
+import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
 import { ExpensesService } from './expenses.service'
 import { isActionOf } from 'typesafe-actions'
 import { ProcessingMessage } from './receipt.types'

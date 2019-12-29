@@ -9,8 +9,6 @@ import { month as monthSelector, year as yearSelector } from '../../../../../../
 
 export type DayFieldProps = {
   value: string
-  month: number
-  year: number
   onChange: (day: string) => void
 }
 

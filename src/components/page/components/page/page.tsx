@@ -25,7 +25,7 @@ export const Page = React.memo(
 
     useEffect(() => {
       dispatch(loadBudgets())
-    }, [])
+    }, [dispatch])
 
     return (
       <Fragment>
