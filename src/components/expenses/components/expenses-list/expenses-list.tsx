@@ -1,16 +1,17 @@
-import React, { FC, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { Expense, NewExpense } from '../expense'
-import { Receipt } from '../../receipt.types'
+import { useSelector } from 'react-redux'
+import { expensesReceipts } from '../../expenses.selectors'
 
-type ExpensesListProps = {
-  receipts: Receipt[]
+export const ExpensesList = () => {
+  const receipts = useSelector(expensesReceipts)
+
+  return (
+    <Fragment>
+      <NewExpense />
+      {receipts.map(receipt => (
+        <Expense key={receipt.id} receipt={receipt} />
+      ))}
+    </Fragment>
+  )
 }
-
-export const ExpensesList: FC<ExpensesListProps> = ({ receipts }) => (
-  <Fragment>
-    <NewExpense />
-    {receipts.map(receipt => (
-      <Expense key={receipt.id} receipt={receipt} />
-    ))}
-  </Fragment>
-)

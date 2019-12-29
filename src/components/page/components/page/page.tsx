@@ -1,16 +1,13 @@
-import React, { FC, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Container } from 'semantic-ui-react'
+import { useSelector } from 'react-redux'
 
-import { AvailableRoutes } from '../../../../routes'
+import { location as locationSelector } from '../../../../routes'
 import { pages } from '../../../../routes/pages'
 import { PageMenu } from '../page-menu'
 
 import styles from './page.module.css'
-
-interface PageProps {
-  location: AvailableRoutes
-}
 
 const transitionStyles = {
   enter: styles['navigation-enter'],
@@ -19,8 +16,9 @@ const transitionStyles = {
 }
 const transitionTimeouts = { enter: 300, exit: 500 }
 
-export const Page: FC<PageProps> = React.memo(
-  ({ location }) => {
+export const Page = React.memo(
+  () => {
+    const location = useSelector(locationSelector)
     const { component: Component } = pages[location]
 
     return (

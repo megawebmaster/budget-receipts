@@ -1,16 +1,19 @@
 import React, { FC, SyntheticEvent, useCallback } from 'react'
 import { Dropdown, DropdownItemProps, DropdownProps, DropdownSearchInput } from 'semantic-ui-react'
+import { dropdownCategories } from '../../../../../categories'
+import { useSelector } from 'react-redux'
+import { AppState } from '../../../../../../app.store'
 
 export type CategoryFieldProps = {
   value?: number
-  categories: DropdownItemProps[]
   onChange: (event: SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void
 }
 
 
 export const CategoryField: FC<CategoryFieldProps> = React.memo(
-  ({ value, categories, onChange }) => {
+  ({ value, onChange }) => {
     const blockKeyDown = useCallback((event: SyntheticEvent) => event.stopPropagation(), [])
+    const categories = useSelector<AppState, DropdownItemProps[]>(dropdownCategories)
 
     return (
       <Dropdown

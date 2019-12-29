@@ -1,1 +1,1 @@
-export { DayField } from './day-field.container'
+export { DayField } from './day-field'

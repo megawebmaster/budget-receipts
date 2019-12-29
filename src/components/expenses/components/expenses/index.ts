@@ -1,1 +1,1 @@
-export { Expenses } from './expenses.container'
+export { Expenses } from './expenses'

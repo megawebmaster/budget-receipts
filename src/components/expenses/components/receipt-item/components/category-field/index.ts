@@ -1,1 +1,1 @@
-export { CategoryField } from './category-field.container'
+export { CategoryField } from './category-field'

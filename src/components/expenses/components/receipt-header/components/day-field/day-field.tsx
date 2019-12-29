@@ -4,6 +4,8 @@ import DayPickerInput from 'react-day-picker/DayPickerInput'
 
 import 'react-day-picker/lib/style.css'
 import './day-field.css'
+import { useSelector } from 'react-redux'
+import { month as monthSelector, year as yearSelector } from '../../../../../../routes'
 
 export type DayFieldProps = {
   value: string
@@ -14,7 +16,10 @@ export type DayFieldProps = {
 
 
 export const DayField: FC<DayFieldProps> = React.memo(
-  ({ month, value, year, onChange }) => {
+  ({ value, onChange }) => {
+    const year = useSelector(yearSelector)
+    const month = useSelector(monthSelector)
+
     const onDayChange = useCallback((day) => {
       if (day) {
         onChange(day.getDate().toString())
