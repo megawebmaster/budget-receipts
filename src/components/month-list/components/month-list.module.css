@@ -1,0 +1,7 @@
+.dropdownContainer {
+    display: flex;
+}
+
+.dropdown.dropdown.dropdown {
+    flex: 1 1;
+}

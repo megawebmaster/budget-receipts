@@ -1,15 +1,17 @@
-import React, { ComponentType, FC, Fragment, useCallback } from 'react'
+import React, { ComponentType, FC, Fragment, ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps } from 'redux-first-router-link'
-import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive, Segment } from 'semantic-ui-react'
+import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive } from 'semantic-ui-react'
 import { times } from 'ramda'
 import { AvailableRoutes } from '../../../routes'
+
+import styles from './month-list.module.css'
 
 type MonthListProps = {
   route: AvailableRoutes,
   budget: string,
   year: number,
   month: number,
-  showSpinner?: boolean,
+  children: ReactNode,
 }
 
 type MonthItem = {
@@ -44,7 +46,7 @@ const MonthItems: FC<MonthItemsProps> = React.memo(
 )
 
 export const MonthList: FC<MonthListProps> = React.memo(
-  ({ route, budget, year, month, showSpinner = false }) => {
+  ({ route, budget, year, month, children }) => {
     const renderDropdownItem = useCallback(({ month, ...props }) => (
       <DropdownItem {...props}>Month {month}</DropdownItem>
     ), [])
@@ -55,17 +57,18 @@ export const MonthList: FC<MonthListProps> = React.memo(
     return (
       <Fragment>
         <Responsive
-          as={Fragment}
+          as="div"
           maxWidth={Responsive.onlyTablet.maxWidth}
+          className={styles.dropdownContainer}
         >
-          <Dropdown text={`Expenses: month ${month}`} button fluid scrolling>
+          <Dropdown text={`Expenses: month ${month}`} button fluid scrolling className={styles.dropdown}>
             <DropdownMenu>
               <MonthItems route={route} budget={budget} year={year}>
                 {renderDropdownItem}
               </MonthItems>
             </DropdownMenu>
           </Dropdown>
-          {showSpinner && <Segment basic loading size="mini" />}
+          {children}
         </Responsive>
         <Responsive
           as={Fragment}

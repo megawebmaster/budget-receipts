@@ -1,1 +1,1 @@
-export { Budget } from './budget.container'
+export { Budget } from './budget'

@@ -1,13 +1,14 @@
 import { connect } from "react-redux"
 
 import { AppState } from "../../../app.store"
-import { expensesBudget, expensesMonth, expensesYear } from '../../../routes'
+import { budget, month, year } from '../../../routes'
 import { MonthList } from "./month-list"
 
+// TODO: Refactor to useSelector
 const mapStateToProps = (state: AppState) => ({
-  budget: expensesBudget(state) || 'no-budget',
-  year: expensesYear(state),
-  month: expensesMonth(state),
+  budget: budget(state) || 'no-budget',
+  year: year(state),
+  month: month(state),
 })
 
 const MonthListContainer = connect(mapStateToProps)(MonthList)

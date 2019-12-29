@@ -1,7 +1,7 @@
 import { connect, Omit } from "react-redux"
 
 import { AppState } from '../../../../../../app.store'
-import { expensesMonth, expensesYear } from '../../../../../../routes'
+import { month, year } from '../../../../../../routes'
 
 import { DayField, DayFieldProps } from './day-field'
 
@@ -11,8 +11,8 @@ type StateProps = {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  year: expensesYear(state),
-  month: expensesMonth(state),
+  year: year(state),
+  month: month(state),
 })
 
 const DayFieldContainer = connect<StateProps, {}, Omit<DayFieldProps, keyof StateProps>, AppState>(

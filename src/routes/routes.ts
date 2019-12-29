@@ -1,6 +1,6 @@
 import { redirect, RoutesMap } from 'redux-first-router'
 import { AppState } from '../app.store'
-import { budgetBudget, budgetYear, expensesBudget, expensesYear } from './routes.selectors'
+import { budget as budgetSelector, year as yearSelector } from './routes.selectors'
 import { AvailableRoutes } from './routes.types'
 
 export const routes: RoutesMap<{}, AppState> = {
@@ -9,8 +9,8 @@ export const routes: RoutesMap<{}, AppState> = {
     path: '/:budget/:year/expenses',
     thunk: (dispatch, getState) => {
       const state: AppState = getState()
-      const budget = expensesBudget(state)
-      const year = expensesYear(state)
+      const budget = budgetSelector(state)
+      const year = yearSelector(state)
       dispatch(redirect({
         type: AvailableRoutes.EXPENSES_MONTH,
         payload: { budget, year, month: new Date().getMonth() + 1 },
@@ -25,8 +25,8 @@ export const routes: RoutesMap<{}, AppState> = {
     path: '/:budget/:year/budget',
     thunk: (dispatch, getState) => {
       const state: AppState = getState()
-      const budget = budgetBudget(state)
-      const year = budgetYear(state)
+      const budget = budgetSelector(state)
+      const year = yearSelector(state)
       dispatch(redirect({
         type: AvailableRoutes.BUDGET_MONTH,
         payload: { budget, year, month: new Date().getMonth() + 1 },

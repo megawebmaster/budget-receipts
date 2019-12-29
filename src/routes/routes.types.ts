@@ -16,17 +16,17 @@ export const AvailableRoutes: Record<string, AvailableRoutes> = {
   BUDGET_MONTH: 'ROUTES/BudgetMonth',
 }
 
-export type BudgetRoutePayload = {
-  budget: string,
-  year: number,
-  month: number,
+export type CommonRoutePayload = {
+  budget: string
+  year: number
+  month: number
 }
 
+export type BudgetRoutePayload = {
+} & CommonRoutePayload
+
 export type ExpensesRoutePayload = {
-  budget: string,
-  year: number,
-  month: number,
-}
+} & CommonRoutePayload
 
 export type ExpenseRouteAction = Action & {
   type: AvailableRoutes,
