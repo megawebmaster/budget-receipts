@@ -16,6 +16,7 @@ const entriesReducer: Reducer<BudgetState['entries'], BudgetAction> = (state = [
     case getType(Actions.loadEntries):
       return []
     case getType(Actions.updateEntries):
+      // TODO: Do not update the object if nothing changes
       return values(
         mergeWith(
           mergeRight,

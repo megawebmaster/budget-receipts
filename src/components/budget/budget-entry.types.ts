@@ -2,9 +2,9 @@ import { Category } from '../categories'
 
 export type BudgetEntry = {
   id: number
-  category: Pick<Category, 'id' | 'type'>
+  category: Pick<Category, 'id' | 'type' | 'parent'>
   month: number
-  plan: string
-  real: string
+  plan: number
+  real: number
   monthlyRealValues: string[]
 }

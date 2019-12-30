@@ -18,11 +18,10 @@ import { ExpensesService } from './expenses.service'
 import { isActionOf } from 'typesafe-actions'
 import { ProcessingMessage } from './receipt.types'
 import { ParsingWorker } from './expense-parsing-worker'
-import { categories } from '../categories'
+import { accessibleCategories } from '../categories'
 
 const parsingWorker = WebWorker.build(ParsingWorker)
 
-// TODO: Why is this loading?
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     ofType<AppAction, ExpenseRouteAction>(AvailableRoutes.EXPENSES_MONTH),
@@ -50,7 +49,7 @@ const checkImageProcessingStatusEpic: Epic<AppAction, AppAction, AppState> = (ac
     switchMap(({ payload: token }) => from(ExpensesService.getReceiptParsingResult(token)).pipe(
       map(result => processParsedImage({
         id: Date.now(),
-        categories: categories(state$.value),
+        categories: accessibleCategories(state$.value),
         parsingResult: result,
       })),
       catchError(() => of(checkProcessingStatus(token)).pipe(delay(10000))),

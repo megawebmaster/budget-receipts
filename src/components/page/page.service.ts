@@ -11,7 +11,8 @@ const budgetsCache: Budget[] = [{
   'slug': 'domowy',
   'isDefault': true,
   'abilities': null,
-  'recipient': 'wy4ECQMIG9m7lsyLSatgWtJvW5i79Y2Ff3h1bnMWQxlU92zTXdlEsvyLR7c+8IR60k8BN9+0INohjhE3dd7scsIUH6zqsMEy12lPHWEgHfLUq6K\/rzTT5HrlfdbxJAln5uEq+2kFqy0vVfbWlVriGch+4jRoc8pP2WBDix4aiZW+',
+  'recipient': '',
+  // 'recipient': 'wy4ECQMIG9m7lsyLSatgWtJvW5i79Y2Ff3h1bnMWQxlU92zTXdlEsvyLR7c+8IR60k8BN9+0INohjhE3dd7scsIUH6zqsMEy12lPHWEgHfLUq6K\/rzTT5HrlfdbxJAln5uEq+2kFqy0vVfbWlVriGch+4jRoc8pP2WBDix4aiZW+',
   'ownerId': 'email|5ad319273020501cd4911d4f',
 }]
 

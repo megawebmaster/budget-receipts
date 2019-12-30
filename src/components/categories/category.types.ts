@@ -1,7 +1,9 @@
+export type CategoryType = 'income' | 'expense' | 'irregular' | 'saving'
+
 export type Category = {
   id: number
   name: string
-  type: 'income' | 'expense' | 'irregular' | 'saving'
+  type: CategoryType
   parent: Category | null
   createdAt: string
   startedAt: string

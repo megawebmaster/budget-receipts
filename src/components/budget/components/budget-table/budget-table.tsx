@@ -1,122 +1,55 @@
-import React, { FC, Fragment } from 'react'
-import cx from 'classnames'
-import { Button, Header, Input, Label, Responsive, Segment, SemanticCOLORS, Table } from 'semantic-ui-react'
+import React, { FC, useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { Button, Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
 
-import { Category } from '../../../categories'
+import { categories as categoriesSelectors, CategoryType } from '../../../categories'
+import { createSummarySelector } from '../../budget.selectors'
 
 import styles from './budget-table.module.css'
+import { BudgetTableCategory } from '../budget-table-category'
 
 type BudgetTableProps = {
   className?: string
   color: SemanticCOLORS
-  categories: Category[]
+  categoryType: CategoryType
   editable: boolean
   label: string
 }
 
-// TODO: Extract sub-components
-// TODO: Calculate real and plan summary
+export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, editable }) => {
+  const plannedSelector = useMemo(() => createSummarySelector(categoryType, 'plan'), [categoryType])
+  const realSelector = useMemo(() => createSummarySelector(categoryType, 'real'), [categoryType])
 
-export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categories, editable }) =>
-  categories.length === 0 ? null : (
+  const categories = useSelector(categoriesSelectors[categoryType])
+  const plannedSummary = useSelector(plannedSelector)
+  const realSummary = useSelector(realSelector)
+
+  return categories.length === 0 ? null : (
     <Segment.Group>
       <Segment.Group horizontal>
         <Segment basic color={color} className={styles.header}>
           <Header as="h3">{label}</Header>
         </Segment>
         <Segment basic color={color} className={styles.header}>
-          <strong>Planned: 2000.00 PLN</strong>
+          <strong>Planned: {plannedSummary} PLN</strong>
         </Segment>
         <Segment basic color={color} className={styles.header}>
-          <strong>Real: 2000.00 PLN</strong>
+          <strong>Real: {realSummary} PLN</strong>
         </Segment>
       </Segment.Group>
       <Segment className={styles.content}>
-        {categories.map(category => {
-          const hasChildren = category.children && category.children.length > 0
-          // TODO: Fetch entries for each category using budgetEntries
-
-          return (
-            <Table
-              key={category.id}
-              singleLine
-              compact
-              className={cx(styles.table, { [styles.single]: !editable && !hasChildren })}
-            >
-              <Responsive
-                as={Table.Header}
-                minWidth={hasChildren ? Responsive.onlyTablet.minWidth : Responsive.onlyMobile.minWidth}
-              >
-                <Table.Row>
-                  <Table.HeaderCell width={4}>
-                    <span>{category.name}</span>
-                  </Table.HeaderCell>
-                  <Table.HeaderCell width={4}>
-                    <Input fluid labelPosition="right" value={1200} disabled={hasChildren}>
-                      <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-                        Planned:
-                      </Responsive>
-                      <input />
-                      <Label>PLN</Label>
-                    </Input>
-                  </Table.HeaderCell>
-                  <Table.HeaderCell width={4}>
-                    <Input fluid labelPosition="right" value={1300} disabled={hasChildren}>
-                      <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-                        Real:
-                      </Responsive>
-                      <input />
-                      <Label>PLN</Label>
-                    </Input>
-                  </Table.HeaderCell>
-                </Table.Row>
-              </Responsive>
-              {category.children && (
-                <Table.Body>
-                  {category.children.map(subcategory => (
-                    <Table.Row key={subcategory.id}>
-                      <Table.Cell>
-                        <span>
-                          <Responsive as={Fragment} {...Responsive.onlyMobile}>{category.name} - </Responsive>
-                          {subcategory.name}
-                        </span>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Input fluid labelPosition="right" value={1000}>
-                          <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-                            Planned:
-                          </Responsive>
-                          <input />
-                          <Label>PLN</Label>
-                        </Input>
-                      </Table.Cell>
-                      <Table.Cell><Input fluid labelPosition="right" value={900}>
-                        <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-                          Real:
-                        </Responsive>
-                        <input />
-                        <Label>PLN</Label>
-                      </Input>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              )}
-              {editable && (
-                <Table.Footer>
-                  <Table.Row>
-                    <Table.Cell colSpan={3}>
-                      <Button fluid basic size="tiny">Add subcategory…</Button>
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Footer>
-              )}
-            </Table>
-          )
-        })}
+        {categories.map(category => (
+          <BudgetTableCategory
+            key={`category-${category.id}`}
+            categoryId={category.id}
+            categoryType={category.type}
+            editable={editable}
+          />
+        ))}
         {editable && (
-          <Button fluid basic size="small">Add category…</Button>
+          <Button fluid basic size="small" className={styles.addCategory}>Add category…</Button>
         )}
       </Segment>
     </Segment.Group>
   )
+}

@@ -1,34 +1,6 @@
-.table.table.table {
-    border-bottom: none;
-    border-left: none;
-    border-right: none;
-    border-radius: 0;
-}
-.table.table.table thead th {
-    padding-top: .6em;
-    padding-bottom: .5em;
-}
-
-.table:first-child {
-    border-top: none;
-}
-
-.table thead th span {
-    display: inline-block;
-    height: 2em;
-    padding: .25em;
-}
-
-.table tbody td span {
-    padding: .25em 0;
-}
-
-.table:not(.single) tbody td span {
-    margin-left: 1em;
-}
-
-.single.single.single {
-    margin: 0;
+.addCategory.addCategory.addCategory {
+    margin: .5em;
+    width: calc(100% - 1em);
 }
 
 .header.header.header.header {
@@ -38,8 +10,4 @@
 .content.content.content {
     padding: 0;
     box-shadow: none;
-}
-
-.phoneLabel.phoneLabel.phoneLabel {
-    width: 80px;
 }
