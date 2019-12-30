@@ -1,10 +1,11 @@
-import React, { FC, Fragment, useMemo } from 'react'
+import React, { FC, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Button, Input, Label, Responsive, Table } from 'semantic-ui-react'
 
 import { CategoryType, createCategorySelector } from '../../../categories'
 import { createCategoryEntrySelector } from '../../budget.selectors'
+import { BudgetTableSubcategory } from '../budget-table-subcategory'
 
 import styles from './budget-table-category.module.css'
 
@@ -13,8 +14,6 @@ type BudgetTableCategoryProps = {
   categoryType: CategoryType
   editable: boolean
 }
-
-// TODO: Extract sub-components
 
 export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType, categoryId, editable }) => {
   const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
@@ -67,31 +66,11 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
       {category.children && (
         <Table.Body>
           {category.children.map(subcategory => (
-            <Table.Row key={subcategory.id}>
-              <Table.Cell>
-                <span>
-                  <Responsive as={Fragment} {...Responsive.onlyMobile}>{category.name} - </Responsive>
-                  {subcategory.name}
-                </span>
-              </Table.Cell>
-              <Table.Cell>
-                <Input fluid labelPosition="right" value={1000}>
-                  <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-                    Planned:
-                  </Responsive>
-                  <input />
-                  <Label>PLN</Label>
-                </Input>
-              </Table.Cell>
-              <Table.Cell><Input fluid labelPosition="right" value={900}>
-                <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-                  Real:
-                </Responsive>
-                <input />
-                <Label>PLN</Label>
-              </Input>
-              </Table.Cell>
-            </Table.Row>
+            <BudgetTableSubcategory
+              categoryId={category.id}
+              subcategoryId={subcategory.id}
+              categoryType={categoryType}
+            />
           ))}
         </Table.Body>
       )}
