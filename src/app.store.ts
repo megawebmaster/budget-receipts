@@ -33,8 +33,10 @@ export const configureStore = () => {
     categories: categoriesReducer,
     page: pageReducer,
   })
-  const enhancers = composeWithDevTools(
-    enhancer as unknown as StoreEnhancer<Store<any, AppAction>, {}>,
+
+  const composeEnhancers = composeWithDevTools({ trace: true })
+  const enhancers = composeEnhancers(
+    enhancer as unknown as StoreEnhancer<Store<any, AppAction>>,
     applyMiddleware(middleware, epicMiddleware),
   )
 

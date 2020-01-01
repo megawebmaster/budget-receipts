@@ -35,7 +35,7 @@ export const Budget = () => {
       </Helmet>
       <Grid className={styles.container}>
         <GridColumn mobile={16} tablet={16} computer={3}>
-          <MonthList route={AvailableRoutes.BUDGET_MONTH_ENTRIES}>
+          <MonthList route={AvailableRoutes.BUDGET_MONTH_ENTRIES} label="Budget">
             <Responsive as={Button} {...Responsive.onlyTablet} {...editCategoriesButtonProps} />
             {loading && (
               <Segment basic loading size="tiny" className={styles.inlineLoader} />

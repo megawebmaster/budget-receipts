@@ -26,7 +26,7 @@ export const Expenses = React.memo(
         </Helmet>
         <Grid className={styles.container}>
           <GridColumn mobile={16} tablet={16} computer={3}>
-            <MonthList route={AvailableRoutes.EXPENSES_MONTH}>
+            <MonthList route={AvailableRoutes.EXPENSES_MONTH} label="Expenses">
               {loading && (
                 <Segment basic loading size="tiny" className={styles.inlineLoader} />
               )}
