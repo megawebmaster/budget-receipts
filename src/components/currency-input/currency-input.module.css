@@ -6,8 +6,10 @@
     text-align: right;
 }
 
+.narrowOnMobile {}
+
 @media screen and (max-width: 767px) {
-    .input.input.input > input {
+    .input.input.input.narrowOnMobile > input {
         border-right-color: rgba(34, 36, 38, 0.15) !important;
         border-top-right-radius: 0.28571429rem !important;
         border-bottom-right-radius: 0.28571429rem !important;

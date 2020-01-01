@@ -74,7 +74,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
     return (
       <Input
         fluid
-        className={cx(styles.input, className)}
+        className={cx(styles.input, className, { [styles.narrowOnMobile]: narrowOnMobile })}
         disabled={disabled}
         error={hasError}
         labelPosition={'right'}
