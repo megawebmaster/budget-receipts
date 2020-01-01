@@ -1,11 +1,12 @@
-import React, { FC, useMemo } from 'react'
+import React, { FC, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import cx from 'classnames'
-import { Button, Input, Label, Responsive, Table } from 'semantic-ui-react'
+import { Button, Responsive, Table } from 'semantic-ui-react'
 
 import { CategoryType, createCategorySelector } from '../../../categories'
 import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
 import { BudgetTableSubcategory } from '../budget-table-subcategory'
+import { CurrencyInput } from '../../../currency-input'
 
 import styles from './budget-table-category.module.css'
 
@@ -24,6 +25,14 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
   const category = useSelector(categorySelector)
   const entry = useSelector(entrySelector)
   const loading = useSelector(budgetLoading)
+
+  const [plan, setPlan] = useState(entry.plan)
+  const [real, setReal] = useState(entry.real)
+
+  useEffect(() => {
+    setPlan(entry.plan)
+    setReal(entry.real)
+  }, [setPlan, setReal, entry])
 
   if (!category) {
     return null
@@ -47,22 +56,10 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             <span>{category.name}</span>
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
-            <Input fluid labelPosition="right" value={entry.plan} disabled={hasChildren || loading}>
-              <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-                Planned:
-              </Responsive>
-              <input />
-              <Label>PLN</Label>
-            </Input>
+            <CurrencyInput label="Planned" value={plan} currency="PLN" disabled={hasChildren || loading} onUpdate={setPlan} />
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
-            <Input fluid labelPosition="right" value={entry.real} disabled={hasChildren || loading}>
-              <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-                Real:
-              </Responsive>
-              <input />
-              <Label>PLN</Label>
-            </Input>
+            <CurrencyInput label="Real" value={real} currency="PLN" disabled={hasChildren || loading} onUpdate={setReal} />
           </Table.HeaderCell>
         </Table.Row>
       </Responsive>

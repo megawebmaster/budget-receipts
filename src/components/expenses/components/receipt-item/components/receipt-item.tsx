@@ -4,7 +4,7 @@ import { Grid, Input } from 'semantic-ui-react'
 import styles from '../receipt-item.module.css'
 import { ReceiptItem as ItemType } from '../../../receipt.types'
 import { CategoryField } from './category-field'
-import { PriceInput } from '../../price-input'
+import { CurrencyInput } from '../../../../currency-input'
 
 export type ExpensesListItemProps = {
   category?: number
@@ -34,9 +34,16 @@ export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
           <CategoryField value={category} onChange={updateCategory} />
         </Grid.Column>
         <Grid.Column mobile={8} tablet={3} computer={3}>
-          <PriceInput editable={!disabled} placeholder="Price" onUpdate={updatePrice} value={price} />
+          <CurrencyInput
+            narrowOnMobile
+            currency="PLN"
+            disabled={disabled}
+            placeholder="Price"
+            value={price || 0}
+            onUpdate={updatePrice}
+          />
         </Grid.Column>
-        <Grid.Column mobile={12} tablet={5} computer={5}>
+        <Grid.Column mobile={11} tablet={5} computer={5}>
           <Input
             fluid
             disabled={disabled}
@@ -45,7 +52,7 @@ export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
             onChange={updateDescription}
           />
         </Grid.Column>
-        <Grid.Column mobile={4} tablet={2} computer={2}>
+        <Grid.Column mobile={5} tablet={2} computer={2}>
           {children}
         </Grid.Column>
       </Grid.Row>

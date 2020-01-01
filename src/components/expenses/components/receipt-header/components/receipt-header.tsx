@@ -4,7 +4,7 @@ import { Grid, Input, Responsive } from 'semantic-ui-react'
 import styles from '../receipt-header.module.css'
 import { Receipt } from '../../../receipt.types'
 import { DayField } from './day-field'
-import { PriceInput } from '../../price-input'
+import { CurrencyInput } from '../../../../currency-input'
 
 type ReceiptHeaderProps = {
   date?: string
@@ -36,7 +36,14 @@ export const ReceiptHeader: FC<ReceiptHeaderProps> = React.memo(
           <Input fluid placeholder="Shop" defaultValue={shop} onChange={updateShop} />
         </Grid.Column>
         <Grid.Column mobile={6} tablet={5} computer={5}>
-          <PriceInput className={styles.disabledInput} editable={false} placeholder="Total" value={total} />
+          <CurrencyInput
+            narrowOnMobile
+            className={styles.disabledInput}
+            currency="PLN"
+            disabled={true}
+            placeholder="Total"
+            value={total || 0}
+          />
         </Grid.Column>
         <Responsive minWidth={Responsive.onlyTablet.minWidth} as={Grid.Column} width={4}>
           {children()}

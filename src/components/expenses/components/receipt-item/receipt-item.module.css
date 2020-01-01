@@ -11,12 +11,12 @@
         padding-left: .25rem !important;
     }
 
-    .item [class*="twelve wide mobile"] {
+    .item [class*="eleven wide mobile"] {
         padding-top: .5rem !important;
         padding-right: .25rem !important;
     }
 
-    .item [class*="four wide mobile"] {
+    .item [class*="five wide mobile"] {
         padding-top: .5rem !important;
         padding-left: .25rem !important;
     }

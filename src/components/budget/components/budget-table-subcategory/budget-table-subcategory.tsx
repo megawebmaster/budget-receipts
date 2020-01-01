@@ -1,11 +1,11 @@
-import React, { FC, Fragment, useMemo } from 'react'
+import React, { FC, Fragment, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Input, Label, Responsive, Table } from 'semantic-ui-react'
+import { Responsive, Table } from 'semantic-ui-react'
 
 import { CategoryType, createCategorySelector } from '../../../categories'
 import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
 
-import styles from './budget-table-subcategory.module.css'
+import { CurrencyInput } from '../../../currency-input'
 
 type BudgetTableSubcategoryProps = {
   categoryId: number
@@ -25,6 +25,14 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ catego
   const entry = useSelector(entrySelector)
   const loading = useSelector(budgetLoading)
 
+  const [plan, setPlan] = useState(entry.plan)
+  const [real, setReal] = useState(entry.real)
+
+  useEffect(() => {
+    setPlan(entry.plan)
+    setReal(entry.real)
+  }, [setPlan, setReal, entry])
+
   if (!category || !subcategory) {
     return null
   }
@@ -38,22 +46,10 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ catego
         </span>
       </Table.Cell>
       <Table.Cell>
-        <Input fluid labelPosition="right" value={entry.plan} disabled={loading}>
-          <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-            Planned:
-          </Responsive>
-          <input />
-          <Label>PLN</Label>
-        </Input>
+        <CurrencyInput label="Planned" value={plan} currency="PLN" disabled={loading} onUpdate={setPlan} />
       </Table.Cell>
       <Table.Cell>
-        <Input fluid labelPosition="right" value={entry.real} disabled={loading}>
-          <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-            Real:
-          </Responsive>
-          <input />
-          <Label>PLN</Label>
-        </Input>
+        <CurrencyInput label="Real" value={real} currency="PLN" disabled={loading} onUpdate={setReal} />
       </Table.Cell>
     </Table.Row>
   )

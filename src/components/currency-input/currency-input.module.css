@@ -1,0 +1,15 @@
+.phoneLabel.phoneLabel.phoneLabel {
+    width: 80px;
+}
+
+.input.input.input input {
+    text-align: right;
+}
+
+@media screen and (max-width: 767px) {
+    .input.input.input > input {
+        border-right-color: rgba(34, 36, 38, 0.15) !important;
+        border-top-right-radius: 0.28571429rem !important;
+        border-bottom-right-radius: 0.28571429rem !important;
+    }
+}
