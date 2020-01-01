@@ -4,7 +4,7 @@ import cx from 'classnames'
 import { Button, Input, Label, Responsive, Table } from 'semantic-ui-react'
 
 import { CategoryType, createCategorySelector } from '../../../categories'
-import { createCategoryEntrySelector } from '../../budget.selectors'
+import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
 import { BudgetTableSubcategory } from '../budget-table-subcategory'
 
 import styles from './budget-table-category.module.css'
@@ -15,12 +15,15 @@ type BudgetTableCategoryProps = {
   editable: boolean
 }
 
+// TODO: Add value editing
+// TODO: Add navigable table
 export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType, categoryId, editable }) => {
   const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
   const entrySelector = useMemo(() => createCategoryEntrySelector(categoryType, categoryId), [categoryType, categoryId])
 
   const category = useSelector(categorySelector)
   const entry = useSelector(entrySelector)
+  const loading = useSelector(budgetLoading)
 
   if (!category) {
     return null
@@ -44,7 +47,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             <span>{category.name}</span>
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
-            <Input fluid labelPosition="right" value={entry.plan} disabled={hasChildren}>
+            <Input fluid labelPosition="right" value={entry.plan} disabled={hasChildren || loading}>
               <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
                 Planned:
               </Responsive>
@@ -53,7 +56,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             </Input>
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
-            <Input fluid labelPosition="right" value={entry.real} disabled={hasChildren}>
+            <Input fluid labelPosition="right" value={entry.real} disabled={hasChildren || loading}>
               <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
                 Real:
               </Responsive>
@@ -67,6 +70,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
         <Table.Body>
           {category.children.map(subcategory => (
             <BudgetTableSubcategory
+              key={`subcategory-${subcategory.id}`}
               categoryId={category.id}
               subcategoryId={subcategory.id}
               categoryType={categoryType}

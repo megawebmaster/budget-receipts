@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { Input, Label, Responsive, Table } from 'semantic-ui-react'
 
 import { CategoryType, createCategorySelector } from '../../../categories'
-import { createCategoryEntrySelector } from '../../budget.selectors'
+import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
 
 import styles from './budget-table-subcategory.module.css'
 
@@ -13,6 +13,8 @@ type BudgetTableSubcategoryProps = {
   categoryType: CategoryType
 }
 
+// TODO: Add value editing
+// TODO: Extract input field
 export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ categoryType, categoryId, subcategoryId }) => {
   const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
   const subcategorySelector = useMemo(() => createCategorySelector(subcategoryId), [subcategoryId])
@@ -21,6 +23,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ catego
   const category = useSelector(categorySelector)
   const subcategory = useSelector(subcategorySelector)
   const entry = useSelector(entrySelector)
+  const loading = useSelector(budgetLoading)
 
   if (!category || !subcategory) {
     return null
@@ -35,7 +38,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ catego
         </span>
       </Table.Cell>
       <Table.Cell>
-        <Input fluid labelPosition="right" value={entry.plan}>
+        <Input fluid labelPosition="right" value={entry.plan} disabled={loading}>
           <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
             Planned:
           </Responsive>
@@ -43,13 +46,14 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ catego
           <Label>PLN</Label>
         </Input>
       </Table.Cell>
-      <Table.Cell><Input fluid labelPosition="right" value={entry.real}>
-        <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
-          Real:
-        </Responsive>
-        <input />
-        <Label>PLN</Label>
-      </Input>
+      <Table.Cell>
+        <Input fluid labelPosition="right" value={entry.real} disabled={loading}>
+          <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
+            Real:
+          </Responsive>
+          <input />
+          <Label>PLN</Label>
+        </Input>
       </Table.Cell>
     </Table.Row>
   )

@@ -5,7 +5,8 @@ export type AvailableRoutes =
   | 'ROUTES/Expenses'
   | 'ROUTES/ExpensesMonth'
   | 'ROUTES/Budget'
-  | 'ROUTES/BudgetMonth'
+  | 'ROUTES/BudgetEntries'
+  | 'ROUTES/BudgetMonthEntries'
   | '@@redux-first-router/NOT_FOUND'
 
 export const AvailableRoutes: Record<string, AvailableRoutes> = {
@@ -13,7 +14,8 @@ export const AvailableRoutes: Record<string, AvailableRoutes> = {
   EXPENSES: 'ROUTES/Expenses',
   EXPENSES_MONTH: 'ROUTES/ExpensesMonth',
   BUDGET: 'ROUTES/Budget',
-  BUDGET_MONTH: 'ROUTES/BudgetMonth',
+  BUDGET_ENTRIES: 'ROUTES/BudgetEntries',
+  BUDGET_MONTH_ENTRIES: 'ROUTES/BudgetMonthEntries',
 }
 
 export type CommonRoutePayload = {

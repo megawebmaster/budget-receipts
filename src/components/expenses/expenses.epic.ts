@@ -26,6 +26,7 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     ofType<AppAction, ExpenseRouteAction>(AvailableRoutes.EXPENSES_MONTH),
     map(({ payload: { budget, year, month } }) => (
+      // TODO: Change this URL to match existing ones
       new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/${month}/receipts`)
     )),
     mergeMap((request) => of(

@@ -1,39 +1,48 @@
-import { redirect, RoutesMap } from 'redux-first-router'
+import { redirect, RoutesMap, StateGetter } from 'redux-first-router'
+import { Dispatch } from 'redux'
 import { AppState } from '../app.store'
-import { budget as budgetSelector, year as yearSelector } from './routes.selectors'
+import { budget as budgetSelector, year as yearSelector, month as monthSelector } from './routes.selectors'
 import { AvailableRoutes } from './routes.types'
 
+const redirectToBudgetMonth = (dispatch: Dispatch, getState: StateGetter) => {
+  const state: AppState = getState()
+  const budget = budgetSelector(state)
+  const year = yearSelector(state)
+  const month = monthSelector(state)
+  dispatch(redirect({
+    type: AvailableRoutes.BUDGET_MONTH_ENTRIES,
+    payload: { budget, year, month },
+  }))
+}
+const redirectToMonthExpenses = (dispatch: Dispatch, getState: StateGetter) => {
+  const state: AppState = getState()
+  const budget = budgetSelector(state)
+  const year = yearSelector(state)
+  const month = monthSelector(state)
+  dispatch(redirect({
+    type: AvailableRoutes.EXPENSES_MONTH,
+    payload: { budget, year, month },
+  }))
+}
 export const routes: RoutesMap<{}, AppState> = {
   [AvailableRoutes.HOME]: '/',
   [AvailableRoutes.EXPENSES]: {
     path: '/:budget/:year/expenses',
-    thunk: (dispatch, getState) => {
-      const state: AppState = getState()
-      const budget = budgetSelector(state)
-      const year = yearSelector(state)
-      dispatch(redirect({
-        type: AvailableRoutes.EXPENSES_MONTH,
-        payload: { budget, year, month: new Date().getMonth() + 1 },
-      }))
-    },
+    thunk: redirectToMonthExpenses,
   },
   [AvailableRoutes.EXPENSES_MONTH]: {
     path: '/:budget/:year/expenses/:month',
     coerceNumbers: true,
   },
   [AvailableRoutes.BUDGET]: {
-    path: '/:budget/:year/budget',
-    thunk: (dispatch, getState) => {
-      const state: AppState = getState()
-      const budget = budgetSelector(state)
-      const year = yearSelector(state)
-      dispatch(redirect({
-        type: AvailableRoutes.BUDGET_MONTH,
-        payload: { budget, year, month: new Date().getMonth() + 1 },
-      }))
-    },
+    path: '/:budget',
+    thunk: redirectToBudgetMonth,
   },
-  [AvailableRoutes.BUDGET_MONTH]: {
+  [AvailableRoutes.BUDGET_ENTRIES]: {
+    path: '/:budget/:year/budget',
+    thunk: redirectToBudgetMonth,
+  },
+  [AvailableRoutes.BUDGET_MONTH_ENTRIES]: {
     path: '/:budget/:year/budget/:month',
     coerceNumbers: true,
   },

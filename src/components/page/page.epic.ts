@@ -23,12 +23,13 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     mergeAll(),
   )
 
-const loadDefaultBudgetEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+const loadDefaultBudgetEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(updateBudgets)),
+    filter(() => state$.value.location.type === AvailableRoutes.HOME),
     map(({ payload: { budgets } }) => (
       redirect({
-        type: AvailableRoutes.BUDGET_MONTH,
+        type: AvailableRoutes.BUDGET_MONTH_ENTRIES,
         payload: {
           budget: (budgets.find(budget => budget.isDefault) || budgets[0]).slug,
           year: new Date().getFullYear(),

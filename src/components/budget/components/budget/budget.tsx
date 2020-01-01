@@ -14,7 +14,7 @@ import styles from './budget.module.css'
 
 export const Budget = () => {
   const [editable, setEditable] = useState(false)
-  const toggleEditable = useCallback(() => setEditable(!editable), [editable, setEditable])
+  const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
   const year = useSelector(yearSelector)
   const month = useSelector(monthSelector)
   const messages = useSelector(pageMessages)
@@ -25,6 +25,7 @@ export const Budget = () => {
     icon: editable ? 'cancel' : 'pencil',
     onClick: toggleEditable,
     content: editable ? 'Close' : 'Edit categories',
+    disabled: loading,
   }
 
   return (
@@ -34,7 +35,7 @@ export const Budget = () => {
       </Helmet>
       <Grid className={styles.container}>
         <GridColumn mobile={16} tablet={16} computer={3}>
-          <MonthList route={AvailableRoutes.BUDGET_MONTH}>
+          <MonthList route={AvailableRoutes.BUDGET_MONTH_ENTRIES}>
             <Responsive as={Button} {...Responsive.onlyTablet} {...editCategoriesButtonProps} />
             {loading && (
               <Segment basic loading size="tiny" className={styles.inlineLoader} />

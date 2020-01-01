@@ -12,11 +12,14 @@ export const pages: Record<AvailableRoutes, Page> = {
   'ROUTES/Home': {
     component: Home
   },
-  'ROUTES/BudgetMonth': {
+  'ROUTES/BudgetMonthEntries': {
     component: Budget
   },
   'ROUTES/ExpensesMonth': {
     component: Expenses
+  },
+  'ROUTES/BudgetEntries': {
+    component: NotFound
   },
   'ROUTES/Budget': {
     component: NotFound

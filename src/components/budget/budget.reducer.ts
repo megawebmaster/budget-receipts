@@ -1,6 +1,8 @@
 import { combineReducers, Reducer } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
 import { indexBy, mergeRight, mergeWith, pipe, prop, toString, values } from 'ramda'
+import { AvailableRoutes } from '../../routes'
+import { AppAction } from '../../app.actions'
 
 import * as Actions from './budget.actions'
 import { BudgetEntry } from './budget-entry.types'
@@ -11,9 +13,9 @@ export type BudgetState = {
   loading: boolean
 }
 
-const entriesReducer: Reducer<BudgetState['entries'], BudgetAction> = (state = [], action) => {
+const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], action) => {
   switch (action.type) {
-    case getType(Actions.loadEntries):
+    case AvailableRoutes.BUDGET_MONTH_ENTRIES:
       return []
     case getType(Actions.updateEntries):
       // TODO: Do not update the object if nothing changes
@@ -29,9 +31,9 @@ const entriesReducer: Reducer<BudgetState['entries'], BudgetAction> = (state = [
   }
 }
 
-const loadingReducer: Reducer<BudgetState['loading'], BudgetAction> = (state = false, action) => {
+const loadingReducer: Reducer<BudgetState['loading'], AppAction> = (state = true, action) => {
   switch (action.type) {
-    case getType(Actions.loadEntries):
+    case AvailableRoutes.BUDGET_MONTH_ENTRIES:
       return true
     case getType(Actions.updateEntries):
       return action.payload.source !== 'network'
