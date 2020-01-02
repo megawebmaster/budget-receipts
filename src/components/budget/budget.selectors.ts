@@ -3,7 +3,7 @@ import { AppState } from '../../app.store'
 import { CategoryType } from '../categories'
 import { BudgetEntry, BudgetEntryValueType } from './budget-entry.types'
 
-export const budgetLoading = (state: AppState) => state.budget.loading
+export const budgetLoading = (state: AppState) => state.budget.loading || state.categories.loading
 export const budgetEntries = (state: AppState) => state.budget.entries
 
 const createBudgetSelector = (type: CategoryType) =>

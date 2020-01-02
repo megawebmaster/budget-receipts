@@ -1,7 +1,9 @@
 import { RouteAction } from './routes'
-import { BudgetAction } from './components/budget'
-import { ExpensesAction } from './components/expenses'
-import { PageAction } from './components/page'
+import * as BudgetActions from './components/budget/budget.actions'
+import * as CategoriesActions from './components/categories/categories.actions'
+import * as ExpensesActions from './components/expenses/expenses.actions'
+import * as PageActions from './components/page/page.actions'
+import { ActionType } from 'typesafe-actions'
 
 type NoopAction = {
   type: 'noop',
@@ -13,4 +15,10 @@ export const noop = (): NoopAction => ({
   payload: {},
 })
 
-export type AppAction = RouteAction | BudgetAction | ExpensesAction | PageAction | NoopAction
+export type AppAction =
+  RouteAction |
+  ActionType<typeof BudgetActions> |
+  ActionType<typeof CategoriesActions> |
+  ActionType<typeof ExpensesActions> |
+  ActionType<typeof PageActions> |
+  NoopAction

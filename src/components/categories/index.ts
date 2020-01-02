@@ -1,4 +1,5 @@
 export * from './categories.actions'
+export * from './categories.epic'
 export * from './categories.reducer'
 export * from './categories.selectors'
 export * from './category.types'

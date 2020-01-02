@@ -1,19 +1,19 @@
 import { combineReducers, Reducer } from 'redux'
-import { ActionType, getType } from 'typesafe-actions'
+import { getType } from 'typesafe-actions'
 import { append, filter, propEq } from 'ramda'
 
+import { AppAction } from '../../app.actions'
 import { AppMessage } from '../message-list'
-import * as Actions from './page.actions'
 import { Budget } from './budget.types'
+import * as Actions from './page.actions'
 
-export type PageAction = ActionType<typeof Actions>
 export type PageState = {
   budgets: Budget[]
   loading: boolean
   messages: AppMessage[]
 }
 
-const budgetsReducer: Reducer<PageState['budgets'], PageAction> = (state = [], action) => {
+const budgetsReducer: Reducer<PageState['budgets'], AppAction> = (state = [], action) => {
   switch (action.type) {
     case getType(Actions.updateBudgets):
       return action.payload.budgets
@@ -22,7 +22,7 @@ const budgetsReducer: Reducer<PageState['budgets'], PageAction> = (state = [], a
   }
 }
 
-const loadingReducer: Reducer<PageState['loading'], PageAction> = (state = true, action) => {
+const loadingReducer: Reducer<PageState['loading'], AppAction> = (state = true, action) => {
   switch (action.type) {
     case getType(Actions.loadBudgets):
       return true
@@ -33,7 +33,7 @@ const loadingReducer: Reducer<PageState['loading'], PageAction> = (state = true,
   }
 }
 
-const messagesReducer: Reducer<PageState['messages'], PageAction> = (state = [], action) => {
+const messagesReducer: Reducer<PageState['messages'], AppAction> = (state = [], action) => {
   switch (action.type) {
     case getType(Actions.pageError):
       return append(action.payload, state)

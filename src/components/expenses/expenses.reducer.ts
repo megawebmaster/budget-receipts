@@ -1,5 +1,5 @@
 import { combineReducers, Reducer } from 'redux'
-import { ActionType, getType } from 'typesafe-actions'
+import { getType } from 'typesafe-actions'
 import {
   append,
   complement,
@@ -25,8 +25,8 @@ import {
 } from 'ramda'
 import * as Actions from './expenses.actions'
 import { ApiReceipt, Receipt, ReceiptItem } from './receipt.types'
+import { AppAction } from '../../app.actions'
 
-export type ExpensesAction = ActionType<typeof Actions>
 export type ExpensesState = {
   items: {
     [key: string]: ReceiptItem[]
@@ -40,7 +40,7 @@ const makeItems = (receipts: ApiReceipt[]): Record<string, ReceiptItem[]> => zip
   map(prop('items'), receipts),
 )
 
-const receiptsReducer: Reducer<ExpensesState['receipts'], ExpensesAction> = (state = [], action) => {
+const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = [], action) => {
   switch (action.type) {
     case getType(Actions.loadReceipts):
       return []
@@ -86,7 +86,7 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], ExpensesAction> = (sta
   }
 }
 
-const itemsReducer: Reducer<ExpensesState['items'], ExpensesAction> = (state = {}, action) => {
+const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, action) => {
   switch (action.type) {
     case getType(Actions.loadReceipts):
       return {}
@@ -135,7 +135,7 @@ const itemsReducer: Reducer<ExpensesState['items'], ExpensesAction> = (state = {
   }
 }
 
-const loadingReducer: Reducer<ExpensesState['loading'], ExpensesAction> = (state = false, action) => {
+const loadingReducer: Reducer<ExpensesState['loading'], AppAction> = (state = false, action) => {
   switch (action.type) {
     case getType(Actions.loadReceipts):
       return true

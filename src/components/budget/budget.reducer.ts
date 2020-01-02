@@ -1,5 +1,5 @@
 import { combineReducers, Reducer } from 'redux'
-import { ActionType, getType } from 'typesafe-actions'
+import { getType } from 'typesafe-actions'
 import { findIndex, indexBy, lensPath, mergeRight, mergeWith, pathEq, pipe, prop, set, toString, values } from 'ramda'
 import { AvailableRoutes } from '../../routes'
 import { AppAction } from '../../app.actions'
@@ -7,7 +7,6 @@ import { AppAction } from '../../app.actions'
 import * as Actions from './budget.actions'
 import { BudgetEntry } from './budget-entry.types'
 
-export type BudgetAction = ActionType<typeof Actions>
 export type BudgetState = {
   entries: BudgetEntry[]
   loading: boolean

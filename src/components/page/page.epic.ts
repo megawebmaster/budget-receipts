@@ -5,14 +5,14 @@ import { redirect } from 'redux-first-router'
 import { of } from 'rxjs'
 
 import { AppAction } from '../../app.actions'
-import { clearPageMessages, loadBudgets, updateBudgets } from './page.actions'
 import { AppState } from '../../app.store'
 import { PageService } from './page.service'
 import { AvailableRoutes, RouteAction } from '../../routes'
+import * as Actions from './page.actions'
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
-    filter(isActionOf(loadBudgets)),
+    filter(isActionOf(Actions.loadBudgets)),
     map(() => (
       new Request(`${process.env.REACT_APP_API_URL}/budgets`)
     )),
@@ -25,7 +25,7 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 
 const loadDefaultBudgetEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
-    filter(isActionOf(updateBudgets)),
+    filter(isActionOf(Actions.updateBudgets)),
     filter(() => state$.value.location.type === AvailableRoutes.HOME),
     map(({ payload: { budgets } }) => (
       redirect({
@@ -42,7 +42,7 @@ const loadDefaultBudgetEpic: Epic<AppAction, AppAction, AppState> = (action$, st
 const clearErrorsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(...Object.values(AvailableRoutes)),
-    map(() => clearPageMessages()),
+    map(() => Actions.clearPageMessages()),
   )
 
 export const pageEpic = combineEpics(

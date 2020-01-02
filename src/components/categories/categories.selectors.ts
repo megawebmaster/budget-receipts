@@ -7,7 +7,7 @@ import { month, year } from '../../routes'
 import { Category, CategoryType } from './category.types'
 
 export const accessibleCategories = createSelector(
-  [year, month, (state: AppState) => state.categories],
+  [year, month, (state: AppState) => state.categories.categories],
   (year, month, categories) => categories.filter(category => {
     const started = new Date(category.startedAt)
     const startMatched = category.startedAt === null || (
@@ -28,7 +28,7 @@ export const dropdownCategories = createSelector(
 )
 
 const yearCategories = createSelector(
-  [year, (state: AppState) => state.categories],
+  [year, (state: AppState) => state.categories.categories],
   (year, categories) => categories.filter(category => {
     const started = new Date(category.startedAt)
 
