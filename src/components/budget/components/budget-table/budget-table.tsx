@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react'
+import React, { FC, useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Button, Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
 
@@ -7,6 +7,7 @@ import { createSummarySelector } from '../../budget.selectors'
 
 import styles from './budget-table.module.css'
 import { BudgetTableCategory } from '../budget-table-category'
+import { useIntl } from 'react-intl'
 
 type BudgetTableProps = {
   className?: string
@@ -17,6 +18,16 @@ type BudgetTableProps = {
 }
 
 export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, editable }) => {
+  const intl = useIntl()
+  const formatCurrency = useCallback(
+    (value: number) =>
+      intl.formatNumber(value, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [intl],
+  )
+
   const plannedSelector = useMemo(() => createSummarySelector(categoryType, 'plan'), [categoryType])
   const realSelector = useMemo(() => createSummarySelector(categoryType, 'real'), [categoryType])
 
@@ -31,10 +42,10 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
           <Header as="h3">{label}</Header>
         </Segment>
         <Segment basic color={color} className={styles.header}>
-          <strong>Planned: {plannedSummary} PLN</strong>
+          <strong>Planned: {formatCurrency(plannedSummary)} PLN</strong>
         </Segment>
         <Segment basic color={color} className={styles.header}>
-          <strong>Real: {realSummary} PLN</strong>
+          <strong>Real: {formatCurrency(realSummary)} PLN</strong>
         </Segment>
       </Segment.Group>
       <Segment className={styles.content}>
