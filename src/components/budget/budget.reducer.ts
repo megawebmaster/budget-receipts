@@ -21,9 +21,9 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
       return set(
         lensPath([
           findIndex(pathEq(['category', 'id'], action.payload.categoryId), state),
-          action.payload.type
+          action.payload.type,
         ]),
-        action.payload.value
+        action.payload.value,
       )(state)
     case getType(Actions.updateEntries):
       // TODO: Do not update the object if nothing changes

@@ -19,7 +19,7 @@ export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size
   const saveInput = useCallback(() => {
     onSave(value)
     setValue('')
-  }, [setValue, onSave])
+  }, [value, onSave])
 
   const onKeyDown = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Enter') {
@@ -38,7 +38,7 @@ export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size
     if (ref.current) {
       ref.current.focus()
     }
-  }, [ref.current])
+  }, [ref])
 
   return (
     <Input

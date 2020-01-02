@@ -76,10 +76,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
     useEffect(() => {
       setError(false)
       setFormattedPrice(formatCurrency(value))
-      if (!focused) {
-        setPrice(formatCurrency(value, false))
-      }
-    }, [value, setPrice, setFormattedPrice, setError, formatCurrency])
+    }, [value, setFormattedPrice, setError, formatCurrency])
 
     return (
       <Input
