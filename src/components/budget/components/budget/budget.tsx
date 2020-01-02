@@ -28,6 +28,7 @@ export const Budget = () => {
     disabled: loading,
   }
 
+  // TODO: Show empty loading page
   return (
     <Fragment>
       <Helmet>

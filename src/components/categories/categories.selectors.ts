@@ -22,6 +22,7 @@ export const accessibleCategories = createSelector(
   }),
 )
 
+// TODO: Make it nicer for a dropdown ;)
 export const dropdownCategories = createSelector(
   accessibleCategories,
   (categories): DropdownItemProps[] => categories.map(category => ({ text: category.name, value: category.id })),
