@@ -12,5 +12,5 @@ type UpdateBudgetEntry = {
   value: number
 }
 
-export const updateEntries = createAction('BUDGET/UpdateBudgetEntries')<UpdateBudgetEntries>()
-export const updateEntry = createAction('BUDGET/UpdateBudgetEntry')<UpdateBudgetEntry>()
+export const updateEntries = createAction('BUDGET/updateBudgetEntries')<UpdateBudgetEntries>()
+export const updateEntry = createAction('BUDGET/updateBudgetEntry')<UpdateBudgetEntry>()
