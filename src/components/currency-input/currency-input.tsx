@@ -40,22 +40,18 @@ export const CurrencyInput: FC<CurrencyInputProps> =
       const newValue = event.target.value.replace(',', '.')
 
       setFocus(false)
+      setPrice(formatCurrency(newValue, false))
 
-      if (!isNaN(newValue)) {
-        const numericValue = parseFloat(newValue)
-        setPrice(formatCurrency(numericValue, false))
-
-        if (onUpdate) {
-          onUpdate(numericValue)
-        }
+      if (!isNaN(newValue) && onUpdate) {
+        onUpdate(parseFloat(newValue))
       }
-    }, [setFocus, formatCurrency, onUpdate])
+    }, [setFocus, setPrice, formatCurrency, onUpdate])
 
     const update = useCallback((event) => {
       const newValue = event.target.value.replace(',', '.')
 
       setError(false)
-      setPrice(newValue)
+      setPrice(event.target.value)
 
       if (isNaN(newValue)) {
         setError(true)
@@ -65,10 +61,24 @@ export const CurrencyInput: FC<CurrencyInputProps> =
       setFormattedPrice(formatCurrency(parseFloat(newValue)))
     }, [setPrice, setFormattedPrice, setError, formatCurrency])
 
+    const onKeyDown = useCallback((event: KeyboardEvent) => {
+      if (event.key === 'Enter') {
+        const element = event.target as HTMLInputElement
+        const newValue = element?.value.replace(',', '.')
+        const numericValue = parseFloat(newValue)
+
+        if (newValue && !isNaN(numericValue) && onUpdate) {
+          onUpdate(numericValue)
+        }
+      }
+    }, [onUpdate])
+
     useEffect(() => {
       setError(false)
-      setPrice(formatCurrency(value, false))
       setFormattedPrice(formatCurrency(value))
+      if (!focused) {
+        setPrice(formatCurrency(value, false))
+      }
     }, [value, setPrice, setFormattedPrice, setError, formatCurrency])
 
     return (
@@ -77,10 +87,11 @@ export const CurrencyInput: FC<CurrencyInputProps> =
         className={cx(styles.input, className, { [styles.narrowOnMobile]: narrowOnMobile })}
         disabled={disabled}
         error={hasError}
-        labelPosition={'right'}
+        labelPosition="right"
         onBlur={onBlur}
         onChange={update}
         onFocus={onFocus}
+        onKeyDown={onKeyDown}
         placeholder={placeholder}
         value={focused ? price : formattedPrice}
       >
