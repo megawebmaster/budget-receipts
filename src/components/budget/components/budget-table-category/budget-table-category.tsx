@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
-import { Button, Responsive, Table } from 'semantic-ui-react'
+import { Responsive, Table } from 'semantic-ui-react'
 
 import { CategoryType, createCategorySelector } from '../../../categories'
 import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
@@ -10,6 +10,7 @@ import { CurrencyInput } from '../../../currency-input'
 import { updateEntry } from '../../budget.actions'
 
 import styles from './budget-table-category.module.css'
+import { AddButton } from '../add-button'
 
 type BudgetTableCategoryProps = {
   categoryId: number
@@ -93,7 +94,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
         <Table.Footer>
           <Table.Row>
             <Table.Cell colSpan={3}>
-              <Button fluid basic size="tiny">Add subcategory…</Button>
+              <AddButton disabled={loading} label="Add subcategory…" size="mini" onSave={() => console.log('saved')} />
             </Table.Cell>
           </Table.Row>
         </Table.Footer>

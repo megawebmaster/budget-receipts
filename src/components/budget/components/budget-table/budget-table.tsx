@@ -1,13 +1,14 @@
 import React, { FC, useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
+import { useIntl } from 'react-intl'
+import { Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
 
 import { categories as categoriesSelectors, CategoryType } from '../../../categories'
-import { createSummarySelector } from '../../budget.selectors'
+import { budgetLoading, createSummarySelector } from '../../budget.selectors'
+import { BudgetTableCategory } from '../budget-table-category'
+import { AddButton } from '../add-button'
 
 import styles from './budget-table.module.css'
-import { BudgetTableCategory } from '../budget-table-category'
-import { useIntl } from 'react-intl'
 
 type BudgetTableProps = {
   className?: string
@@ -34,6 +35,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
   const categories = useSelector(categoriesSelectors[categoryType])
   const plannedSummary = useSelector(plannedSelector)
   const realSummary = useSelector(realSelector)
+  const loading = useSelector(budgetLoading)
 
   return categories.length === 0 ? null : (
     <Segment.Group>
@@ -58,7 +60,13 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
           />
         ))}
         {editable && (
-          <Button fluid basic size="small" className={styles.addCategory}>Add category…</Button>
+          <AddButton
+            className={styles.addCategory}
+            disabled={loading}
+            label="Add category…"
+            size="large"
+            onSave={(v) => console.log('saved', v)}
+          />
         )}
       </Segment>
     </Segment.Group>

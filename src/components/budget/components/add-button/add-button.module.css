@@ -1,0 +1,9 @@
+.button.button.button {
+    text-align: left;
+}
+
+@media screen and (max-width: 767px) {
+    i.icon.icon.icon.icon.icon.icon {
+        margin-right: 0;
+    }
+}
