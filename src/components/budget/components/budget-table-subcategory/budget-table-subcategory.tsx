@@ -1,11 +1,12 @@
-import React, { FC, Fragment, useEffect, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { FC, Fragment, useCallback, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { Responsive, Table } from 'semantic-ui-react'
 
+import { CurrencyInput } from '../../../currency-input'
 import { CategoryType, createCategorySelector } from '../../../categories'
 import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
+import { updateEntry } from '../../budget.actions'
 
-import { CurrencyInput } from '../../../currency-input'
 
 type BudgetTableSubcategoryProps = {
   categoryId: number
@@ -13,8 +14,7 @@ type BudgetTableSubcategoryProps = {
   categoryType: CategoryType
 }
 
-// TODO: Add value editing
-// TODO: Extract input field
+// TODO: Navigable table
 export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ categoryType, categoryId, subcategoryId }) => {
   const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
   const subcategorySelector = useMemo(() => createCategorySelector(subcategoryId), [subcategoryId])
@@ -25,13 +25,15 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ catego
   const entry = useSelector(entrySelector)
   const loading = useSelector(budgetLoading)
 
-  const [plan, setPlan] = useState(entry.plan)
-  const [real, setReal] = useState(entry.real)
-
-  useEffect(() => {
-    setPlan(entry.plan)
-    setReal(entry.real)
-  }, [setPlan, setReal, entry])
+  const dispatch = useDispatch()
+  const updatePlanned = useCallback(
+    (value: number) => dispatch(updateEntry({ value, categoryId: subcategoryId, type: 'plan' })),
+    [dispatch, subcategoryId],
+  )
+  const updateReal = useCallback(
+    (value: number) => dispatch(updateEntry({ value, categoryId: subcategoryId, type: 'real' })),
+    [dispatch, subcategoryId],
+  )
 
   if (!category || !subcategory) {
     return null
@@ -46,10 +48,10 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> = ({ catego
         </span>
       </Table.Cell>
       <Table.Cell>
-        <CurrencyInput label="Planned" value={plan} currency="PLN" disabled={loading} onUpdate={setPlan} />
+        <CurrencyInput label="Planned" value={entry.plan} currency="PLN" disabled={loading} onUpdate={updatePlanned} />
       </Table.Cell>
       <Table.Cell>
-        <CurrencyInput label="Real" value={real} currency="PLN" disabled={loading} onUpdate={setReal} />
+        <CurrencyInput label="Real" value={entry.real} currency="PLN" disabled={loading} onUpdate={updateReal} />
       </Table.Cell>
     </Table.Row>
   )

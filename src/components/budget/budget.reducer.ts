@@ -1,6 +1,6 @@
 import { combineReducers, Reducer } from 'redux'
 import { ActionType, getType } from 'typesafe-actions'
-import { indexBy, mergeRight, mergeWith, pipe, prop, toString, values } from 'ramda'
+import { findIndex, indexBy, lensPath, mergeRight, mergeWith, pathEq, pipe, prop, set, toString, values } from 'ramda'
 import { AvailableRoutes } from '../../routes'
 import { AppAction } from '../../app.actions'
 
@@ -17,6 +17,14 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
   switch (action.type) {
     case AvailableRoutes.BUDGET_MONTH_ENTRIES:
       return []
+    case getType(Actions.updateEntry):
+      return set(
+        lensPath([
+          findIndex(pathEq(['category', 'id'], action.payload.categoryId), state),
+          action.payload.type
+        ]),
+        action.payload.value
+      )(state)
     case getType(Actions.updateEntries):
       // TODO: Do not update the object if nothing changes
       return values(

@@ -1,7 +1,7 @@
 import { createSelector, Selector } from 'reselect'
 import { AppState } from '../../app.store'
 import { CategoryType } from '../categories'
-import { BudgetEntry } from './budget-entry.types'
+import { BudgetEntry, BudgetEntryValueType } from './budget-entry.types'
 
 export const budgetLoading = (state: AppState) => state.budget.loading
 export const budgetEntries = (state: AppState) => state.budget.entries
@@ -19,13 +19,12 @@ const entries: Record<CategoryType, Selector<AppState, BudgetEntry[]>> = {
   saving: createBudgetSelector('saving'),
 }
 
-type EntryValueType = 'plan' | 'real'
 
-const reduceBudgetType = (type: EntryValueType, entries: BudgetEntry[]) => (
+const reduceBudgetType = (type: BudgetEntryValueType, entries: BudgetEntry[]) => (
   entries.reduce((result, entry) => result + (typeof entry[type] === 'number' ? entry[type] : 0.0), 0.0)
 )
 
-export const createSummarySelector = (type: CategoryType, entryType: EntryValueType) =>
+export const createSummarySelector = (type: CategoryType, entryType: BudgetEntryValueType) =>
   createSelector(entries[type], reduceBudgetType.bind(null, entryType))
 
 export const createCategoryEntrySelector = (type: CategoryType, categoryId: number): Selector<AppState, BudgetEntry> =>

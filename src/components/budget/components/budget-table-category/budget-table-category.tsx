@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { FC, useCallback, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Button, Responsive, Table } from 'semantic-ui-react'
 
@@ -7,6 +7,7 @@ import { CategoryType, createCategorySelector } from '../../../categories'
 import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
 import { BudgetTableSubcategory } from '../budget-table-subcategory'
 import { CurrencyInput } from '../../../currency-input'
+import { updateEntry } from '../../budget.actions'
 
 import styles from './budget-table-category.module.css'
 
@@ -16,7 +17,6 @@ type BudgetTableCategoryProps = {
   editable: boolean
 }
 
-// TODO: Add value editing
 // TODO: Add navigable table
 export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType, categoryId, editable }) => {
   const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
@@ -26,13 +26,15 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
   const entry = useSelector(entrySelector)
   const loading = useSelector(budgetLoading)
 
-  const [plan, setPlan] = useState(entry.plan)
-  const [real, setReal] = useState(entry.real)
-
-  useEffect(() => {
-    setPlan(entry.plan)
-    setReal(entry.real)
-  }, [setPlan, setReal, entry])
+  const dispatch = useDispatch()
+  const updatePlanned = useCallback(
+    (value: number) => dispatch(updateEntry({ categoryId, value, type: 'plan' })),
+    [dispatch, categoryId],
+  )
+  const updateReal = useCallback(
+    (value: number) => dispatch(updateEntry({ categoryId, value, type: 'real' })),
+    [dispatch, categoryId],
+  )
 
   if (!category) {
     return null
@@ -56,10 +58,22 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             <span>{category.name}</span>
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
-            <CurrencyInput label="Planned" value={plan} currency="PLN" disabled={hasChildren || loading} onUpdate={setPlan} />
+            <CurrencyInput
+              currency="PLN"
+              disabled={hasChildren || loading}
+              label="Planned"
+              value={entry.plan}
+              onUpdate={updatePlanned}
+            />
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
-            <CurrencyInput label="Real" value={real} currency="PLN" disabled={hasChildren || loading} onUpdate={setReal} />
+            <CurrencyInput
+              currency="PLN"
+              disabled={hasChildren || loading}
+              label="Real"
+              value={entry.real}
+              onUpdate={updateReal}
+            />
           </Table.HeaderCell>
         </Table.Row>
       </Responsive>
