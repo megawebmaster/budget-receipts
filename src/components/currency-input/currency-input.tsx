@@ -38,14 +38,15 @@ export const CurrencyInput: FC<CurrencyInputProps> =
     const onFocus = useCallback(() => setFocus(true), [setFocus])
     const onBlur = useCallback((event) => {
       const newValue = event.target.value.replace(',', '.')
+      const numericValue = parseFloat(newValue)
 
       setFocus(false)
       setPrice(formatCurrency(newValue, false))
 
-      if (!isNaN(newValue) && onUpdate) {
-        onUpdate(parseFloat(newValue))
+      if (!isNaN(numericValue) && value !== numericValue && onUpdate) {
+        onUpdate(numericValue)
       }
-    }, [setFocus, setPrice, formatCurrency, onUpdate])
+    }, [value, setFocus, setPrice, formatCurrency, onUpdate])
 
     const update = useCallback((event) => {
       const newValue = event.target.value.replace(',', '.')
