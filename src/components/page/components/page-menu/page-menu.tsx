@@ -2,19 +2,25 @@ import React, { Fragment, useCallback, useState } from 'react'
 import Link, { NavLink } from 'redux-first-router-link'
 import { Button, Dropdown, Icon, Menu, Responsive, Segment } from 'semantic-ui-react'
 
-import { AvailableRoutes } from '../../../../routes'
+import {
+  AvailableRoutes,
+  budget as budgetSelector,
+  month as monthSelector,
+  year as yearSelector,
+} from '../../../../routes'
 import { useSelector } from 'react-redux'
 import { budgets, budgetsLoading, currentBudget as currentBudgetSelector } from '../../page.selectors'
 
 import styles from './page-menu.module.css'
-
-const year = new Date().getFullYear()
 
 export const PageMenu = React.memo(
   () => {
     const currentBudget = useSelector(currentBudgetSelector)
     const loading = useSelector(budgetsLoading)
     const availableBudgets = useSelector(budgets)
+    const year = useSelector(yearSelector)
+    const month = useSelector(monthSelector)
+    const budget = useSelector(budgetSelector)
 
     const [expanded, setExpanded] = useState(false)
     const toggleExpanded = useCallback(() => setExpanded(value => !value), [setExpanded])
@@ -27,14 +33,14 @@ export const PageMenu = React.memo(
           <Menu.Item header as={Link} to={{ type: AvailableRoutes.HOME }}>SimplyBudget</Menu.Item>
           <Menu.Item
             as={NavLink}
-            to={{ type: AvailableRoutes.BUDGET_ENTRIES, payload: { year, budget: 'domowy' } }}
+            to={{ type: AvailableRoutes.BUDGET_MONTH_ENTRIES, payload: { year, month, budget } }}
             activeClassName="active"
           >
             Budget
           </Menu.Item>
           <Menu.Item
             as={NavLink}
-            to={{ type: AvailableRoutes.EXPENSES, payload: { year, budget: 'domowy' } }}
+            to={{ type: AvailableRoutes.EXPENSES_MONTH, payload: { year, month, budget } }}
             activeClassName="active"
           >
             Expenses
