@@ -137,8 +137,41 @@ export class BudgetEntryService {
       })
 
       return pageError({
-        text: 'Network connection failed',
         sticky: false,
+        text: 'Network connection failed',
+        type: AppMessageType.ERROR,
+      })
+    }
+  }
+
+  static update = async (url: string, body: any): Promise<AppAction> => {
+    try {
+      const response = await fetch(new Request(url, {
+        body: JSON.stringify(body),
+        headers: new Headers({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          // 'Authorization': `Bearer ${Authenticator.getToken()}`,
+        }),
+        method: 'PUT',
+      }))
+
+      if (!response.ok) {
+        const result = await response.json()
+
+        return pageError({
+          sticky: false,
+          text: Object.values(result).join('\n'),
+          type: AppMessageType.ERROR
+        });
+      }
+
+      return noop()
+    } catch (err) {
+      console.log('error', err)
+      return pageError({
+        sticky: false,
+        text: 'Network connection failed',
         type: AppMessageType.ERROR,
       })
     }
