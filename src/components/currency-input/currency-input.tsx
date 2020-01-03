@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useState } from 'react'
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Input, Label, Responsive } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
 import cx from 'classnames'
@@ -29,13 +29,18 @@ export const CurrencyInput: FC<CurrencyInputProps> =
       [intl],
     )
 
+    const ref = useRef<Input>(null)
+
     const [focused, setFocus] = useState(false)
     const [hasError, setError] = useState(false)
 
     const [price, setPrice] = useState(formatCurrency(value, false))
     const [formattedPrice, setFormattedPrice] = useState(formatCurrency(value))
 
-    const onFocus = useCallback(() => setFocus(true), [setFocus])
+    const onFocus = useCallback(() => {
+      setFocus(true)
+      ref.current?.select()
+    }, [ref, setFocus])
     const onBlur = useCallback((event) => {
       const newValue = event.target.value.replace(',', '.')
       const numericValue = parseFloat(newValue)
@@ -91,6 +96,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
         onFocus={onFocus}
         onKeyDown={onKeyDown}
         placeholder={placeholder}
+        ref={ref}
         value={focused ? price : formattedPrice}
       >
         {label && (
