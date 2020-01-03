@@ -40,18 +40,29 @@ const makeItems = (receipts: ApiReceipt[]): Record<string, ReceiptItem[]> => zip
   map(prop('items'), receipts),
 )
 
-const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = [], action) => {
+const receipts: Receipt[] = [
+  {
+    id: 1,
+    date: 20,
+    shop: 'Lidl',
+  },
+  {
+    id: 2,
+    date: 21,
+    shop: 'Biedronka',
+  },
+]
+
+const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = receipts, action) => {
   switch (action.type) {
     case getType(Actions.loadReceipts):
       return []
     case getType(Actions.updateReceipts): {
-      const { receipts } = action.payload
-
       return values(
         mergeWith(
           mergeRight,
           indexBy(pipe(prop('id'), toString), state),
-          indexBy(pipe(prop('id'), toString), receipts),
+          indexBy(pipe(prop('id'), toString), action.payload.value),
         ),
       )
     }
@@ -86,13 +97,21 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
   }
 }
 
-const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, action) => {
+const items: { [key: string]: ReceiptItem[] } = {
+  1: [
+    { id: 1, category: 2, price: 200, description: 'Test 1' },
+    { id: 2, category: 1, price: 100, description: 'Test 2' },
+  ],
+  2: [
+    { id: 3, category: 1, price: 100.23, description: 'Test 3' },
+  ],
+}
+
+const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = items, action) => {
   switch (action.type) {
     case getType(Actions.loadReceipts):
       return {}
     case getType(Actions.updateReceipts): {
-      const { receipts } = action.payload
-
       return mergeDeepWith(
         (newValues: ReceiptItem[], currentValues: ReceiptItem[]) => values(
           mergeWith(
@@ -101,7 +120,7 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
             indexBy(pipe(prop('id'), toString), newValues),
           ),
         ),
-        makeItems(receipts),
+        makeItems(action.payload.value),
         state,
       )
     }
@@ -135,10 +154,11 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
   }
 }
 
+// TODO: Restore state value and route reset to true
 const loadingReducer: Reducer<ExpensesState['loading'], AppAction> = (state = false, action) => {
   switch (action.type) {
     case getType(Actions.loadReceipts):
-      return true
+      return false
     case getType(Actions.updateReceipts):
       return state && action.payload.source !== 'network'
     default:

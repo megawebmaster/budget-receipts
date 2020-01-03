@@ -11,7 +11,7 @@ import {
   RouteAction,
   year as yearSelector,
 } from '../../routes'
-import { BudgetEntryService } from './budget.service'
+import { ConnectionService } from '../../connection.service'
 import * as Actions from './budget.actions'
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
@@ -21,8 +21,8 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/entries/${month}`)
     )),
     concatMap((request) => [
-      BudgetEntryService.fetchFromNetwork(request),
-      BudgetEntryService.loadFromCache(request),
+      ConnectionService.fetchFromNetwork(request, Actions.updateEntries),
+      ConnectionService.loadFromCache(request, Actions.updateEntries),
     ]),
     mergeAll(),
   )
@@ -43,7 +43,7 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
         },
       }
     }),
-    concatMap(({ url, body }) => BudgetEntryService.update(url, body)),
+    concatMap(({ url, body }) => ConnectionService.update(url, body)),
   )
 
 export const budgetEpic = combineEpics(

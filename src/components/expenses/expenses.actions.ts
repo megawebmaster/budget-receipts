@@ -1,10 +1,6 @@
 import { createAction } from 'typesafe-actions'
 import { ApiReceipt, ImageParsingResult, Receipt, ReceiptItem } from './receipt.types'
-
-type UpdateReceipts = {
-  receipts: ApiReceipt[]
-  source: 'network' | 'cache'
-}
+import { DownloadValue } from '../../connection.types'
 
 export type AddReceiptItem = {
   id: number
@@ -26,7 +22,7 @@ type ImageProcessingRequest = {
 }
 
 export const loadReceipts = createAction('EXPENSES/loadReceipts')<void>()
-export const updateReceipts = createAction('EXPENSES/updateReceipts')<UpdateReceipts>()
+export const updateReceipts = createAction('EXPENSES/updateReceipts')<DownloadValue<ApiReceipt>>()
 
 export const addReceipt = createAction('EXPENSES/addReceipt')<Receipt>()
 export const updateReceipt = createAction('EXPENSES/updateReceipt')<Receipt>()

@@ -8,3 +8,5 @@ export type Budget = {
   recipient: string
   ownerId: string
 }
+
+export type BudgetYear = number

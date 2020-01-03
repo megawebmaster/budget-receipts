@@ -1,10 +1,6 @@
 import { createAction } from 'typesafe-actions'
 import { BudgetEntry, BudgetEntryValueType } from './budget-entry.types'
-
-type UpdateBudgetEntries = {
-  entries: BudgetEntry[]
-  source: 'network' | 'cache'
-}
+import { DownloadValue } from '../../connection.types'
 
 type UpdateBudgetEntry = {
   categoryId: number
@@ -12,5 +8,5 @@ type UpdateBudgetEntry = {
   value: number
 }
 
-export const updateEntries = createAction('BUDGET/updateBudgetEntries')<UpdateBudgetEntries>()
+export const updateEntries = createAction('BUDGET/updateBudgetEntries')<DownloadValue<BudgetEntry>>()
 export const updateEntry = createAction('BUDGET/updateBudgetEntry')<UpdateBudgetEntry>()
