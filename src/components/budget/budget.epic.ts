@@ -27,7 +27,6 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     mergeAll(),
   )
 
-
 const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.updateEntry)),

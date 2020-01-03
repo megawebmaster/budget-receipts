@@ -98,6 +98,7 @@ const budgetEntries = [
   },
 ] as BudgetEntry[]
 
+// TODO: Add authentication
 export class BudgetEntryService {
   static loadFromCache = async (request: Request): Promise<AppAction> => {
     const cached = await caches.match(request)

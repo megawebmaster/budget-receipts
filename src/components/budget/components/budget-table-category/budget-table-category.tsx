@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Responsive, Table } from 'semantic-ui-react'
 
-import { CategoryType, createCategorySelector } from '../../../categories'
+import { CategoryType, createCategory, createCategorySelector } from '../../../categories'
 import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
 import { BudgetTableSubcategory } from '../budget-table-subcategory'
 import { CurrencyInput } from '../../../currency-input'
@@ -36,6 +36,10 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
     (value: number) => dispatch(updateEntry({ categoryId, value, type: 'real' })),
     [dispatch, categoryId],
   )
+  const addSubcategory = useCallback(
+    (value: string) => dispatch(createCategory({ value, parentId: categoryId, type: categoryType })),
+    [dispatch, categoryId],
+  )
 
   if (!category) {
     return null
@@ -43,6 +47,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
 
   const hasChildren = category.children && category.children.length > 0
 
+  // TODO: Add margin bottom to non-single table only
   return (
     <Table
       key={category.id}
@@ -94,7 +99,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
         <Table.Footer>
           <Table.Row>
             <Table.Cell colSpan={3}>
-              <AddButton disabled={loading} label="Add subcategory…" size="mini" onSave={() => console.log('saved')} />
+              <AddButton disabled={loading} label="Add subcategory…" size="mini" onSave={addSubcategory} />
             </Table.Cell>
           </Table.Row>
         </Table.Footer>
