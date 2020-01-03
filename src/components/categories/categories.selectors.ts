@@ -22,12 +22,6 @@ export const accessibleCategories = createSelector(
   }),
 )
 
-// TODO: Make it nicer for a dropdown ;)
-export const dropdownCategories = createSelector(
-  accessibleCategories,
-  (categories): DropdownItemProps[] => categories.map(category => ({ text: category.name, value: category.id })),
-)
-
 const yearCategories = createSelector(
   [year, (state: AppState) => state.categories.categories],
   (year, categories) => categories.filter(category => {
@@ -62,5 +56,27 @@ export const categories: Record<CategoryType, Selector<AppState, Category[]>> = 
 export const createCategorySelector = (categoryId: number) =>
   createSelector(
     [accessibleCategories],
-    (categories) => categories.find(category => category.id === categoryId)
+    (categories) => categories.find(category => category.id === categoryId),
   )
+
+const mapDropdownCategories = (categories: Category[], additionalLabel?: string) =>
+  categories.flatMap(category =>
+    category.children && category.children.length > 0
+      ? category.children.map(subcategory => ({
+        text: [additionalLabel, category.name, subcategory.name].filter(Boolean).join(' - '),
+        value: subcategory.id,
+      }))
+      : {
+        text: [additionalLabel, category.name].filter(Boolean).join(' - '),
+        value: category.id,
+      },
+  )
+
+// TODO: How to make `Nieregularne` translatable?
+export const dropdownCategories = createSelector(
+  [categories.expense, categories.irregular],
+  (expenseCategories, irregularCategories): DropdownItemProps[] => [
+    ...mapDropdownCategories(expenseCategories),
+    ...mapDropdownCategories(irregularCategories, 'Nieregularne'),
+  ].sort((a, b) => a.text.localeCompare(b.text)),
+)

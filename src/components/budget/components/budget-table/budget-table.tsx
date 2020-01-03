@@ -40,7 +40,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
   const dispatch = useDispatch()
   const addCategory = useCallback(
     (value: string) => dispatch(createCategory({ value, type: categoryType })),
-    [dispatch],
+    [dispatch, categoryType],
   )
 
   return categories.length === 0 ? null : (

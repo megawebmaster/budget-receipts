@@ -169,7 +169,6 @@ export class BudgetEntryService {
 
       return noop()
     } catch (err) {
-      console.log('error', err)
       return pageError({
         sticky: false,
         text: 'Network connection failed',

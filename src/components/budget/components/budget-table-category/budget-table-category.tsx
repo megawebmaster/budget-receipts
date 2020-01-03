@@ -38,7 +38,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
   )
   const addSubcategory = useCallback(
     (value: string) => dispatch(createCategory({ value, parentId: categoryId, type: categoryType })),
-    [dispatch, categoryId],
+    [dispatch, categoryId, categoryType],
   )
 
   if (!category) {
