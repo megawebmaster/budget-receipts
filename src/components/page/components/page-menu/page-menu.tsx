@@ -4,12 +4,12 @@ import { Button, Dropdown, Icon, Menu, Responsive, Segment } from 'semantic-ui-r
 
 import {
   AvailableRoutes,
-  budget as budgetSelector,
+  budget as budgetSelector, location,
   month as monthSelector,
   year as yearSelector,
 } from '../../../../routes'
 import { useSelector } from 'react-redux'
-import { budgets, budgetsLoading, currentBudget as currentBudgetSelector } from '../../page.selectors'
+import { budgets, budgetsLoading, budgetYears, currentBudget as currentBudgetSelector } from '../../page.selectors'
 
 import styles from './page-menu.module.css'
 
@@ -18,9 +18,11 @@ export const PageMenu = React.memo(
     const currentBudget = useSelector(currentBudgetSelector)
     const loading = useSelector(budgetsLoading)
     const availableBudgets = useSelector(budgets)
+    const years = useSelector(budgetYears)
     const year = useSelector(yearSelector)
     const month = useSelector(monthSelector)
     const budget = useSelector(budgetSelector)
+    const currentRoute = useSelector(location)
 
     const [expanded, setExpanded] = useState(false)
     const toggleExpanded = useCallback(() => setExpanded(value => !value), [setExpanded])
@@ -45,7 +47,23 @@ export const PageMenu = React.memo(
           >
             Expenses
           </Menu.Item>
-          <Menu.Menu position="right">}
+          <Menu.Menu position="right">
+            <Dropdown
+              item
+              loading={!years}
+              text={`Year: ${year.toString()}`}
+            >
+              <Dropdown.Menu>
+                {years.map(y =>
+                  <Dropdown.Item
+                    key={`year-${y}`}
+                    text={y}
+                    as={NavLink}
+                    to={{ type: currentRoute, payload: { budget, year: y, month: 1 } }}
+                  />,
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
             <Dropdown
               item
               loading={loading}
@@ -97,6 +115,26 @@ export const PageMenu = React.memo(
                 onClick={toggleExpanded}
               >
                 Expenses
+              </Menu.Item>
+              <Menu.Item>
+                Available years:
+                {loading && (
+                  <Segment loading size="tiny" />
+                )}
+                <Menu.Menu>
+                  {years && years.map(y => (
+                    // TODO: How to show currently selected year
+                    <Menu.Item
+                      key={`yaer-${y}`}
+                      as={NavLink}
+                      to={{ type: currentRoute, payload: { budget, year: y, month: 1 } }}
+                      activeClassName="active"
+                      onClick={toggleExpanded}
+                    >
+                      {y}
+                    </Menu.Item>
+                  ))}
+                </Menu.Menu>
               </Menu.Item>
               <Menu.Item>
                 Your budgets
