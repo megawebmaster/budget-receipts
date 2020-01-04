@@ -1,3 +1,14 @@
 .secondaryMenu.secondaryMenu.secondaryMenu {
     margin-top: 40px;
+    z-index: 1000;
+}
+
+.loader.loader.loader:before {
+    background: none;
+}
+
+.loader.loader.loader:after {
+    height: 2em;
+    width: 2em;
+    margin: -1em 0 0 -1em;
 }

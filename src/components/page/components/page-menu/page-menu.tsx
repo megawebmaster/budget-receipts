@@ -126,7 +126,7 @@ export const PageMenu = React.memo(
               <Menu.Item>
                 Available years:
                 {loadingYears && (
-                  <Segment loading size="tiny" />
+                  <Segment basic loading size="tiny" floated="right" className={styles.loader} />
                 )}
                 <Menu.Menu>
                   {years && years.map(y => (
@@ -144,10 +144,10 @@ export const PageMenu = React.memo(
                 </Menu.Menu>
               </Menu.Item>
               <Menu.Item>
-                Your budgets
                 {loadingBudgets && (
-                  <Segment loading size="tiny" />
+                  <Segment basic loading size="tiny" floated="right" className={styles.loader} />
                 )}
+                Your budgets
                 <Menu.Menu>
                   {availableBudgets && availableBudgets.map(budget => (
                     <Menu.Item
