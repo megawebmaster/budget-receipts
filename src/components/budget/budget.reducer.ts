@@ -1,12 +1,27 @@
 import { combineReducers, Reducer } from 'redux'
 import { getType } from 'typesafe-actions'
-import { findIndex, indexBy, lensPath, mergeRight, mergeWith, pathEq, pipe, prop, set, toString, values } from 'ramda'
+import {
+  append,
+  assoc,
+  findIndex,
+  indexBy,
+  lensIndex,
+  map,
+  mergeRight,
+  mergeWith,
+  over,
+  path,
+  pathEq,
+  pipe,
+  toString,
+  values,
+} from 'ramda'
 import { AvailableRoutes } from '../../routes'
 import { AppAction } from '../../app.actions'
 
 import * as Actions from './budget.actions'
 import { BudgetEntry } from './budget-entry.types'
-import { Category } from '../categories'
+import { categoryCreated, updateCategories } from '../categories'
 
 export type BudgetState = {
   entries: BudgetEntry[]
@@ -17,21 +32,34 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
   switch (action.type) {
     case AvailableRoutes.BUDGET_MONTH_ENTRIES:
       return []
-    case getType(Actions.updateEntry):
-      return set(
-        lensPath([
-          findIndex(pathEq(['category', 'id'], action.payload.categoryId), state),
-          action.payload.type,
-        ]),
-        action.payload.value,
-      )(state)
-    case getType(Actions.updateEntries):
-      // TODO: Do not update the object if nothing changes
+    case getType(categoryCreated):
+      return append({
+        id: Date.now(),
+        category: action.payload.value,
+      })(state)
+    case getType(updateCategories):
       return values(
         mergeWith(
           mergeRight,
-          indexBy(pipe(prop('id'), toString), state),
-          indexBy(pipe(prop('id'), toString), action.payload.value),
+          indexBy(
+            pipe(path(['category', 'id']), toString),
+            map((category) => ({ category, plan: 0, real: 0 }), action.payload.value),
+          ),
+          indexBy(pipe(path(['category', 'id']), toString), state),
+        ),
+      )
+    case getType(Actions.updateEntry):
+      return over(
+        lensIndex(findIndex(pathEq(['category', 'id'], action.payload.categoryId), state)),
+        assoc(action.payload.type, action.payload.value),
+      )(state)
+    case getType(Actions.updateEntries):
+      // TODO: Do not update the object if nothing changes: check `assoc`
+      return values(
+        mergeWith(
+          mergeRight,
+          indexBy(pipe(path(['category', 'id']), toString), state),
+          indexBy(pipe(path(['category', 'id']), toString), action.payload.value),
         ),
       )
     default:
