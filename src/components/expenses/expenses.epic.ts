@@ -21,12 +21,12 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     ofType<AppAction, ExpenseRouteAction>(AvailableRoutes.EXPENSES_MONTH),
     map(({ payload: { budget, year, month } }) => (
       // TODO: Change this URL to match existing ones
-      new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/${month}/receipts`)
+      `${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/${month}/receipts`
     )),
-    mergeMap((request) => of(
+    mergeMap((url) => of(
       Promise.resolve(Actions.loadReceipts()),
-      ConnectionService.fetchFromNetwork(request, Actions.updateReceipts),
-      ConnectionService.loadFromCache(request, Actions.updateReceipts),
+      ConnectionService.fetchFromNetwork(url, Actions.updateReceipts),
+      ConnectionService.loadFromCache(url, Actions.updateReceipts),
     )),
     mergeAll(),
   )

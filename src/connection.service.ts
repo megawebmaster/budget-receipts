@@ -1,5 +1,6 @@
 import { ActionType, PayloadActionCreator } from 'typesafe-actions'
 import { decamelizeKeys } from 'humps'
+import { Authenticator } from './app.auth'
 import { AppAction, noop } from './app.actions'
 import { AppMessageType } from './components/message-list'
 // noinspection TypeScriptPreferShortImport
@@ -8,9 +9,15 @@ import { CreateValue, DownloadValue } from './connection.types'
 
 export class ConnectionService {
   static loadFromCache = async <TValue>(
-    request: Request,
+    url: string,
     actionCreator: PayloadActionCreator<ActionType<AppAction>, DownloadValue<TValue>>,
   ): Promise<AppAction> => {
+    const request = new Request(url, {
+      headers: new Headers({
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${Authenticator.getToken()}`,
+      }),
+    })
     const cached = await caches.match(request)
 
     if (cached) {
@@ -26,11 +33,26 @@ export class ConnectionService {
   }
 
   static fetchFromNetwork = async <TValue>(
-    request: Request,
+    url: string,
     actionCreator: PayloadActionCreator<ActionType<AppAction>, DownloadValue<TValue>>,
   ): Promise<AppAction> => {
     try {
+      const request = new Request(url, {
+        headers: new Headers({
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${Authenticator.getToken()}`,
+        }),
+      })
       const response = await fetch(request)
+
+      if (!response.ok) {
+        return pageError({
+          sticky: false,
+          text: await response.json() as string,
+          type: AppMessageType.ERROR
+        });
+      }
+
       const cache = await caches.open('SimplyBudget')
       await cache.put(request, response.clone())
 
@@ -39,6 +61,8 @@ export class ConnectionService {
         source: 'network',
       })
     } catch (err) {
+      console.error('fetch error', err)
+
       return pageError({
         text: 'Network connection failed',
         sticky: false,
@@ -59,7 +83,7 @@ export class ConnectionService {
         headers: new Headers({
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          // 'Authorization': `Bearer ${Authenticator.getToken()}`,
+          'Authorization': `Bearer ${Authenticator.getToken()}`,
         }),
         method: 'POST',
       }))
@@ -102,7 +126,7 @@ export class ConnectionService {
         headers: new Headers({
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          // 'Authorization': `Bearer ${Authenticator.getToken()}`,
+          'Authorization': `Bearer ${Authenticator.getToken()}`,
         }),
       }))
 

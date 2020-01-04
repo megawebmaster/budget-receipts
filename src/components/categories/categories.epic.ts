@@ -21,11 +21,11 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       prevBudget === budget,
     ),
     map(({ payload: { budget } }) => (
-      new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`)
+      `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`
     )),
-    concatMap((request) => [
-      ConnectionService.fetchFromNetwork(request, Actions.updateCategories),
-      ConnectionService.loadFromCache(request, Actions.updateCategories),
+    concatMap((url) => [
+      ConnectionService.fetchFromNetwork(url, Actions.updateCategories),
+      ConnectionService.loadFromCache(url, Actions.updateCategories),
     ]),
     mergeAll(),
   )

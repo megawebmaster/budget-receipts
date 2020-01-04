@@ -14,19 +14,7 @@ export type PageState = {
   years: BudgetYear[]
 }
 
-const budgets: Budget[] = [{
-  'id': 1,
-  'userId': 'email|5ad319273020501cd4911d4f',
-  'name': 'Domowy',
-  'slug': 'domowy',
-  'isDefault': true,
-  'abilities': null,
-  'recipient': '',
-  // 'recipient': 'wy4ECQMIG9m7lsyLSatgWtJvW5i79Y2Ff3h1bnMWQxlU92zTXdlEsvyLR7c+8IR60k8BN9+0INohjhE3dd7scsIUH6zqsMEy12lPHWEgHfLUq6K\/rzTT5HrlfdbxJAln5uEq+2kFqy0vVfbWlVriGch+4jRoc8pP2WBDix4aiZW+',
-  'ownerId': 'email|5ad319273020501cd4911d4f',
-}]
-
-const budgetsReducer: Reducer<PageState['budgets'], AppAction> = (state = budgets, action) => {
+const budgetsReducer: Reducer<PageState['budgets'], AppAction> = (state = [], action) => {
   switch (action.type) {
     case getType(Actions.updateBudgets):
       return action.payload.value
@@ -35,8 +23,7 @@ const budgetsReducer: Reducer<PageState['budgets'], AppAction> = (state = budget
   }
 }
 
-const years: BudgetYear[] = [2019, 2020]
-const yearsReducer: Reducer<PageState['years'], AppAction> = (state = years, action) => {
+const yearsReducer: Reducer<PageState['years'], AppAction> = (state = [], action) => {
   switch (action.type) {
     case getType(Actions.updateBudgetYears):
       return action.payload.value
@@ -45,11 +32,10 @@ const yearsReducer: Reducer<PageState['years'], AppAction> = (state = years, act
   }
 }
 
-// TODO: Restore state value and route reset to true
-const loadingReducer: Reducer<PageState['loading'], AppAction> = (state = false, action) => {
+const loadingReducer: Reducer<PageState['loading'], AppAction> = (state = true, action) => {
   switch (action.type) {
     case getType(Actions.loadBudgets):
-      return false
+      return true
     case getType(Actions.updateBudgets):
       return action.payload.source !== 'network'
     default:

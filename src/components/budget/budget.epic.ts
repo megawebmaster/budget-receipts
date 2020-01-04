@@ -18,11 +18,11 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES),
     map(({ payload: { budget, year, month } }) => (
-      new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/entries/${month}`)
+      `${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/entries/${month}`
     )),
-    concatMap((request) => [
-      ConnectionService.fetchFromNetwork(request, Actions.updateEntries),
-      ConnectionService.loadFromCache(request, Actions.updateEntries),
+    concatMap((url) => [
+      ConnectionService.fetchFromNetwork(url, Actions.updateEntries),
+      ConnectionService.loadFromCache(url, Actions.updateEntries),
     ]),
     mergeAll(),
   )
