@@ -12,6 +12,7 @@ export type CategoriesState = {
   loading: boolean
 }
 
+// TODO: Improve `startedAt` setting and updating new category id after saving is complete
 const newCategory =
   (state: CategoriesState['categories'], { parentId, type, value }: CreateCategory): Category[] => [
     ...state,

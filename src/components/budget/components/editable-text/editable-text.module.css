@@ -1,0 +1,6 @@
+.textContainer {
+    display: flex;
+}
+.textContainer > span {
+    flex: 1 1;
+}

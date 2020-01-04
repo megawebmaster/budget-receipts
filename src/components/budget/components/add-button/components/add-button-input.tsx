@@ -27,7 +27,7 @@ export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size
       event.stopPropagation()
       saveInput()
     }
-    if (event.key === 'Esc') {
+    if (event.key === 'Escape') {
       event.preventDefault()
       event.stopPropagation()
       onClose()

@@ -11,6 +11,7 @@ import { updateEntry } from '../../budget.actions'
 
 import styles from './budget-table-category.module.css'
 import { AddButton } from '../add-button'
+import { EditableText } from '../editable-text'
 
 type BudgetTableCategoryProps = {
   categoryId: number
@@ -61,7 +62,15 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
       >
         <Table.Row>
           <Table.HeaderCell width={4}>
-            <span>{category.name}</span>
+            <EditableText
+              editable={editable}
+              saving={false}
+              value={category.name}
+              onDelete={() => null}
+              onSave={() => null}
+            >
+              {category.name}
+            </EditableText>
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
             <CurrencyInput
@@ -89,8 +98,9 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             <BudgetTableSubcategory
               key={`subcategory-${subcategory.id}`}
               categoryId={category.id}
-              subcategoryId={subcategory.id}
               categoryType={categoryType}
+              editable={editable}
+              subcategoryId={subcategory.id}
             />
           ))}
         </Table.Body>
