@@ -43,7 +43,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
     [dispatch, categoryType],
   )
 
-  return categories.length === 0 ? null : (
+  return categories.length === 0 && !editable ? null : (
     <Segment.Group>
       <Segment.Group horizontal>
         <Segment basic color={color} className={styles.header}>

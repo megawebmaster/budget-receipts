@@ -17,7 +17,9 @@ import { ConnectionService } from '../../connection.service'
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_MONTH),
-    distinctUntilChanged(({ payload: { budget: prevBudget } }, { payload: { budget } }) => prevBudget === budget),
+    distinctUntilChanged(({ payload: { budget: prevBudget } }, { payload: { budget } }) =>
+      prevBudget === budget
+    ),
     map(({ payload: { budget } }) => (
       new Request(`${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`)
     )),
