@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import cx from 'classnames'
 import { Responsive, Table } from 'semantic-ui-react'
 
-import { CategoryType, createCategory, createCategorySelector } from '../../../categories'
+import {
+  CategoryType,
+  createCategory,
+  createCategorySelector,
+  deleteCategory,
+  updateCategory,
+} from '../../../categories'
 import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
 import { BudgetTableSubcategory } from '../budget-table-subcategory'
 import { CurrencyInput } from '../../../currency-input'
@@ -41,6 +47,14 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
     (value: string) => dispatch(createCategory({ value, parentId: categoryId, type: categoryType })),
     [dispatch, categoryId, categoryType],
   )
+  const editCategory = useCallback(
+    (name: string) => dispatch(updateCategory({ name, id: categoryId })),
+    [dispatch, categoryId],
+  )
+  const removeCategory = useCallback(
+    () => dispatch(deleteCategory({ id: categoryId, type: categoryType })),
+    [dispatch, categoryId, categoryType],
+  )
 
   if (!category) {
     return null
@@ -65,8 +79,8 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
               editable={editable}
               saving={false}
               value={category.name}
-              onDelete={() => null}
-              onSave={() => null}
+              onDelete={removeCategory}
+              onSave={editCategory}
             >
               {category.name}
             </EditableText>

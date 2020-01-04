@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Responsive, Table } from 'semantic-ui-react'
 
 import { CurrencyInput } from '../../../currency-input'
-import { CategoryType, createCategorySelector } from '../../../categories'
+import { CategoryType, createCategorySelector, deleteCategory, updateCategory } from '../../../categories'
 import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
 import { updateEntry } from '../../budget.actions'
 import { EditableText } from '../editable-text'
@@ -39,6 +39,14 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
       (value: number) => dispatch(updateEntry({ value, categoryId: subcategoryId, type: 'real' })),
       [dispatch, subcategoryId],
     )
+    const editCategory = useCallback(
+      (name: string) => dispatch(updateCategory({ name, id: subcategoryId })),
+      [dispatch, subcategoryId],
+    )
+    const removeCategory = useCallback(
+      () => dispatch(deleteCategory({ id: subcategoryId, type: categoryType })),
+      [dispatch, subcategoryId, categoryType],
+    )
 
     if (!category || !subcategory) {
       return null
@@ -51,8 +59,8 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
             editable={editable}
             saving={false}
             value={subcategory.name}
-            onDelete={() => null}
-            onSave={() => null}
+            onDelete={removeCategory}
+            onSave={editCategory}
           >
             <Responsive as={Fragment} {...Responsive.onlyMobile}>{category.name} - </Responsive>
             {subcategory.name}

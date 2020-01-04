@@ -50,10 +50,14 @@ export class ConnectionService {
   static create = async (url: string, body: any): Promise<AppAction> =>
     ConnectionService._doRequest(url, body, 'POST')
 
+  static delete = async (url: string, body: any): Promise<AppAction> =>
+    ConnectionService._doRequest(url, body, 'DELETE')
+
+  // TODO: Fix API to either always use PUT or PATCH method
   static update = async (url: string, body: any): Promise<AppAction> =>
     ConnectionService._doRequest(url, body, 'PUT')
 
-  private static _doRequest = async (url: string, body: any, method: 'POST' | 'PUT'): Promise<AppAction> => {
+  private static _doRequest = async (url: string, body: any, method: 'POST' | 'PUT' | 'DELETE'): Promise<AppAction> => {
     try {
       const response = await fetch(new Request(url, {
         method,

@@ -4,8 +4,8 @@ import { getType } from 'typesafe-actions'
 import { AppAction } from '../../app.actions'
 import { AvailableRoutes } from '../../routes'
 import { Category } from './category.types'
-import { CreateCategory } from './categories.actions'
 import * as Actions from './categories.actions'
+import { CreateCategory } from './categories.actions'
 
 export type CategoriesState = {
   categories: Category[]
@@ -265,6 +265,20 @@ const categoriesReducer: Reducer<CategoriesState['categories'], AppAction> = (st
     }
     case getType(Actions.createCategory): {
       return newCategory(state, action.payload)
+    }
+    case getType(Actions.updateCategory): {
+      const { id, ...values } = action.payload
+      return state.map(category =>
+        category.id === id
+          ? {
+            ...category,
+            ...values,
+          }
+          : category,
+      )
+    }
+    case getType(Actions.deleteCategory): {
+      return state.filter(category => category.id !== action.payload.id)
     }
     default:
       return state
