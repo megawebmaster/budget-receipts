@@ -33,13 +33,12 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.createCategory)),
-    map(({ payload: { value, type, parentId } }) => {
+    map(({ payload: { id, value, type, parentId } }) => {
       const budget = budgetSelector(state$.value)
       const year = yearSelector(state$.value)
       const month = monthSelector(state$.value)
 
       return {
-        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`,
         body: {
           type,
           year,
@@ -47,9 +46,13 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
           parentId,
           name: value,
         },
+        currentId: id,
+        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`,
       }
     }),
-    concatMap(({ url, body }) => ConnectionService.create(url, body)),
+    concatMap(({ body, currentId, url }) =>
+      ConnectionService.create(currentId, url, body, Actions.categoryCreated)
+    ),
   )
 
 const updateCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>

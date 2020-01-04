@@ -22,7 +22,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
     const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
     const subcategorySelector = useMemo(() => createCategorySelector(subcategoryId), [subcategoryId])
     const entrySelector = useMemo(() =>
-      createCategoryEntrySelector(categoryType, subcategoryId), [categoryType, subcategoryId]
+      createCategoryEntrySelector(categoryType, subcategoryId), [categoryType, subcategoryId],
     )
 
     const category = useSelector(categorySelector)
@@ -52,12 +52,14 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
       return null
     }
 
+    const saving = Boolean(subcategory.saving)
+
     return (
       <Table.Row>
         <Table.Cell>
           <EditableText
             editable={editable}
-            saving={false}
+            saving={saving}
             value={subcategory.name}
             onDelete={removeCategory}
             onSave={editCategory}
@@ -67,11 +69,22 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
           </EditableText>
         </Table.Cell>
         <Table.Cell>
-          <CurrencyInput label="Planned" value={entry.plan} currency="PLN" disabled={loading}
-                         onUpdate={updatePlanned} />
+          <CurrencyInput
+            currency="PLN"
+            disabled={loading || saving}
+            label="Planned"
+            value={entry.plan}
+            onUpdate={updatePlanned}
+          />
         </Table.Cell>
         <Table.Cell>
-          <CurrencyInput label="Real" value={entry.real} currency="PLN" disabled={loading} onUpdate={updateReal} />
+          <CurrencyInput
+            currency="PLN"
+            disabled={loading || saving}
+            label="Real"
+            value={entry.real}
+            onUpdate={updateReal}
+          />
         </Table.Cell>
       </Table.Row>
     )

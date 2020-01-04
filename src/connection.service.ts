@@ -4,7 +4,7 @@ import { AppAction, noop } from './app.actions'
 import { AppMessageType } from './components/message-list'
 // noinspection TypeScriptPreferShortImport
 import { pageError } from './components/page/page.actions'
-import { DownloadValue } from './connection.types'
+import { CreateValue, DownloadValue } from './connection.types'
 
 export class ConnectionService {
   static loadFromCache = async <TValue>(
@@ -47,8 +47,45 @@ export class ConnectionService {
     }
   }
 
-  static create = async (url: string, body: any): Promise<AppAction> =>
-    ConnectionService._doRequest(url, body, 'POST')
+  static create = async<TValue> (
+    currentId: number,
+    url: string,
+    body: any,
+    actionCreator: PayloadActionCreator<ActionType<AppAction>, CreateValue<TValue>>,
+  ): Promise<AppAction> => {
+    try {
+      const response = await fetch(new Request(url, {
+        body: JSON.stringify(decamelizeKeys(body)),
+        headers: new Headers({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          // 'Authorization': `Bearer ${Authenticator.getToken()}`,
+        }),
+        method: 'POST',
+      }))
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        return pageError({
+          sticky: false,
+          text: Object.values(result).join('\n'),
+          type: AppMessageType.ERROR
+        });
+      }
+
+      return actionCreator({
+        currentId,
+        value: result as TValue
+      })
+    } catch (err) {
+      return pageError({
+        sticky: false,
+        text: 'Network connection failed',
+        type: AppMessageType.ERROR,
+      })
+    }
+  }
 
   static delete = async (url: string, body: any): Promise<AppAction> =>
     ConnectionService._doRequest(url, body, 'DELETE')

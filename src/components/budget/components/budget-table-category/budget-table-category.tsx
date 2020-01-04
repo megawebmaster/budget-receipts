@@ -44,7 +44,12 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
     [dispatch, categoryId],
   )
   const addSubcategory = useCallback(
-    (value: string) => dispatch(createCategory({ value, parentId: categoryId, type: categoryType })),
+    (value: string) => dispatch(createCategory({
+      value,
+      id: Date.now(),
+      parentId: categoryId,
+      type: categoryType
+    })),
     [dispatch, categoryId, categoryType],
   )
   const editCategory = useCallback(
@@ -61,6 +66,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
   }
 
   const hasChildren = category.children && category.children.length > 0
+  const saving = Boolean(category.saving)
 
   return (
     <Table
@@ -77,7 +83,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           <Table.HeaderCell width={4}>
             <EditableText
               editable={editable}
-              saving={false}
+              saving={saving}
               value={category.name}
               onDelete={removeCategory}
               onSave={editCategory}
@@ -88,7 +94,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           <Table.HeaderCell width={4}>
             <CurrencyInput
               currency="PLN"
-              disabled={hasChildren || loading}
+              disabled={hasChildren || loading || saving}
               label="Planned"
               value={entry.plan}
               onUpdate={updatePlanned}
@@ -97,7 +103,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           <Table.HeaderCell width={4}>
             <CurrencyInput
               currency="PLN"
-              disabled={hasChildren || loading}
+              disabled={hasChildren || loading || saving}
               label="Real"
               value={entry.real}
               onUpdate={updateReal}
@@ -122,7 +128,12 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
         <Table.Footer>
           <Table.Row>
             <Table.Cell colSpan={3}>
-              <AddButton disabled={loading} label="Add subcategory…" size="mini" onSave={addSubcategory} />
+              <AddButton
+                disabled={loading || saving}
+                label="Add subcategory…"
+                size="mini"
+                onSave={addSubcategory}
+              />
             </Table.Cell>
           </Table.Row>
         </Table.Footer>

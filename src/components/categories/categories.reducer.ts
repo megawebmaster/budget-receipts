@@ -12,19 +12,20 @@ export type CategoriesState = {
   loading: boolean
 }
 
-// TODO: Improve `startedAt` setting and updating new category id after saving is complete
+// TODO: Improve `startedAt` setting
 const newCategory =
-  (state: CategoriesState['categories'], { parentId, type, value }: CreateCategory): Category[] => [
+  (state: CategoriesState['categories'], { id, parentId, type, value }: CreateCategory): Category[] => [
     ...state,
     {
+      id,
       type,
       averageValues: [],
-      id: Date.now(),
       name: value,
       parent: parentId ? state.find(category => category.id === parentId) || null : null,
       createdAt: new Date().toString(),
       deletedAt: null,
       startedAt: new Date().toString(),
+      saving: true
     },
   ]
 
@@ -266,8 +267,14 @@ const categoriesReducer: Reducer<CategoriesState['categories'], AppAction> = (st
     case getType(Actions.createCategory): {
       return newCategory(state, action.payload)
     }
+    case getType(Actions.categoryCreated): {
+      const { currentId, value } = action.payload
+      // TODO: Ramdify it
+      return state.map(category => category.id === currentId ? value : category)
+    }
     case getType(Actions.updateCategory): {
       const { id, ...values } = action.payload
+      // TODO: Ramdify it
       return state.map(category =>
         category.id === id
           ? {

@@ -10,4 +10,5 @@ export type Category = {
   deletedAt: string | null
   averageValues: string[]
   children?: Category[]
+  saving?: boolean
 }
