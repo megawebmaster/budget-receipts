@@ -9,14 +9,21 @@ import {
   year as yearSelector,
 } from '../../../../routes'
 import { useSelector } from 'react-redux'
-import { budgets, budgetsLoading, budgetYears, currentBudget as currentBudgetSelector } from '../../page.selectors'
+import {
+  budgets,
+  budgetsLoading,
+  budgetYears,
+  budgetYearsLoading,
+  currentBudget as currentBudgetSelector,
+} from '../../page.selectors'
 
 import styles from './page-menu.module.css'
 
 export const PageMenu = React.memo(
   () => {
     const currentBudget = useSelector(currentBudgetSelector)
-    const loading = useSelector(budgetsLoading)
+    const loadingBudgets = useSelector(budgetsLoading)
+    const loadingYears = useSelector(budgetYearsLoading)
     const availableBudgets = useSelector(budgets)
     const years = useSelector(budgetYears)
     const year = useSelector(yearSelector)
@@ -50,7 +57,7 @@ export const PageMenu = React.memo(
           <Menu.Menu position="right">
             <Dropdown
               item
-              loading={!years}
+              loading={loadingYears}
               text={`Year: ${year.toString()}`}
             >
               <Dropdown.Menu>
@@ -66,7 +73,7 @@ export const PageMenu = React.memo(
             </Dropdown>
             <Dropdown
               item
-              loading={loading}
+              loading={loadingBudgets}
               text={currentBudget ? currentBudget.name : ''}
             >
               <Dropdown.Menu>
@@ -118,14 +125,14 @@ export const PageMenu = React.memo(
               </Menu.Item>
               <Menu.Item>
                 Available years:
-                {loading && (
+                {loadingYears && (
                   <Segment loading size="tiny" />
                 )}
                 <Menu.Menu>
                   {years && years.map(y => (
                     // TODO: How to show currently selected year
                     <Menu.Item
-                      key={`yaer-${y}`}
+                      key={`year-${y}`}
                       as={NavLink}
                       to={{ type: currentRoute, payload: { budget, year: y, month: 1 } }}
                       activeClassName="active"
@@ -138,7 +145,7 @@ export const PageMenu = React.memo(
               </Menu.Item>
               <Menu.Item>
                 Your budgets
-                {loading && (
+                {loadingBudgets && (
                   <Segment loading size="tiny" />
                 )}
                 <Menu.Menu>

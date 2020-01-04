@@ -4,7 +4,8 @@ import { budget } from '../../routes'
 
 export const budgets = (state: AppState) => state.page.budgets
 export const budgetYears = (state: AppState) => state.page.years
-export const budgetsLoading = (state: AppState) => state.page.loading
+export const budgetsLoading = (state: AppState) => state.page.loadingBudgets
+export const budgetYearsLoading = (state: AppState) => state.page.loadingYears
 export const pageMessages = (state: AppState) => state.page.messages
 
 export const currentBudget = createSelector(

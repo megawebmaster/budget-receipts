@@ -9,7 +9,8 @@ import * as Actions from './page.actions'
 
 export type PageState = {
   budgets: Budget[]
-  loading: boolean
+  loadingBudgets: boolean
+  loadingYears: boolean
   messages: AppMessage[]
   years: BudgetYear[]
 }
@@ -32,11 +33,22 @@ const yearsReducer: Reducer<PageState['years'], AppAction> = (state = [], action
   }
 }
 
-const loadingReducer: Reducer<PageState['loading'], AppAction> = (state = true, action) => {
+const loadingBudgetsReducer: Reducer<PageState['loadingBudgets'], AppAction> = (state = true, action) => {
   switch (action.type) {
     case getType(Actions.loadBudgets):
       return true
     case getType(Actions.updateBudgets):
+      return action.payload.source !== 'network'
+    default:
+      return state
+  }
+}
+
+const loadingYearsReducer: Reducer<PageState['loadingYears'], AppAction> = (state = true, action) => {
+  switch (action.type) {
+    case getType(Actions.loadBudgets):
+      return true
+    case getType(Actions.updateBudgetYears):
       return action.payload.source !== 'network'
     default:
       return state
@@ -56,7 +68,8 @@ const messagesReducer: Reducer<PageState['messages'], AppAction> = (state = [], 
 
 export const reducer = combineReducers({
   budgets: budgetsReducer,
-  loading: loadingReducer,
+  loadingBudgets: loadingBudgetsReducer,
+  loadingYears: loadingYearsReducer,
   messages: messagesReducer,
   years: yearsReducer,
 })
