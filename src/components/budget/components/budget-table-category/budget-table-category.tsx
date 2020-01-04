@@ -48,7 +48,6 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
 
   const hasChildren = category.children && category.children.length > 0
 
-  // TODO: Add margin bottom to non-single table only
   return (
     <Table
       key={category.id}
