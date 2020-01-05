@@ -4,6 +4,7 @@ import { IntlProvider } from 'react-intl'
 
 import { configureStore } from './app.store'
 import { Page } from './components/page'
+import { PasswordRequirement } from './components/password-requirement'
 import messages from './translations/en.json'
 
 const { store } = configureStore()
@@ -11,7 +12,9 @@ const { store } = configureStore()
 export const App = () => (
   <IntlProvider key="en" locale="en" messages={messages}>
     <Provider store={store}>
-      <Page />
+      <PasswordRequirement>
+        <Page />
+      </PasswordRequirement>
     </Provider>
   </IntlProvider>
 )

@@ -4,6 +4,7 @@ import 'semantic-ui-css/semantic.css'
 
 import { App } from './app'
 import * as serviceWorker from './serviceWorker'
+import { initEncryption } from './encryption/encryption'
 
 ReactDOM.render(<App />, document.getElementById('root'))
 
@@ -11,3 +12,4 @@ ReactDOM.render(<App />, document.getElementById('root'))
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister()
+initEncryption();

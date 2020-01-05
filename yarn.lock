@@ -1356,6 +1356,13 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/bn.js@*":
+  version "4.11.6"
+  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.6.tgz#c306c70d9358aaea33cd4eda092a742b9505967c"
+  integrity sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/classnames@^2.2.9":
   version "2.2.9"
   resolved "https://registry.yarnpkg.com/@types/classnames/-/classnames-2.2.9.tgz#d868b6febb02666330410fe7f58f3c4b8258be7b"
@@ -1444,6 +1451,13 @@
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.1.1.tgz#6d11a8c2d58405b3db9388ab740106cbfa64c3c9"
   integrity sha512-hx6zWtudh3Arsbl3cXay+JnkvVgCKzCWKv42C9J01N2T2np4h8w5X8u6Tpz5mj38kE3M9FM0Pazx8vKFFMnjLQ==
+
+"@types/openpgp@^4.4.8":
+  version "4.4.8"
+  resolved "https://registry.yarnpkg.com/@types/openpgp/-/openpgp-4.4.8.tgz#76de4187c1f7ccfe0f723ee9f2d35a8b713fbcf5"
+  integrity sha512-pYljsF1LjVCfV+c9PCT4x3e4MXXP2ktl9m5gk8WMRRgSvCbjr3q7DJhVVtxgWxbx2rxb3i0Wy+pVCLqbs3Rj9w==
+  dependencies:
+    "@types/bn.js" "*"
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -1990,6 +2004,15 @@ asn1.js@^4.0.0:
   version "4.10.1"
   resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-4.10.1.tgz#b9c2bf5805f1e64aadeed6df3a2bfafb5a73f5a0"
   integrity sha512-p32cOF5q0Zqs9uBiONKYLm6BClCoBCM5O9JfeUSlnQLBTxYdTK+pW+nXflm8UkKd2UYlEbYz5qEi0JuZR9ckSw==
+  dependencies:
+    bn.js "^4.0.0"
+    inherits "^2.0.1"
+    minimalistic-assert "^1.0.0"
+
+asn1.js@^5.0.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-5.2.0.tgz#292c0357f26a47802ac9727e8772c09c7fc9bd85"
+  integrity sha512-Q7hnYGGNYbcmGrCPulXfkEw7oW7qjWeM4ZTALmgpuIcZLxyqqKYWxCZg2UBm8bklrnB4m2mGyJPWfoktdORD8A==
   dependencies:
     bn.js "^4.0.0"
     inherits "^2.0.1"
@@ -6804,6 +6827,11 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
+node-fetch@^2.1.2:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
+
 node-forge@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
@@ -6842,6 +6870,13 @@ node-libs-browser@^2.2.1:
     url "^0.11.0"
     util "^0.11.0"
     vm-browserify "^1.0.1"
+
+node-localstorage@~1.3.0:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/node-localstorage/-/node-localstorage-1.3.1.tgz#3177ef42837f398aee5dd75e319b281e40704243"
+  integrity sha512-NMWCSWWc6JbHT5PyWlNT2i8r7PgGYXVntmKawY83k/M0UJScZ5jirb61TLnqKwd815DfBQu+lR3sRw08SPzIaQ==
+  dependencies:
+    write-file-atomic "^1.1.4"
 
 node-modules-regexp@^1.0.0:
   version "1.0.0"
@@ -7087,6 +7122,15 @@ open@^7.0.0:
   integrity sha512-K6EKzYqnwQzk+/dzJAQSBORub3xlBTxMz+ntpZpH/LyCa1o6KjXhuN+2npAaI9jaSmU3R1Q8NWf4KUWcyytGsQ==
   dependencies:
     is-wsl "^2.1.0"
+
+openpgp@^4.7.2:
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-4.7.2.tgz#87ab211e044b684ef8c8554ef0f30027dab99bf5"
+  integrity sha512-/vCTBelOvrsvgTrc22TPweH8OPIa9UR9SG2aNey9oxg/pUFvnL4yLuNuwsv3YBFSfmh+dy2wX/dH5MkyHfIwGg==
+  dependencies:
+    asn1.js "^5.0.0"
+    node-fetch "^2.1.2"
+    node-localstorage "~1.3.0"
 
 opn@^5.5.0:
   version "5.5.0"
@@ -9427,6 +9471,11 @@ slice-ansi@^2.1.0:
     astral-regex "^1.0.0"
     is-fullwidth-code-point "^2.0.0"
 
+slide@^1.1.5:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
+  integrity sha1-VusCfWW00tzmyy4tMsTUr8nh1wc=
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/snapdragon-node/-/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
@@ -10802,6 +10851,15 @@ write-file-atomic@2.4.1:
     graceful-fs "^4.1.11"
     imurmurhash "^0.1.4"
     signal-exit "^3.0.2"
+
+write-file-atomic@^1.1.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-1.3.4.tgz#f807a4f0b1d9e913ae7a48112e6cc3af1991b45f"
+  integrity sha1-+Aek8LHZ6ROuekgRLmzDrxmRtF8=
+  dependencies:
+    graceful-fs "^4.1.11"
+    imurmurhash "^0.1.4"
+    slide "^1.1.5"
 
 write@1.0.3:
   version "1.0.3"
