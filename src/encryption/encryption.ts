@@ -10,7 +10,7 @@ export const initEncryption = () => {
   })
 }
 
-class EncryptionError extends Error {
+export class EncryptionError extends Error {
   constructor(message?: string) {
     super(message)
     this.name = 'EncryptionError'
@@ -53,7 +53,7 @@ export class Encryption {
     return localStorage.getItem(`encryption-password-${budget}`)
   }
 
-  static async encrypt(budget: string, text: string) {
+  static async encrypt(budget: string, text: string): Promise<string> {
     const password = this.getPassword(budget)
     const encrypted = await openpgp.encrypt({
       message: openpgp.message.fromText(text),

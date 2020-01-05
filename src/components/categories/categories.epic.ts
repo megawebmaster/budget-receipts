@@ -13,6 +13,12 @@ import {
 } from '../../routes'
 import * as Actions from './categories.actions'
 import { ConnectionService } from '../../connection.service'
+import { decryptAction } from '../../encryption'
+
+const decryptCategories = decryptAction({
+  actionCreator: Actions.updateCategories,
+  fields: ['name'],
+})
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
@@ -24,8 +30,8 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`
     )),
     concatMap((url) => [
-      ConnectionService.fetchFromNetwork(url, Actions.updateCategories),
-      ConnectionService.loadFromCache(url, Actions.updateCategories),
+      ConnectionService.fetchFromNetwork(url, decryptCategories),
+      ConnectionService.loadFromCache(url, decryptCategories),
     ]),
     mergeAll(),
   )
@@ -50,8 +56,8 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
         url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`,
       }
     }),
-    concatMap(({ body, currentId, url }) =>
-      ConnectionService.create(currentId, url, body, Actions.categoryCreated)
+    concatMap((data) =>
+      ConnectionService.create(data, Actions.categoryCreated),
     ),
   )
 

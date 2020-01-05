@@ -1,16 +1,17 @@
 import { ActionType, PayloadActionCreator } from 'typesafe-actions'
 import { decamelizeKeys } from 'humps'
 import { Authenticator } from './app.auth'
-import { AppAction, noop } from './app.actions'
+import { AppAction } from './app.actions'
 import { AppMessageType } from './components/message-list'
+import { CreateValue, DownloadValue, RequestData } from './connection.types'
 // noinspection TypeScriptPreferShortImport
 import { pageError } from './components/page/page.actions'
-import { CreateValue, DownloadValue } from './connection.types'
+import { noop } from './system.actions'
 
 export class ConnectionService {
   static loadFromCache = async <TValue>(
     url: string,
-    actionCreator: PayloadActionCreator<ActionType<AppAction>, DownloadValue<TValue>>,
+    actionCreator: (payload: DownloadValue<TValue>) => AppAction,
   ): Promise<AppAction> => {
     const request = new Request(url, {
       headers: new Headers({
@@ -34,7 +35,7 @@ export class ConnectionService {
 
   static fetchFromNetwork = async <TValue>(
     url: string,
-    actionCreator: PayloadActionCreator<ActionType<AppAction>, DownloadValue<TValue>>,
+    actionCreator: (payload: DownloadValue<TValue>) => AppAction,
   ): Promise<AppAction> => {
     try {
       const request = new Request(url, {
@@ -49,8 +50,8 @@ export class ConnectionService {
         return pageError({
           sticky: false,
           text: await response.json() as string,
-          type: AppMessageType.ERROR
-        });
+          type: AppMessageType.ERROR,
+        })
       }
 
       const cache = await caches.open('SimplyBudget')
@@ -71,15 +72,13 @@ export class ConnectionService {
     }
   }
 
-  static create = async<TValue> (
-    currentId: number,
-    url: string,
-    body: any,
+  static create = async <TValue>(
+    data: RequestData,
     actionCreator: PayloadActionCreator<ActionType<AppAction>, CreateValue<TValue>>,
   ): Promise<AppAction> => {
     try {
-      const response = await fetch(new Request(url, {
-        body: JSON.stringify(decamelizeKeys(body)),
+      const response = await fetch(new Request(data.url, {
+        body: JSON.stringify(decamelizeKeys(data.body)),
         headers: new Headers({
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -94,13 +93,14 @@ export class ConnectionService {
         return pageError({
           sticky: false,
           text: Object.values(result).join('\n'),
-          type: AppMessageType.ERROR
-        });
+          type: AppMessageType.ERROR,
+        })
       }
 
+      // TODO: This needs to be decryptable
       return actionCreator({
-        currentId,
-        value: result as TValue
+        currentId: data.currentId,
+        value: result as TValue,
       })
     } catch (err) {
       return pageError({
@@ -136,8 +136,8 @@ export class ConnectionService {
         return pageError({
           sticky: false,
           text: Object.values(result).join('\n'),
-          type: AppMessageType.ERROR
-        });
+          type: AppMessageType.ERROR,
+        })
       }
 
       return noop()

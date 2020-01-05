@@ -40,20 +40,7 @@ const makeItems = (receipts: ApiReceipt[]): Record<string, ReceiptItem[]> => zip
   map(prop('items'), receipts),
 )
 
-const receipts: Receipt[] = [
-  {
-    id: 1,
-    date: 20,
-    shop: 'Lidl',
-  },
-  {
-    id: 2,
-    date: 21,
-    shop: 'Biedronka',
-  },
-]
-
-const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = receipts, action) => {
+const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = [], action) => {
   switch (action.type) {
     case getType(Actions.loadReceipts):
       return []
@@ -97,17 +84,7 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
   }
 }
 
-const items: { [key: string]: ReceiptItem[] } = {
-  1: [
-    { id: 1, category: 2, price: 200, description: 'Test 1' },
-    { id: 2, category: 1, price: 100, description: 'Test 2' },
-  ],
-  2: [
-    { id: 3, category: 1, price: 100.23, description: 'Test 3' },
-  ],
-}
-
-const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = items, action) => {
+const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, action) => {
   switch (action.type) {
     case getType(Actions.loadReceipts):
       return {}

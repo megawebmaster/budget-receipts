@@ -13,6 +13,12 @@ import {
 } from '../../routes'
 import { ConnectionService } from '../../connection.service'
 import * as Actions from './budget.actions'
+import { decryptAction } from '../../encryption'
+
+const decryptEntries = decryptAction({
+  actionCreator: Actions.updateEntries,
+  numericFields: ['plan', 'real'],
+})
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
@@ -21,8 +27,8 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       `${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/entries/${month}`
     )),
     concatMap((url) => [
-      ConnectionService.fetchFromNetwork(url, Actions.updateEntries),
-      ConnectionService.loadFromCache(url, Actions.updateEntries),
+      ConnectionService.fetchFromNetwork(url, decryptEntries),
+      ConnectionService.loadFromCache(url, decryptEntries),
     ]),
     mergeAll(),
   )
