@@ -30,7 +30,6 @@ export const Budget = () => {
     disabled: loading,
   }
 
-  // TODO: Show empty loading page
   return (
     <Fragment>
       <Helmet>
@@ -59,7 +58,7 @@ export const Budget = () => {
           <MessageList messages={messages} />
           <BudgetTable color="green" categoryType="income" editable={editable} label="Income" />
           <BudgetTable color="yellow" categoryType="expense" editable={editable} label="Expenses" />
-          <BudgetTable color="blue" categoryType="irregular" editable={editable} label="Irregular expenses" />
+          <BudgetTable color="blue" categoryType="irregular" editable={false} label="Irregular expenses" />
           <BudgetTable color="red" categoryType="saving" editable={editable} label="Savings" />
         </GridColumn>
       </Grid>

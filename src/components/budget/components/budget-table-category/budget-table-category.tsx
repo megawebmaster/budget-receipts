@@ -10,7 +10,12 @@ import {
   deleteCategory,
   updateCategory,
 } from '../../../categories'
-import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
+import {
+  budgetLoading,
+  createCategoryEntrySelector,
+  plannedValueDisabled,
+  realValueDisabled,
+} from '../../budget.selectors'
 import { BudgetTableSubcategory } from '../budget-table-subcategory'
 import { CurrencyInput } from '../../../currency-input'
 import { updateEntry } from '../../budget.actions'
@@ -94,7 +99,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           <Table.HeaderCell width={4}>
             <CurrencyInput
               currency="PLN"
-              disabled={hasChildren || loading || saving}
+              disabled={hasChildren || loading || saving || plannedValueDisabled(categoryType)}
               label="Planned"
               value={entry.plan}
               onUpdate={updatePlanned}
@@ -103,7 +108,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           <Table.HeaderCell width={4}>
             <CurrencyInput
               currency="PLN"
-              disabled={hasChildren || loading || saving}
+              disabled={hasChildren || loading || saving || realValueDisabled(categoryType)}
               label="Real"
               value={entry.real}
               onUpdate={updateReal}

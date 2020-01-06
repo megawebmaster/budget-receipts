@@ -4,7 +4,12 @@ import { Responsive, Table } from 'semantic-ui-react'
 
 import { CurrencyInput } from '../../../currency-input'
 import { CategoryType, createCategorySelector, deleteCategory, updateCategory } from '../../../categories'
-import { budgetLoading, createCategoryEntrySelector } from '../../budget.selectors'
+import {
+  budgetLoading,
+  createCategoryEntrySelector,
+  plannedValueDisabled,
+  realValueDisabled,
+} from '../../budget.selectors'
 import { updateEntry } from '../../budget.actions'
 import { EditableText } from '../editable-text'
 
@@ -69,7 +74,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
         <Table.Cell>
           <CurrencyInput
             currency="PLN"
-            disabled={loading || saving}
+            disabled={loading || saving || plannedValueDisabled(categoryType)}
             label="Planned"
             value={entry.plan}
             onUpdate={updatePlanned}
@@ -78,7 +83,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
         <Table.Cell>
           <CurrencyInput
             currency="PLN"
-            disabled={loading || saving}
+            disabled={loading || saving || realValueDisabled(categoryType)}
             label="Real"
             value={entry.real}
             onUpdate={updateReal}

@@ -48,3 +48,5 @@ export const createCategoryEntrySelector = (categoryId: number): Selector<AppSta
       ) as BudgetEntry,
   )
 
+export const plannedValueDisabled = (type: CategoryType) => type === 'irregular'
+export const realValueDisabled = (type: CategoryType) => type === 'irregular' || type === 'expense'
