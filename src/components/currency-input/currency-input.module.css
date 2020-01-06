@@ -14,4 +14,7 @@
         border-top-right-radius: 0.28571429rem !important;
         border-bottom-right-radius: 0.28571429rem !important;
     }
+    .input.input.input.narrowOnMobile > input:focus {
+        border-right-color: #85B7D9 !important
+    }
 }
