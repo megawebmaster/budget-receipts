@@ -39,8 +39,9 @@ export const CurrencyInput: FC<CurrencyInputProps> =
 
     const onFocus = useCallback(() => {
       setFocus(true)
+      setPrice(formatCurrency(value, false))
       ref.current?.select()
-    }, [ref, setFocus])
+    }, [ref, value, formatCurrency, setFocus])
     const onBlur = useCallback((event) => {
       const newValue = event.target.value.replace(',', '.')
       const numericValue = parseFloat(newValue)
