@@ -31,7 +31,7 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       prevBudget === budget,
     ),
     map(({ payload: { budget } }) => (
-      `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`
+      `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories`
     )),
     concatMap((url) => [
       ConnectionService.fetchFromNetwork(url, decryptCategories),
@@ -78,7 +78,7 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
           year,
           month,
         },
-        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`,
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories`,
       }
     }),
     map(encryptAction({
@@ -102,7 +102,7 @@ const updateCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
       const parent = payload.parent ?? currentCategory.parent
 
       return {
-        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories/${payload.id}`,
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories/${payload.id}`,
         value: {
           ...currentCategory,
           name: payload.name ?? currentCategory.name,
@@ -128,7 +128,7 @@ const deleteCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
       const month = monthSelector(state$.value)
 
       return {
-        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories/${id}`,
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories/${id}`,
         body: {
           year,
           month,

@@ -13,7 +13,7 @@ const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     filter(isActionOf(Actions.loadBudgets)),
     map(() => (
-      `${process.env.REACT_APP_API_URL}/budgets`
+      `${process.env.REACT_APP_API_URL}/v2/budgets`
     )),
     mergeMap((url) => [
       ConnectionService.fetchFromNetwork(url, Actions.updateBudgets),
@@ -26,7 +26,7 @@ const loadBudgetYearsEpic: Epic<AppAction, AppAction, AppState> = (action$, stat
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_ENTRIES),
     map(() => (
-      `${process.env.REACT_APP_API_URL}/budgets/${budget(state$.value)}`
+      `${process.env.REACT_APP_API_URL}/v2/budgets/${budget(state$.value)}`
     )),
     mergeMap((url) => [
       ConnectionService.fetchFromNetwork(url, Actions.updateBudgetYears),

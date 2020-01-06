@@ -25,7 +25,7 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES),
     map(({ payload: { budget, year, month } }) => (
-      `${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/entries/${month}`
+      `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}`
     )),
     concatMap((url) => [
       ConnectionService.fetchFromNetwork(url, decryptEntries),
@@ -44,10 +44,7 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
       const month = monthSelector(state$.value)
 
       return {
-        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/entries/${categoryId}`,
-        params: {
-          month,
-        },
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}/${categoryId}`,
         value: {
           ...entry,
           [type]: value,
