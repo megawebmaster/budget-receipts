@@ -10,11 +10,10 @@ import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
 import { ConnectionService } from '../../connection.service'
 import { decryptAction } from '../../encryption'
 
-// TODO: Support optional fields decrypting
-// const decryptReceipts = decryptAction({
-//   actionCreator: Actions.updateReceipts,
-//   fields: ['shop'],
-// })
+const decryptReceipts = decryptAction({
+  actionCreator: Actions.updateReceipts,
+  fields: ['shop'],
+})
 const decryptReceiptItems = decryptAction({
   actionCreator: Actions.updateReceiptItems,
   fields: ['description'],
@@ -38,7 +37,7 @@ const loadReceiptsFromApiEpic: Epic<AppAction, AppAction, AppState> = (action$) 
   action$.pipe(
     filter(isActionOf(Actions.loadReceiptsFromApi)),
     concatMap(({ payload: { source, value } }) => [
-      Actions.updateReceipts({ source, value }),
+      decryptReceipts({ source, value }),
       ...value.map((receipt) => decryptReceiptItems({ source, value: receipt.items || [] })),
     ]),
   )

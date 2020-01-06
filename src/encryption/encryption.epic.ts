@@ -52,10 +52,10 @@ const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
           value: await Promise.all(action.value.map(async (item: any) => ({
             ...item,
             ...Object.fromEntries(await Promise.all((fields || []).map(async (field) =>
-              [field, await Encryption.decrypt(budget, item[field])],
+              [field, item[field] ? await Encryption.decrypt(budget, item[field]) : ''],
             ))),
             ...Object.fromEntries(await Promise.all((numericFields || []).map(async (field) =>
-              [field, parseFloat(await Encryption.decrypt(budget, item[field]))],
+              [field, item[field] ? parseFloat(await Encryption.decrypt(budget, item[field])) : 0],
             ))),
           }))),
         }) as ApiAction
