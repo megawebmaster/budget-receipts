@@ -34,8 +34,9 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
       return []
     case getType(categoryCreated):
       return append({
-        id: Date.now(),
         category: action.payload.value,
+        plan: 0,
+        real: 0,
       })(state)
     case getType(updateCategories):
       return values(

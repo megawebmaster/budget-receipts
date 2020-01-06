@@ -53,10 +53,15 @@ export const categories: Record<CategoryType, Selector<AppState, Category[]>> = 
   saving: createCategoriesSelector(accessibleCategories, 'saving'),
 }
 
+export const hasVisibleCategories = createSelector(
+  [accessibleCategories, yearCategories],
+  (regularCategories, yearlyCategories) => regularCategories.length > 0 || yearlyCategories.length > 0
+)
+
 export const createCategorySelector = (categoryId: number) =>
   createSelector(
     [accessibleCategories],
-    (categories) => categories.find(category => category.id === categoryId),
+    (categories) => categories.find(category => category.id === categoryId) || null,
   )
 
 const mapDropdownCategories = (categories: Category[], additionalLabel?: string) =>

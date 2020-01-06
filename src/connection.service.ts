@@ -3,7 +3,7 @@ import { decamelizeKeys } from 'humps'
 import { Authenticator } from './app.auth'
 import { AppAction } from './app.actions'
 import { AppMessageType } from './components/message-list'
-import { CreateValue, DownloadValue, RequestData } from './connection.types'
+import { CreateRequest, CreateValue, DownloadValue } from './connection.types'
 // noinspection TypeScriptPreferShortImport
 import { pageError } from './components/page/page.actions'
 import { noop } from './system.actions'
@@ -72,13 +72,16 @@ export class ConnectionService {
     }
   }
 
-  static create = async <TValue>(
-    data: RequestData,
+  static create = async <TValue extends { id: number }>(
+    data: CreateRequest<TValue>,
     actionCreator: PayloadActionCreator<ActionType<AppAction>, CreateValue<TValue>>,
   ): Promise<AppAction> => {
     try {
       const response = await fetch(new Request(data.url, {
-        body: JSON.stringify(decamelizeKeys(data.body)),
+        body: JSON.stringify(decamelizeKeys({
+          ...data.params,
+          value: data.value
+        })),
         headers: new Headers({
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -97,9 +100,8 @@ export class ConnectionService {
         })
       }
 
-      // TODO: This needs to be decryptable
       return actionCreator({
-        currentId: data.currentId,
+        currentId: data.value.id,
         value: result as TValue,
       })
     } catch (err) {

@@ -1,10 +1,16 @@
 import { ActionType, createAction, getType, PayloadActionCreator } from 'typesafe-actions'
-import { DownloadValue } from '../connection.types'
+import { CreateRequest, CreateValue, DownloadValue } from '../connection.types'
 import { ApiAction } from '../api.actions'
 
 export const setEncryptionPassword = createAction('ENCRYPTION/setPassword')<string>()
 
+type TypeWithId = { id: number }
 type DecryptionActionCreator<TValue> = PayloadActionCreator<ActionType<ApiAction>, DownloadValue<TValue>>
+type EncryptionActionCreator<TValue> = PayloadActionCreator<ActionType<ApiAction>, CreateValue<TValue>>
+type ApiCall<TValue extends TypeWithId> = (
+  data: CreateRequest<TValue>,
+  actionCreator: PayloadActionCreator<ActionType<ApiAction>, CreateValue<TValue>>,
+) => Promise<any>
 type Fields<TValue> = (keyof TValue)[]
 
 type DecryptionActionParams<TValue> = {
@@ -13,12 +19,11 @@ type DecryptionActionParams<TValue> = {
   numericFields?: Fields<TValue>
 }
 
-// type EncryptionActionParams<TValue> = {
-//   call: ApiCallAction<TValue>
-//   request: RequestData
-//   fields?: Fields<TValue>
-//   numericFields?: Fields<TValue>
-// }
+type EncryptionActionParams<TValue extends TypeWithId> = {
+  api: ApiCall<TValue>
+  actionCreator: EncryptionActionCreator<TValue>
+  fields?: Fields<TValue>
+}
 
 export const decrypt = createAction('ENCRYPTION/decrypt',
   <TValue>(
@@ -30,22 +35,23 @@ export const decrypt = createAction('ENCRYPTION/decrypt',
   ) => ({ action, actionCreator, fields, name, numericFields }),
 )()
 
-// export const encrypt = createAction(
-//   'ENCRYPTION/encrypt',
-//   <TValue>(
-//     call: ApiCallAction<TValue>,
-//     request: RequestData,
-//     fields?: Fields<TValue>,
-//     numericFields?: Fields<TValue>,
-//   ) => ({ call, fields, request, numericFields }),
-// )()
+export const encrypt = createAction(
+  'ENCRYPTION/encrypt',
+  <TValue extends TypeWithId>(
+    api: ApiCall<TValue>,
+    actionCreator: EncryptionActionCreator<TValue>,
+    data: TValue,
+    name: string,
+    fields?: Fields<TValue>,
+  ) => ({ api, actionCreator, data, fields }),
+)()
 
 export const decryptAction =
   <TValue>({ actionCreator, fields, numericFields }: DecryptionActionParams<TValue>) =>
     (payload: DownloadValue<TValue>) => decrypt(payload, actionCreator, getType(actionCreator), fields, numericFields)
 
-// export const encryptAction =
-//   <TValue>({ call, fields, numericFields }: EncryptionActionParams<TValue>) =>
-//     (request: RequestData) => encrypt(call, request, fields, numericFields)
+export const encryptAction =
+  <TValue extends TypeWithId>({ api, actionCreator, fields }: EncryptionActionParams<TValue>) =>
+    (data: CreateRequest<TValue>) => encrypt(api, actionCreator, data, getType(actionCreator), fields)
 
 

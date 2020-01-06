@@ -4,7 +4,7 @@ export type Category = {
   id: number
   name: string
   type: CategoryType
-  parent: Category | null
+  parent: Category | Pick<Category, 'id'> | null
   createdAt: string
   startedAt: string
   deletedAt: string | null

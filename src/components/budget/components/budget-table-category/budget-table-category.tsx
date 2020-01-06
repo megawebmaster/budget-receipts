@@ -5,7 +5,7 @@ import { Responsive, Table } from 'semantic-ui-react'
 
 import {
   CategoryType,
-  createCategory,
+  addCategory,
   createCategorySelector,
   deleteCategory,
   updateCategory,
@@ -43,10 +43,10 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
     (value: number) => dispatch(updateEntry({ categoryId, value, type: 'real' })),
     [dispatch, categoryId],
   )
-  const addSubcategory = useCallback(
-    (value: string) => dispatch(createCategory({
-      value,
+  const createSubcategory = useCallback(
+    (value: string) => dispatch(addCategory({
       id: Date.now(),
+      name: value,
       parentId: categoryId,
       type: categoryType
     })),
@@ -132,7 +132,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
                 disabled={loading || saving}
                 label="Add subcategory…"
                 size="mini"
-                onSave={addSubcategory}
+                onSave={createSubcategory}
               />
             </Table.Cell>
           </Table.Row>

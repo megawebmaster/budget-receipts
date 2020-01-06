@@ -5,29 +5,11 @@ import { AppAction } from '../../app.actions'
 import { AvailableRoutes } from '../../routes'
 import { Category } from './category.types'
 import * as Actions from './categories.actions'
-import { CreateCategory } from './categories.actions'
 
 export type CategoriesState = {
   categories: Category[]
   loading: boolean
 }
-
-// TODO: Improve `startedAt` setting
-const newCategory =
-  (state: CategoriesState['categories'], { id, parentId, type, value }: CreateCategory): Category[] => [
-    ...state,
-    {
-      id,
-      type,
-      averageValues: [],
-      name: value,
-      parent: parentId ? state.find(category => category.id === parentId) || null : null,
-      createdAt: new Date().toString(),
-      deletedAt: null,
-      startedAt: new Date().toString(),
-      saving: true
-    },
-  ]
 
 const categoriesReducer: Reducer<CategoriesState['categories'], AppAction> = (state = [], action) => {
   switch (action.type) {
@@ -35,7 +17,7 @@ const categoriesReducer: Reducer<CategoriesState['categories'], AppAction> = (st
       return action.payload.value
     }
     case getType(Actions.createCategory): {
-      return newCategory(state, action.payload)
+      return [...state, { ...action.payload, saving: true }]
     }
     case getType(Actions.categoryCreated): {
       const { currentId, value } = action.payload

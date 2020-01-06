@@ -56,7 +56,7 @@ export class Encryption {
   static async encrypt(budget: string, text: string): Promise<string> {
     const password = this.getPassword(budget)
     const encrypted = await openpgp.encrypt({
-      message: openpgp.message.fromText(text),
+      message: message.fromText(text),
       passwords: [password],
       armor: false,
     })
@@ -77,8 +77,9 @@ export class Encryption {
 
   private static async _decryptWithPassword(password: string, encryptedText: string): Promise<string> {
     try {
+      const source = util.b64_to_Uint8Array(encryptedText)
       const plaintext = await openpgp.decrypt({
-        message: await message.readArmored(encryptedText),
+        message: await message.read(source),
         passwords: [password],
       })
 

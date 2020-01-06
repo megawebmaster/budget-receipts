@@ -1,21 +1,15 @@
-import { ActionType, PayloadAction } from 'typesafe-actions'
-import { AppAction } from './app.actions'
-
 export type CreateValue<TValue> = {
-  // TODO: Is this definition enough?
   currentId: number
   value: TValue
 }
 
 export type DownloadValue<TValue> = {
-  value: TValue[]
   source: 'network' | 'cache'
+  value: TValue[]
 }
 
-export type RequestData = {
-  body: any
-  currentId: number
+export type CreateRequest<TValue extends { id: number }> = {
+  params: Record<string, any>
   url: string
+  value: TValue
 }
-
-// export type ApiCallAction<TValue> = (data: RequestData) => Promise<PayloadAction<ActionType<AppAction>, CreateValue<TValue>>>

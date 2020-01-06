@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useIntl } from 'react-intl'
 import { Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
 
-import { categories as categoriesSelectors, CategoryType, createCategory } from '../../../categories'
+import { categories as categoriesSelectors, CategoryType, addCategory } from '../../../categories'
 import { budgetLoading, createSummarySelector } from '../../budget.selectors'
 import { BudgetTableCategory } from '../budget-table-category'
 import { AddButton } from '../add-button'
@@ -38,10 +38,10 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
   const loading = useSelector(budgetLoading)
 
   const dispatch = useDispatch()
-  const addCategory = useCallback(
-    (value: string) => dispatch(createCategory({
-      value,
+  const createCategory = useCallback(
+    (value: string) => dispatch(addCategory({
       id: Date.now(),
+      name: value,
       type: categoryType
     })),
     [dispatch, categoryType],
@@ -75,7 +75,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
             disabled={loading}
             label="Add category…"
             size="large"
-            onSave={addCategory}
+            onSave={createCategory}
           />
         )}
       </Segment>

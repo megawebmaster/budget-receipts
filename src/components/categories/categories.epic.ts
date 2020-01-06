@@ -13,7 +13,9 @@ import {
 } from '../../routes'
 import * as Actions from './categories.actions'
 import { ConnectionService } from '../../connection.service'
-import { decryptAction } from '../../encryption'
+import { decryptAction, encryptAction } from '../../encryption'
+import { createCategorySelector } from './categories.selectors'
+import { pick } from 'ramda'
 
 const decryptCategories = decryptAction({
   actionCreator: Actions.updateCategories,
@@ -36,29 +38,52 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     mergeAll(),
   )
 
+const addCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.addCategory)),
+    map(({ payload: { id, name, type, parentId } }) => {
+      const parent = parentId ? createCategorySelector(parentId)(state$.value) : null
+      const year = yearSelector(state$.value)
+      const month = monthSelector(state$.value)
+
+      return Actions.createCategory({
+        id,
+        name,
+        parent,
+        type,
+        averageValues: [],
+        createdAt: new Date().toString(),
+        deletedAt: null,
+        startedAt: new Date(year, month - 1).toString(),
+      })
+    }),
+  )
+
 const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.createCategory)),
-    map(({ payload: { id, value, type, parentId } }) => {
+    map(({ payload }) => {
       const budget = budgetSelector(state$.value)
       const year = yearSelector(state$.value)
       const month = monthSelector(state$.value)
 
       return {
-        body: {
-          type,
+        value: {
+          ...payload,
+          parent: payload.parent ? pick(['id'], payload.parent) : null,
+        },
+        params: {
           year,
           month,
-          parentId,
-          name: value,
         },
-        currentId: id,
         url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories`,
       }
     }),
-    concatMap((data) =>
-      ConnectionService.create(data, Actions.categoryCreated),
-    ),
+    map(encryptAction({
+      api: ConnectionService.create,
+      actionCreator: Actions.categoryCreated,
+      fields: ['name'],
+    })),
   )
 
 const updateCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
@@ -97,6 +122,7 @@ const deleteCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
 
 export const categoriesEpic = combineEpics(
   pageLoadEpic,
+  addCategoryEpic,
   createCategoryEpic,
   updateCategoryEpic,
   deleteCategoryEpic,

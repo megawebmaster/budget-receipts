@@ -11,20 +11,22 @@ import { budgetLoading } from '../../budget.selectors'
 import { BudgetTable } from '../budget-table'
 
 import styles from './budget.module.css'
+import { hasVisibleCategories } from '../../../categories'
 
 export const Budget = () => {
-  const [editable, setEditable] = useState(false)
+  const loading = useSelector(budgetLoading)
+  const hasCategories = useSelector(hasVisibleCategories)
+  const [editable, setEditable] = useState(!loading && !hasCategories)
   const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
   const year = useSelector(yearSelector)
   const month = useSelector(monthSelector)
   const messages = useSelector(pageMessages)
-  const loading = useSelector(budgetLoading)
 
   const editCategoriesButtonProps: ButtonProps = {
     color: editable ? 'red' : 'blue',
     icon: editable ? 'cancel' : 'pencil',
     onClick: toggleEditable,
-    content: editable ? 'Close' : 'Edit categories',
+    content: editable ? 'Close edition' : 'Edit categories',
     disabled: loading,
   }
 
