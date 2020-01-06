@@ -24,7 +24,7 @@ const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 
 const loadBudgetYearsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
-    ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_ENTRIES),
+    filter(isActionOf(Actions.loadBudgets)),
     map(() => (
       `${process.env.REACT_APP_API_URL}/v2/budgets/${budget(state$.value)}`
     )),
