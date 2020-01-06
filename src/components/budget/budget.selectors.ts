@@ -27,9 +27,9 @@ const reduceBudgetType = (type: BudgetEntryValueType, entries: BudgetEntry[]) =>
 export const createSummarySelector = (type: CategoryType, entryType: BudgetEntryValueType) =>
   createSelector(entries[type], reduceBudgetType.bind(null, entryType))
 
-export const createCategoryEntrySelector = (type: CategoryType, categoryId: number): Selector<AppState, BudgetEntry> =>
+export const createCategoryEntrySelector = (categoryId: number): Selector<AppState, BudgetEntry> =>
   createSelector(
-    entries[type],
+    budgetEntries,
     (entries) =>
       entries.find(entry => entry.category.id === categoryId) ||
       entries.filter(entry => entry.category.parent?.id === categoryId).reduce(
@@ -42,7 +42,6 @@ export const createCategoryEntrySelector = (type: CategoryType, categoryId: numb
           plan: 0,
           real: 0,
           category: {
-            type,
             id: categoryId
           }
         }

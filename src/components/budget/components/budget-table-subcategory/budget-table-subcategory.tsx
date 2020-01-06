@@ -21,9 +21,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
   ({ categoryType, categoryId, editable, subcategoryId }) => {
     const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
     const subcategorySelector = useMemo(() => createCategorySelector(subcategoryId), [subcategoryId])
-    const entrySelector = useMemo(() =>
-      createCategoryEntrySelector(categoryType, subcategoryId), [categoryType, subcategoryId],
-    )
+    const entrySelector = useMemo(() => createCategoryEntrySelector(subcategoryId), [subcategoryId])
 
     const category = useSelector(categorySelector)
     const subcategory = useSelector(subcategorySelector)

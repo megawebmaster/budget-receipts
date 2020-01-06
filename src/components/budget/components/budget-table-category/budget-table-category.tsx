@@ -28,7 +28,7 @@ type BudgetTableCategoryProps = {
 // TODO: Add navigable table
 export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType, categoryId, editable }) => {
   const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
-  const entrySelector = useMemo(() => createCategoryEntrySelector(categoryType, categoryId), [categoryType, categoryId])
+  const entrySelector = useMemo(() => createCategoryEntrySelector(categoryId), [categoryId])
 
   const category = useSelector(categorySelector)
   const entry = useSelector(entrySelector)
