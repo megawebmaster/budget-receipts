@@ -1,6 +1,6 @@
 import { createAction } from 'typesafe-actions'
 import { Category } from './category.types'
-import { CreateValue, DownloadValue } from '../../connection.types'
+import { SaveValue, DownloadValue } from '../../connection.types'
 
 export type CreateCategory = {
   id: Category['id']
@@ -24,6 +24,7 @@ export type DeleteCategory = {
 export const updateCategories = createAction('CATEGORIES/updateAll')<DownloadValue<Category>>()
 export const addCategory = createAction('CATEGORIES/addCategory')<CreateCategory>()
 export const createCategory = createAction('CATEGORIES/createCategory')<Category>()
-export const categoryCreated = createAction('CATEGORIES/categoryCreated')<CreateValue<Category>>()
+export const categoryCreated = createAction('CATEGORIES/categoryCreated')<SaveValue<Category>>()
 export const updateCategory = createAction('CATEGORIES/updateCategory')<UpdateCategory>()
+export const categoryUpdated = createAction('CATEGORIES/categoryUpdated')<SaveValue<Category>>()
 export const deleteCategory = createAction('CATEGORIES/deleteCategory')<DeleteCategory>()

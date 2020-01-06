@@ -3,7 +3,7 @@ import { decamelizeKeys } from 'humps'
 import { Authenticator } from './app.auth'
 import { AppAction } from './app.actions'
 import { AppMessageType } from './components/message-list'
-import { CreateRequest, CreateValue, DownloadValue } from './connection.types'
+import { ApiRequest, SaveValue, DownloadValue } from './connection.types'
 // noinspection TypeScriptPreferShortImport
 import { pageError } from './components/page/page.actions'
 import { noop } from './system.actions'
@@ -72,12 +72,56 @@ export class ConnectionService {
     }
   }
 
+  static delete = async (url: string, body: any): Promise<AppAction> => {
+    try {
+      const response = await fetch(new Request(url, {
+        body: JSON.stringify(decamelizeKeys(body)),
+        headers: new Headers({
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Authenticator.getToken()}`,
+        }),
+        method: 'DELETE',
+      }))
+
+      if (!response.ok) {
+        const result = await response.json()
+
+        return pageError({
+          sticky: false,
+          text: Object.values(result).join('\n'),
+          type: AppMessageType.ERROR,
+        })
+      }
+
+      return noop()
+    } catch (err) {
+      return pageError({
+        sticky: false,
+        text: 'Network connection failed',
+        type: AppMessageType.ERROR,
+      })
+    }
+  }
+
   static create = async <TValue extends { id: number }>(
-    data: CreateRequest<TValue>,
-    actionCreator: PayloadActionCreator<ActionType<AppAction>, CreateValue<TValue>>,
+    data: ApiRequest<TValue>,
+    actionCreator: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
+  ): Promise<AppAction> => ConnectionService._doRequest(data, actionCreator, 'POST')
+
+  static update = async <TValue extends { id: number }>(
+    data: ApiRequest<TValue>,
+    actionCreator: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
+  ): Promise<AppAction> => ConnectionService._doRequest(data, actionCreator, 'PUT')
+
+  static _doRequest = async <TValue extends { id: number }>(
+    data: ApiRequest<TValue>,
+    actionCreator: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
+    method: 'POST' | 'PUT'
   ): Promise<AppAction> => {
     try {
       const response = await fetch(new Request(data.url, {
+        method,
         body: JSON.stringify(decamelizeKeys({
           ...data.params,
           value: data.value
@@ -87,7 +131,6 @@ export class ConnectionService {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${Authenticator.getToken()}`,
         }),
-        method: 'POST',
       }))
 
       const result = await response.json()
@@ -104,45 +147,6 @@ export class ConnectionService {
         currentId: data.value.id,
         value: result as TValue,
       })
-    } catch (err) {
-      return pageError({
-        sticky: false,
-        text: 'Network connection failed',
-        type: AppMessageType.ERROR,
-      })
-    }
-  }
-
-  static delete = async (url: string, body: any): Promise<AppAction> =>
-    ConnectionService._doRequest(url, body, 'DELETE')
-
-  // TODO: Fix API to either always use PUT or PATCH method
-  static update = async (url: string, body: any): Promise<AppAction> =>
-    ConnectionService._doRequest(url, body, 'PUT')
-
-  private static _doRequest = async (url: string, body: any, method: 'POST' | 'PUT' | 'DELETE'): Promise<AppAction> => {
-    try {
-      const response = await fetch(new Request(url, {
-        method,
-        body: JSON.stringify(decamelizeKeys(body)),
-        headers: new Headers({
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Authenticator.getToken()}`,
-        }),
-      }))
-
-      if (!response.ok) {
-        const result = await response.json()
-
-        return pageError({
-          sticky: false,
-          text: Object.values(result).join('\n'),
-          type: AppMessageType.ERROR,
-        })
-      }
-
-      return noop()
     } catch (err) {
       return pageError({
         sticky: false,

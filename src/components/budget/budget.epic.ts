@@ -33,26 +33,26 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     mergeAll(),
   )
 
-const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
-  action$.pipe(
-    filter(isActionOf(Actions.updateEntry)),
-    map(({ payload: { categoryId, value, type } }) => {
-      const budget = budgetSelector(state$.value)
-      const year = yearSelector(state$.value)
-      const month = monthSelector(state$.value)
-
-      return {
-        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/entries/${categoryId}`,
-        body: {
-          month,
-          [type]: value,
-        },
-      }
-    }),
-    concatMap(({ url, body }) => ConnectionService.update(url, body)),
-  )
+// const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+//   action$.pipe(
+//     filter(isActionOf(Actions.updateEntry)),
+//     map(({ payload: { categoryId, value, type } }) => {
+//       const budget = budgetSelector(state$.value)
+//       const year = yearSelector(state$.value)
+//       const month = monthSelector(state$.value)
+//
+//       return {
+//         url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/${year}/entries/${categoryId}`,
+//         body: {
+//           month,
+//           [type]: value,
+//         },
+//       }
+//     }),
+//     concatMap(({ url, body }) => ConnectionService.update(url, body)),
+//   )
 
 export const budgetEpic = combineEpics(
   pageLoadEpic,
-  updateEntryEpic,
+  // updateEntryEpic,
 )

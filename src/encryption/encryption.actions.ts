@@ -1,15 +1,15 @@
 import { ActionType, createAction, getType, PayloadActionCreator } from 'typesafe-actions'
-import { CreateRequest, CreateValue, DownloadValue } from '../connection.types'
+import { ApiRequest, SaveValue, DownloadValue } from '../connection.types'
 import { ApiAction } from '../api.actions'
 
 export const setEncryptionPassword = createAction('ENCRYPTION/setPassword')<string>()
 
 type TypeWithId = { id: number }
 type DecryptionActionCreator<TValue> = PayloadActionCreator<ActionType<ApiAction>, DownloadValue<TValue>>
-type EncryptionActionCreator<TValue> = PayloadActionCreator<ActionType<ApiAction>, CreateValue<TValue>>
+type EncryptionActionCreator<TValue> = PayloadActionCreator<ActionType<ApiAction>, SaveValue<TValue>>
 type ApiCall<TValue extends TypeWithId> = (
-  data: CreateRequest<TValue>,
-  actionCreator: PayloadActionCreator<ActionType<ApiAction>, CreateValue<TValue>>,
+  data: ApiRequest<TValue>,
+  actionCreator: PayloadActionCreator<ActionType<ApiAction>, SaveValue<TValue>>,
 ) => Promise<any>
 type Fields<TValue> = (keyof TValue)[]
 
@@ -52,6 +52,6 @@ export const decryptAction =
 
 export const encryptAction =
   <TValue extends TypeWithId>({ api, actionCreator, fields }: EncryptionActionParams<TValue>) =>
-    (data: CreateRequest<TValue>) => encrypt(api, actionCreator, data, getType(actionCreator), fields)
+    (data: ApiRequest<TValue>) => encrypt(api, actionCreator, data, getType(actionCreator), fields)
 
 

@@ -1,6 +1,7 @@
 import { combineEpics, Epic, ofType } from 'redux-observable'
 import { concatMap, distinctUntilChanged, filter, map, mergeAll } from 'rxjs/operators'
 import { isActionOf } from 'typesafe-actions'
+import { pick } from 'ramda'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
@@ -15,7 +16,8 @@ import * as Actions from './categories.actions'
 import { ConnectionService } from '../../connection.service'
 import { decryptAction, encryptAction } from '../../encryption'
 import { createCategorySelector } from './categories.selectors'
-import { pick } from 'ramda'
+import { ApiRequest } from '../../connection.types'
+import { Category } from './category.types'
 
 const decryptCategories = decryptAction({
   actionCreator: Actions.updateCategories,
@@ -89,15 +91,32 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
 const updateCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.updateCategory)),
-    map(({ payload: { id, ...values } }) => {
+    map(({ payload }) => {
+      const currentCategory = createCategorySelector(payload.id)(state$.value)
+
+      if (!currentCategory) {
+        return null
+      }
+
       const budget = budgetSelector(state$.value)
+      const parent = payload.parent ?? currentCategory.parent
 
       return {
-        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories/${id}`,
-        body: values,
+        url: `${process.env.REACT_APP_API_URL}/budgets/${budget}/categories/${payload.id}`,
+        value: {
+          ...currentCategory,
+          name: payload.name ?? currentCategory.name,
+          type: payload.type ?? currentCategory.type,
+          parent: parent ? pick(['id'], parent) : null,
+        },
       }
     }),
-    concatMap(({ url, body }) => ConnectionService.update(url, body)),
+    filter((result: ApiRequest<Category> | null): result is ApiRequest<Category> => Boolean(result)),
+    map(encryptAction({
+      api: ConnectionService.update,
+      actionCreator: Actions.categoryUpdated,
+      fields: ['name'],
+    })),
   )
 
 const deleteCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
