@@ -11,9 +11,9 @@ type ReceiptItemProps = {
 
 export const ReceiptItem: FC<ReceiptItemProps> = React.memo(
   ({ disabled, item, onUpdate, children }) => {
-    const [category, setCategory] = useState(item.category)
+    const [category, setCategory] = useState(item.category.id)
     const [description, setDescription] = useState(item.description)
-    const [price, setPrice] = useState<number>(item.price)
+    const [price, setPrice] = useState<number>(item.value)
 
     const update = useCallback((field, value) => {
       switch(field) {
@@ -33,7 +33,7 @@ export const ReceiptItem: FC<ReceiptItemProps> = React.memo(
         ...item,
         category,
         description,
-        price
+        value: price
       })
     }, [onUpdate, item])
 
@@ -46,7 +46,7 @@ export const ReceiptItem: FC<ReceiptItemProps> = React.memo(
         onUpdate={update}
         onSave={updateItem}
       >
-        {children({ id: item.id, category, description, price })}
+        {children({ category: { id: category }, description, id: item.id, receiptId: item.receiptId, value: price })}
       </ReceiptItemComponent>
     )
   },

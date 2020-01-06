@@ -8,8 +8,18 @@ import { AppAction } from '../../app.actions'
 import * as Actions from './expenses.actions'
 import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
 import { ConnectionService } from '../../connection.service'
+import { decryptAction } from '../../encryption'
 
-const parsingWorker = WebWorker.build(ParsingWorker)
+// TODO: Support optional fields decrypting
+// const decryptReceipts = decryptAction({
+//   actionCreator: Actions.updateReceipts,
+//   fields: ['shop'],
+// })
+const decryptReceiptItems = decryptAction({
+  actionCreator: Actions.updateReceiptItems,
+  fields: ['description'],
+  numericFields: ['value'],
+})
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
@@ -29,7 +39,7 @@ const loadReceiptsFromApiEpic: Epic<AppAction, AppAction, AppState> = (action$) 
     filter(isActionOf(Actions.loadReceiptsFromApi)),
     concatMap(({ payload: { source, value } }) => [
       Actions.updateReceipts({ source, value }),
-      ...value.map((receipt) => Actions.updateReceiptItems({ source, value: receipt.items })),
+      ...value.map((receipt) => decryptReceiptItems({ source, value: receipt.items || [] })),
     ]),
   )
 

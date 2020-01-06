@@ -19,7 +19,7 @@ export type ExpensesListItemProps = {
 export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
   ({ category, description, disabled, price, onSave, onUpdate, children }) => {
     const updateCategory = useCallback((event, data) => onUpdate('category', data.value), [onUpdate])
-    const updatePrice = useCallback((value: number) => onUpdate('price', value), [onUpdate])
+    const updatePrice = useCallback((value: number) => onUpdate('value', value), [onUpdate])
     const updateDescription = useCallback((event) => onUpdate('description', event.target.value), [onUpdate])
     const handleSaving = useCallback((event: KeyboardEvent) => {
       if (event.key === 'Enter') {

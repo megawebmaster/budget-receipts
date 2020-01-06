@@ -1,2 +1,2 @@
-export { Expense } from './expense.container'
-export { NewExpense } from './new-expense.container'
+export { SavedExpense } from './components/saved-expense'
+export { NewExpense } from './components/new-expense'

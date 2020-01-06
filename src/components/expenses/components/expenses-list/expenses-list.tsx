@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Expense, NewExpense } from '../expense'
+import { NewExpense, SavedExpense } from '../expense'
 import { useSelector } from 'react-redux'
 import { expensesReceipts } from '../../expenses.selectors'
 
@@ -10,7 +10,7 @@ export const ExpensesList = () => {
     <Fragment>
       <NewExpense />
       {receipts.map(receipt => (
-        <Expense key={receipt.id} receipt={receipt} />
+        <SavedExpense key={receipt.id} receipt={receipt} />
       ))}
     </Fragment>
   )

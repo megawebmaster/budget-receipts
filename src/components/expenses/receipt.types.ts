@@ -1,8 +1,11 @@
+import { Category } from '../categories'
+
 export type ReceiptItem = {
   id: number
-  category: number
-  price: number
+  category: Pick<Category, 'id'>
+  value: number
   description?: string
+  receiptId: number
 }
 
 export type NewReceiptItem = {
@@ -14,7 +17,7 @@ export type NewReceiptItem = {
 
 export type Receipt = {
   id: number
-  date: number
+  day: number
   shop?: string
   expanded?: boolean
   processing?: boolean
@@ -22,7 +25,7 @@ export type Receipt = {
 
 export type ApiReceipt = {
   id: number
-  date: number
+  day: number
   shop?: string
   items: ReceiptItem[]
 }

@@ -21,11 +21,11 @@ import {
   toString,
   values,
   when,
-  zipObj,
 } from 'ramda'
 import * as Actions from './expenses.actions'
-import { ApiReceipt, Receipt, ReceiptItem } from './receipt.types'
+import { Receipt, ReceiptItem } from './receipt.types'
 import { AppAction } from '../../app.actions'
+import { AvailableRoutes } from '../../routes'
 
 export type ExpensesState = {
   items: {
@@ -35,30 +35,26 @@ export type ExpensesState = {
   receipts: Receipt[]
 }
 
-const makeItems = (receipts: ApiReceipt[]): Record<string, ReceiptItem[]> => zipObj(
-  map(pipe(prop('id'), toString), receipts),
-  map(prop('items'), receipts),
-)
-
 const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = [], action) => {
   switch (action.type) {
-    case getType(Actions.loadReceipts):
+    case AvailableRoutes.EXPENSES_MONTH:
       return []
     case getType(Actions.updateReceipts): {
+      const receipts = action.payload.value.filter(receipt => receipt.items?.length > 0)
       return values(
         mergeWith(
           mergeRight,
           indexBy(pipe(prop('id'), toString), state),
-          indexBy(pipe(prop('id'), toString), action.payload.value),
+          indexBy(pipe(prop('id'), toString), receipts),
         ),
       )
     }
     case getType(Actions.addReceipt):
-      return prepend(action.payload, state)
+      return prepend(action.payload.receipt, state)
     case getType(Actions.updateReceipt): {
-      const { id, date, shop } = action.payload
+      const { id, day, shop } = action.payload
 
-      return state.map(receipt => receipt.id === id ? { ...receipt, date, shop } : receipt)
+      return state.map(receipt => receipt.id === id ? { ...receipt, day, shop } : receipt)
     }
     case getType(Actions.deleteReceipt):
       return filter(complement(propEq('id', action.payload)), state)
@@ -68,7 +64,7 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
 
       return append({
         id,
-        date: date.getDate(),
+        day: date.getDate(),
         shop: parsingResult.establishment,
         expanded: true,
         processing: true,
@@ -86,9 +82,13 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
 
 const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, action) => {
   switch (action.type) {
-    case getType(Actions.loadReceipts):
+    case AvailableRoutes.EXPENSES_MONTH:
       return {}
-    case getType(Actions.updateReceipts): {
+    case getType(Actions.updateReceiptItems): {
+      if (action.payload.value.length === 0) {
+        return state
+      }
+      // TODO: Make it more beautiful
       return mergeDeepWith(
         (newValues: ReceiptItem[], currentValues: ReceiptItem[]) => values(
           mergeWith(
@@ -97,13 +97,14 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
             indexBy(pipe(prop('id'), toString), newValues),
           ),
         ),
-        makeItems(action.payload.value),
+        { [action.payload.value[0].receiptId]: action.payload.value },
         state,
       )
     }
     case getType(Actions.processParsedImage):
-    case getType(Actions.addReceipt):
       return set(lensProp(action.payload.id.toString()), [], state)
+    case getType(Actions.addReceipt):
+      return set(lensProp(action.payload.receipt.id.toString()), action.payload.items, state)
     case getType(Actions.deleteReceipt): {
       return omit([action.payload.toString()], state)
     }
@@ -131,11 +132,10 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
   }
 }
 
-// TODO: Restore state value and route reset to true
-const loadingReducer: Reducer<ExpensesState['loading'], AppAction> = (state = false, action) => {
+const loadingReducer: Reducer<ExpensesState['loading'], AppAction> = (state = true, action) => {
   switch (action.type) {
-    case getType(Actions.loadReceipts):
-      return false
+    case AvailableRoutes.EXPENSES_MONTH:
+      return true
     case getType(Actions.updateReceipts):
       return state && action.payload.source !== 'network'
     default:
