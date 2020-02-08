@@ -1,11 +1,19 @@
 import React, { FC, useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Receipt } from '../../../receipt.types'
-import { addReceiptItem, deleteReceiptItem, updateReceipt, updateReceiptItem } from '../../../expenses.actions'
+import { NewReceiptItem, Receipt, ReceiptUpdateFields } from '../../../receipt.types'
+import {
+  addReceiptItem,
+  DeleteReceiptItem,
+  deleteReceiptItem,
+  updateReceipt,
+  UpdateReceiptItem,
+  updateReceiptItem,
+} from '../../../expenses.actions'
 import { ReceiptControls } from './receipt-controls'
 import { Expense } from './expense'
 import { createExpenseItemsSelector } from '../../../expenses.selectors'
+import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
 
 type SavedExpenseProps = {
   receipt: Receipt
@@ -13,33 +21,67 @@ type SavedExpenseProps = {
 
 export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
   const dispatch = useDispatch()
-  const itemsSelector = useMemo(() => createExpenseItemsSelector(receipt.id), [receipt])
+  const itemsSelector = useMemo(() => createExpenseItemsSelector(receipt.id), [receipt.id])
+  const [fields, setFields] = useState<Record<FocusableExpenseFields, HTMLInputElement | null>>({
+    day: null,
+    category: null,
+  })
 
-  const onSave = useCallback((receipt) => dispatch(updateReceipt(receipt)), [dispatch])
-  const addItem = useCallback((item) => dispatch(addReceiptItem(item)), [dispatch])
-  const updateItem = useCallback((item) => dispatch(updateReceiptItem(item)), [dispatch])
-  const deleteItem = useCallback((item) => dispatch(deleteReceiptItem(item)), [dispatch])
+  const addField = useCallback((field: FocusableExpenseFields, input: HTMLInputElement | null) => {
+    setFields(fields => ({ ...fields, [field]: input }))
+  }, [])
+
+  const onSave = useCallback((values: ReceiptUpdateFields) =>
+    dispatch(updateReceipt({ ...receipt, ...values })),
+    [dispatch, receipt]
+  )
+  const addItem = useCallback(
+    (item: NewReceiptItem) => dispatch(addReceiptItem({
+      id: receipt.id,
+      value: { ...item, id: Date.now(), receiptId: receipt.id },
+    })),
+    [dispatch, receipt.id],
+  )
+  const updateItem = useCallback((item: UpdateReceiptItem) => dispatch(updateReceiptItem(item)), [dispatch])
+  const deleteItem = useCallback((item: DeleteReceiptItem) => dispatch(deleteReceiptItem(item)), [dispatch])
   const items = useSelector(itemsSelector)
 
+  const onKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      switch (field) {
+        case 'day':
+        case 'shop':
+        case 'value':
+        case 'description':
+          if (fields.category !== null) {
+            fields.category.focus()
+          }
+          break
+      }
+    }
+  }, [fields])
+
   const [expanded, setExpanded] = useState(receipt.expanded || false)
-  const renderControls = useCallback((date?: number, shop?: string) => (
+  const renderControls = useCallback((day?: number, shop?: string) => (
     <ReceiptControls
-      item={{ id: receipt.id, day: date || new Date().getDate(), shop }}
+      item={{ id: receipt.id, day: day || new Date().getDate(), shop }}
       expanded={expanded}
       processing={receipt.processing || false}
       setExpanded={setExpanded}
     />
-  ), [receipt, expanded, setExpanded])
+  ), [receipt.id, receipt.processing, expanded])
 
   return (
     <Expense
-      expanded={expanded}
-      receipt={receipt}
-      items={items}
-      onSave={onSave}
+      addField={addField}
       addItem={addItem}
-      updateItem={updateItem}
       deleteItem={deleteItem}
+      expanded={expanded}
+      items={items}
+      receipt={receipt}
+      onKeyDown={onKeyDown}
+      onSave={onSave}
+      updateItem={updateItem}
     >
       {renderControls}
     </Expense>

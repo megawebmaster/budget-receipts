@@ -1,19 +1,14 @@
-import { Category } from '../categories'
-
 export type ReceiptItem = {
   id: number
-  category: Pick<Category, 'id'>
+  category: {
+    id?: number
+  }
   value: number
   description?: string
   receiptId: number
 }
 
-export type NewReceiptItem = {
-  id: number
-  category?: number
-  price?: number
-  description?: string
-}
+export type NewReceiptItem = Omit<ReceiptItem, 'id' | 'receiptId'>
 
 export type Receipt = {
   id: number
@@ -22,6 +17,8 @@ export type Receipt = {
   expanded?: boolean
   processing?: boolean
 }
+
+export type ReceiptUpdateFields = Pick<Receipt, 'day' | 'shop'>
 
 export type ApiReceipt = {
   id: number

@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { FC, useCallback, useEffect, useRef } from 'react'
 import { Input } from 'semantic-ui-react'
 import DayPickerInput from 'react-day-picker/DayPickerInput'
 
@@ -8,58 +8,70 @@ import { useSelector } from 'react-redux'
 import { month as monthSelector, year as yearSelector } from '../../../../../../routes'
 
 export type DayFieldProps = {
-  value: string
+  addField: (input: HTMLInputElement | null) => void
   onChange: (day: string) => void
+  onKeyDown: (event: React.KeyboardEvent) => void
+  value: string
 }
 
+export const DayField: FC<DayFieldProps> = ({ addField, onChange, onKeyDown, value }) => {
+  const inputRef = useRef<Input>(null)
+  const year = useSelector(yearSelector)
+  const month = useSelector(monthSelector)
 
-export const DayField: FC<DayFieldProps> = React.memo(
-  ({ value, onChange }) => {
-    const year = useSelector(yearSelector)
-    const month = useSelector(monthSelector)
+  const onDayChange = useCallback((day) => {
+    if (day) {
+      onChange(day.getDate().toString())
+    }
+  }, [onChange])
+  const formatDate = useCallback((date) => date.getDate().toString(), [])
+  const parseDate = useCallback((value) => {
+    const day = parseInt(value, 10)
 
-    const onDayChange = useCallback((day) => {
-      if (day) {
-        onChange(day.getDate().toString())
-      }
-    }, [onChange])
-    const formatDate = useCallback((date) => date.getDate().toString(), [])
-    const parseDate = useCallback((value) => {
-      const day = parseInt(value, 10)
+    if (day < 1 || day > 31) {
+      return undefined
+    }
 
-      if (day < 1 || day > 31) {
-        return undefined
-      }
+    const date = new Date(year, month - 1, day)
 
-      const date = new Date(year, month - 1, day)
+    if (date.getMonth() !== month - 1) {
+      return undefined
+    }
 
-      if (date.getMonth() !== month - 1) {
-        return undefined
-      }
+    return date
+  }, [year, month])
 
-      return date
-    }, [year, month])
+  const onFocus = useCallback(() => {
+    inputRef.current?.select()
+  }, [])
 
-    return (
-      <DayPickerInput
-        component={Input}
-        placeholder=""
-        format="D"
-        value={value}
-        onDayChange={onDayChange}
-        formatDate={formatDate}
-        parseDate={parseDate}
-        inputProps={{
-          // disabled: this.props.disabled,
-          // error: this.props.error,
-          fluid: true,
-        }}
-        dayPickerProps={{
-          canChangeMonth: false,
-          firstDayOfWeek: 1,
-          locale: 'pl',
-        }}
-      />
-    )
-  },
-)
+  useEffect(() => {
+    const input = inputRef.current as any as { inputRef: React.MutableRefObject<HTMLInputElement> }
+    addField(input.inputRef.current)
+  }, [addField])
+
+  return (
+    <DayPickerInput
+      component={Input}
+      placeholder=""
+      format="D"
+      value={value}
+      onDayChange={onDayChange}
+      formatDate={formatDate}
+      parseDate={parseDate}
+      inputProps={{
+        // disabled: this.props.disabled,
+        // error: this.props.error,
+        fluid: true,
+        ref: inputRef,
+        onKeyDown: onKeyDown,
+        onFocus: onFocus,
+      }}
+      dayPickerProps={{
+        canChangeMonth: false,
+        firstDayOfWeek: 1,
+        locale: 'pl',
+      }}
+    />
+  )
+}

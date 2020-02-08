@@ -12,20 +12,23 @@ type CurrencyInputProps = {
   label?: string
   narrowOnMobile?: boolean
   placeholder?: string
-  value: number
+  value: number | string
   onUpdate?: (value: number) => void
+  onKeyDown?: (event: React.KeyboardEvent) => void
 }
 
 export const CurrencyInput: FC<CurrencyInputProps> =
-  ({ className, currency, disabled = false, label, narrowOnMobile = false, placeholder = '0.00', value, onUpdate }) => {
+  ({ className, currency, disabled = false, label, narrowOnMobile = false, onUpdate, onKeyDown, placeholder = '0.00', value }) => {
     const intl = useIntl()
     const formatCurrency = useCallback(
-      (value: number, useGrouping = true) =>
-        intl.formatNumber(value, {
-          useGrouping,
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
+      (value: number | string, useGrouping = true) =>
+        typeof value === 'number'
+          ? intl.formatNumber(value, {
+            useGrouping,
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+          : '',
       [intl],
     )
 
@@ -41,7 +44,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
       setFocus(true)
       setPrice(formatCurrency(value, false))
       ref.current?.select()
-    }, [ref, value, formatCurrency, setFocus])
+    }, [value, formatCurrency])
     const onBlur = useCallback((event) => {
       const newValue = event.target.value.replace(',', '.')
       const numericValue = parseFloat(newValue)
@@ -52,7 +55,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
       if (!isNaN(numericValue) && value !== numericValue && onUpdate) {
         onUpdate(numericValue)
       }
-    }, [value, setFocus, setPrice, formatCurrency, onUpdate])
+    }, [value, formatCurrency, onUpdate])
 
     const update = useCallback((event) => {
       const newValue = event.target.value.replace(',', '.')
@@ -66,9 +69,9 @@ export const CurrencyInput: FC<CurrencyInputProps> =
       }
 
       setFormattedPrice(formatCurrency(parseFloat(newValue)))
-    }, [setPrice, setFormattedPrice, setError, formatCurrency])
+    }, [formatCurrency])
 
-    const onKeyDown = useCallback((event: KeyboardEvent) => {
+    const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
       if (event.key === 'Enter') {
         const element = event.target as HTMLInputElement
         const newValue = element?.value.replace(',', '.')
@@ -78,12 +81,15 @@ export const CurrencyInput: FC<CurrencyInputProps> =
           onUpdate(numericValue)
         }
       }
-    }, [onUpdate])
+      if (onKeyDown) {
+        onKeyDown(event)
+      }
+    }, [onUpdate, onKeyDown])
 
     useEffect(() => {
       setError(false)
       setFormattedPrice(formatCurrency(value))
-    }, [value, setFormattedPrice, setError, formatCurrency])
+    }, [value, formatCurrency])
 
     return (
       <Input
@@ -95,7 +101,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
         onBlur={onBlur}
         onChange={update}
         onFocus={onFocus}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         ref={ref}
         value={focused ? price : formattedPrice}

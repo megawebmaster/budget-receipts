@@ -1,46 +1,59 @@
-import React, { FC, KeyboardEvent, useCallback } from 'react'
+import React, { FC, useCallback } from 'react'
 import { Grid, Input } from 'semantic-ui-react'
 
 import styles from '../receipt-item.module.css'
 import { ReceiptItem as ItemType } from '../../../receipt.types'
 import { CategoryField } from './category-field'
 import { CurrencyInput } from '../../../../currency-input'
+import { ExpenseFields, FocusableExpenseFields } from '../../expense/expense.types'
 
 export type ExpensesListItemProps = {
-  category?: number
+  addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
+  category?: number | string
   children: JSX.Element
   description?: string
   disabled: boolean
-  price?: number
+  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent) => void
   onUpdate: (key: keyof ItemType, value: any) => void
-  onSave: (category: number | undefined, description: string | undefined, price: number | undefined) => void
+  value: number | string
 }
 
-export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
-  ({ category, description, disabled, price, onSave, onUpdate, children }) => {
+export const ReceiptItem: FC<ExpensesListItemProps> =
+  ({ addField, category, children, description, disabled, onKeyDown, onUpdate, value }) => {
     const updateCategory = useCallback((event, data) => onUpdate('category', data.value), [onUpdate])
-    const updatePrice = useCallback((value: number) => onUpdate('value', value), [onUpdate])
+    const updateValue = useCallback((value: number) => onUpdate('value', value), [onUpdate])
     const updateDescription = useCallback((event) => onUpdate('description', event.target.value), [onUpdate])
-    const handleSaving = useCallback((event: KeyboardEvent) => {
-      if (event.key === 'Enter') {
-        event.stopPropagation()
-        onSave(category, description, price)
-      }
-    }, [onSave, category, description, price])
+
+    const addCategoryField = useCallback(
+      (input: HTMLInputElement | null) => addField && addField('category', input),
+      [addField],
+    )
+    const valueKeyDown = useCallback(
+      (event: React.KeyboardEvent) => onKeyDown && onKeyDown('value', event),
+      [onKeyDown],
+    )
+    const descriptionKeyDown = useCallback(
+      (event: React.KeyboardEvent) => onKeyDown && onKeyDown('description', event),
+      [onKeyDown],
+    )
 
     return (
-      <Grid.Row className={styles.item} onKeyDown={handleSaving}>
+      <Grid.Row className={styles.item}>
         <Grid.Column mobile={8} tablet={6} computer={6}>
-          <CategoryField value={category} onChange={updateCategory} />
+          <CategoryField
+            addField={addCategoryField}
+            onChange={updateCategory}
+            value={category}
+          />
         </Grid.Column>
         <Grid.Column mobile={8} tablet={3} computer={3}>
           <CurrencyInput
             narrowOnMobile
             currency="PLN"
             disabled={disabled}
-            placeholder="Price"
-            value={price || 0}
-            onUpdate={updatePrice}
+            value={value}
+            onUpdate={updateValue}
+            onKeyDown={valueKeyDown}
           />
         </Grid.Column>
         <Grid.Column mobile={11} tablet={5} computer={5}>
@@ -48,8 +61,9 @@ export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
             fluid
             disabled={disabled}
             placeholder="Description"
-            defaultValue={description}
+            value={description}
             onChange={updateDescription}
+            onKeyDown={descriptionKeyDown}
           />
         </Grid.Column>
         <Grid.Column mobile={5} tablet={2} computer={2}>
@@ -57,5 +71,4 @@ export const ReceiptItem: FC<ExpensesListItemProps> = React.memo(
         </Grid.Column>
       </Grid.Row>
     )
-  },
-)
+  }

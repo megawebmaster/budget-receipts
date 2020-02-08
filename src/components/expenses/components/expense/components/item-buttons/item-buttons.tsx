@@ -1,18 +1,19 @@
-import { Receipt, ReceiptItem as ItemType } from '../../../../receipt.types'
-import { DeleteReceiptItem, UpdateReceiptItem } from '../../../../expenses.actions'
-import React, { FC, useCallback } from 'react'
+import React, { FC } from 'react'
 import { Button, ButtonGroup } from 'semantic-ui-react'
 
+import { Receipt, ReceiptItem as ItemType } from '../../../../receipt.types'
+import { DeleteReceiptItem, UpdateReceiptItem } from '../../../../expenses.actions'
+
 type ItemButtonsProps = {
+  deleteItem: (item: DeleteReceiptItem) => void
   item: ItemType
   receipt: Receipt
-  deleteItem: (item: DeleteReceiptItem) => void
   updateItem: (item: UpdateReceiptItem) => void
 }
 
-export const ItemButtons: FC<ItemButtonsProps> = ({ receipt: { id, processing }, item, updateItem, deleteItem }) => {
-  const save = useCallback(() => updateItem({ id, itemId: item.id, value: item }), [id, item, updateItem])
-  const remove = useCallback(() => deleteItem({ id, itemId: item.id }), [id, item, deleteItem])
+export const ItemButtons: FC<ItemButtonsProps> = ({ deleteItem, item, receipt: { id, processing }, updateItem }) => {
+  const save = () => updateItem({ id, itemId: item.id, value: item })
+  const remove = () => deleteItem({ id, itemId: item.id })
 
   return (
     <ButtonGroup fluid>

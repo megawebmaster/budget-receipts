@@ -1,1 +1,1 @@
-export { ReceiptControls } from './receipt-controls.container'
+export { ReceiptControls } from './receipt-controls'

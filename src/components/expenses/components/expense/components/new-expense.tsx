@@ -1,10 +1,12 @@
 import React, { Fragment, useCallback, useState } from 'react'
 import { Button, ButtonGroup, Responsive } from 'semantic-ui-react'
-import { Receipt, ReceiptItem as Item } from '../../../receipt.types'
+import { useDispatch } from 'react-redux'
+
+import { NewReceiptItem, Receipt, ReceiptItem, ReceiptUpdateFields } from '../../../receipt.types'
 import { PhotoButton } from './photo-button'
 import { Expense } from './expense'
-import { addReceipt, AddReceiptItem, DeleteReceiptItem, UpdateReceiptItem } from '../../../expenses.actions'
-import { useDispatch } from 'react-redux'
+import { addReceipt, DeleteReceiptItem, UpdateReceiptItem } from '../../../expenses.actions'
+import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
 
 const emptyReceipt = (): Receipt => ({
   id: Date.now(),
@@ -13,37 +15,75 @@ const emptyReceipt = (): Receipt => ({
   expanded: true,
 })
 
-// TODO: Make using it a pleasure - proper focus moving etc
 export const NewExpense = () => {
   const dispatch = useDispatch()
 
   const [receipt, setReceipt] = useState<Receipt>(emptyReceipt())
-  const [items, setItems] = useState<Item[]>([])
+  const [items, setItems] = useState<ReceiptItem[]>([])
+  const [fields, setFields] = useState<Record<FocusableExpenseFields, HTMLInputElement | null>>({
+    day: null,
+    category: null,
+  })
 
-  const addItem = useCallback((item: AddReceiptItem) => {
-    setItems(items => [...items, item.value])
-  }, [setItems])
+  const addField = useCallback((field: FocusableExpenseFields, input: HTMLInputElement | null) => {
+    setFields(fields => ({ ...fields, [field]: input }))
+  }, [])
+
+  const addItem = useCallback((item: NewReceiptItem) => {
+    setItems(items => [...items, { ...item, id: Date.now(), receiptId: receipt.id }])
+  }, [receipt.id])
 
   const updateItem = useCallback((item: UpdateReceiptItem) => {
     setItems(items => items.map(currentItem => currentItem.id === item.itemId ? item.value : currentItem))
-  }, [setItems])
+  }, [])
 
   const deleteItem = useCallback((item: DeleteReceiptItem) => {
     setItems(items => items.filter(currentItem => currentItem.id !== item.itemId))
-  }, [setItems])
+  }, [])
 
   const reset = useCallback(() => {
     setReceipt(emptyReceipt())
     setItems([])
-  }, [setReceipt, setItems])
-  const saveReceipt = useCallback((receipt) => {
-    console.log('receipt', receipt)
-    dispatch(addReceipt({ receipt: { ...receipt, expanded: false }, items }))
-    reset()
-  }, [dispatch, reset, items])
+  }, [])
 
-  const renderControls = useCallback((date, shop) => {
-    const onSave = () => saveReceipt({ ...receipt, date, shop })
+  const saveReceipt = useCallback((values: ReceiptUpdateFields) => {
+    dispatch(addReceipt({ receipt: { ...receipt, ...values, expanded: false }, items }))
+    reset()
+  }, [dispatch, reset, items, receipt])
+
+  const onKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
+    switch (event.key) {
+      case 'Enter':
+        switch (field) {
+          case 'day':
+          case 'shop':
+          case 'value':
+          case 'description':
+            if (event.ctrlKey) {
+              if (fields.day !== null) {
+                fields.day.focus()
+              }
+            } else if (fields.category !== null) {
+              fields.category.focus()
+            }
+            break
+        }
+        break
+      case 'Escape':
+        switch (field) {
+          case 'value':
+          case 'description':
+            if (fields.day !== null) {
+              fields.day.focus()
+            }
+            break
+        }
+        break
+    }
+  }, [fields])
+
+  const renderControls = useCallback((day, shop) => {
+    const onSave = () => saveReceipt({ ...receipt, day, shop })
     return (
       <Fragment>
         <Responsive maxWidth={Responsive.onlyTablet.maxWidth} as={ButtonGroup} fluid>
@@ -64,13 +104,15 @@ export const NewExpense = () => {
 
   return (
     <Expense
-      expanded={true}
-      receipt={receipt}
-      items={items}
-      onSave={saveReceipt}
+      addField={addField}
       addItem={addItem}
-      updateItem={updateItem}
       deleteItem={deleteItem}
+      expanded={true}
+      items={items}
+      receipt={receipt}
+      onKeyDown={onKeyDown}
+      onSave={saveReceipt}
+      updateItem={updateItem}
     >
       {renderControls}
     </Expense>

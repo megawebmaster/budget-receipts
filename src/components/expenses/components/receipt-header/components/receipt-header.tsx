@@ -1,38 +1,57 @@
-import React, { FC, KeyboardEvent, ReactNode, useCallback } from 'react'
+import React, { FC, ReactNode, useCallback } from 'react'
 import { Grid, Input, Responsive } from 'semantic-ui-react'
 
 import styles from '../receipt-header.module.css'
-import { Receipt } from '../../../receipt.types'
+import { ReceiptUpdateFields } from '../../../receipt.types'
 import { DayField } from './day-field'
 import { CurrencyInput } from '../../../../currency-input'
+import { ExpenseFields, FocusableExpenseFields } from '../../expense/expense.types'
 
 type ReceiptHeaderProps = {
-  date?: number
+  addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
+  children: (day?: number, shop?: string) => ReactNode
+  day?: number
+  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent) => void
+  onUpdate: (field: keyof ReceiptUpdateFields, value: any) => void
   shop?: string
   total?: number
-  onSave: (date?: number, shop?: string) => void
-  onUpdate: (field: keyof Receipt, value: any) => void
-  children: (date?: number, shop?: string) => ReactNode
 }
 
-export const ReceiptHeader: FC<ReceiptHeaderProps> = ({ date, shop, total, onSave, onUpdate, children }) => {
+export const ReceiptHeader: FC<ReceiptHeaderProps> = ({ day, shop, total, onUpdate, children, addField, onKeyDown }) => {
   const updateDate = useCallback((day) => onUpdate('day', day), [onUpdate])
   const updateShop = useCallback((event) => onUpdate('shop', event.target.value), [onUpdate])
 
-  const handleSaving = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.stopPropagation()
-      onSave(date, shop)
-    }
-  }, [date, shop, onSave])
+  const addDayField = useCallback(
+    (input: HTMLInputElement | null) => addField && addField('day', input),
+    [addField],
+  )
+  const dayKeyDown = useCallback(
+    (event: React.KeyboardEvent) => onKeyDown && onKeyDown('day', event),
+    [onKeyDown],
+  )
+  const shopKeyDown = useCallback(
+    (event: React.KeyboardEvent) => onKeyDown && onKeyDown('shop', event),
+    [onKeyDown],
+  )
 
   return (
-    <Grid.Row className={styles.header} onKeyDown={handleSaving}>
+    <Grid.Row className={styles.header}>
       <Grid.Column mobile={4} tablet={3} computer={3}>
-        <DayField value={date?.toString() || ''} onChange={updateDate} />
+        <DayField
+          value={day?.toString() || ''}
+          onChange={updateDate}
+          addField={addDayField}
+          onKeyDown={dayKeyDown}
+        />
       </Grid.Column>
       <Grid.Column mobile={6} tablet={4} computer={4}>
-        <Input fluid placeholder="Shop" value={shop} onChange={updateShop} />
+        <Input
+          fluid
+          placeholder="Shop"
+          value={shop}
+          onChange={updateShop}
+          onKeyDown={shopKeyDown}
+        />
       </Grid.Column>
       <Grid.Column mobile={6} tablet={5} computer={5}>
         <CurrencyInput
@@ -45,7 +64,7 @@ export const ReceiptHeader: FC<ReceiptHeaderProps> = ({ date, shop, total, onSav
         />
       </Grid.Column>
       <Responsive minWidth={Responsive.onlyTablet.minWidth} as={Grid.Column} width={4}>
-        {children(date, shop)}
+        {children(day, shop)}
       </Responsive>
     </Grid.Row>
   )

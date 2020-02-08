@@ -1,20 +1,17 @@
-import { Receipt, ReceiptItem as ItemType } from "../../../../receipt.types";
-import { AddReceiptItem } from "../../../../expenses.actions";
-import React, { FC } from "react";
-import { Button } from "semantic-ui-react";
+import React, { FC } from 'react'
+import { Button } from 'semantic-ui-react'
+
+import { NewReceiptItem } from '../../../../receipt.types'
 
 type NewItemButtonsProps = {
-  item: ItemType
-  receipt: Receipt
+  addItem: (item: NewReceiptItem) => void
+  item: NewReceiptItem
   reset: () => void
-    addItem: (item: AddReceiptItem) => void
 }
 
-export const NewItemButtons: FC<NewItemButtonsProps> = React.memo(
-  ({ receipt: { id }, item, reset, addItem }) => (
-    <Button fluid icon="plus" color="green" onClick={() => {
-      addItem({ id, value: item })
-      reset()
-    }} />
-  ),
+export const NewItemButtons: FC<NewItemButtonsProps> = ({ addItem, item, reset }) => (
+  <Button fluid icon="plus" color="green" onClick={() => {
+    addItem(item)
+    reset()
+  }} />
 )

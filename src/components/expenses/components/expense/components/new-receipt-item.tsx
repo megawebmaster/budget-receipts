@@ -1,45 +1,64 @@
 import React, { FC, useCallback, useState } from 'react'
+
 import { ReceiptItem } from '../../receipt-item'
-import { NewReceiptItem as ItemType } from '../../../receipt.types'
+import { NewReceiptItem as NewItemType } from '../../../receipt.types'
+import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
 
 type NewReceiptItemProps = {
-  onSave: (item: ItemType) => void
-  children: (item: ItemType, reset: () => void) => JSX.Element
+  addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
+  children: (category: number, value: number, description: string, reset: () => void) => JSX.Element
+  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent) => void
+  onSave: (item: NewItemType) => void
 }
 
-const emptyItem = (): ItemType => ({
-  id: Date.now(),
-  description: '',
-  category: undefined,
-  price: undefined,
-})
+export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, onKeyDown, onSave }) => {
+  const [category, setCategory] = useState<number | string>('')
+  const [value, setValue] = useState<number | string>('')
+  const [description, setDescription] = useState<string>('')
 
-export const NewReceiptItem: FC<NewReceiptItemProps> = React.memo(
-  ({ onSave, children }) => {
-    const [item, setItem] = useState<ItemType>(emptyItem())
-
-    const reset = useCallback(() => setItem(emptyItem()), [setItem])
-    const update = useCallback((field, value) => {
-      // @ts-ignore
-      item[field] = value
-    }, [item])
-    const save = useCallback(() => {
-      onSave(item)
+  const reset = useCallback(() => {
+    setCategory('')
+    setValue(0)
+    setDescription('')
+  }, [])
+  const update = useCallback((field, value) => {
+    switch (field) {
+      case 'category':
+        setCategory(value)
+        break
+      case 'value':
+        setValue(value)
+        break
+      case 'description':
+        setDescription(value)
+    }
+  }, [])
+  const handleKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      onSave({
+        value: value as number, // TODO: Fix number type cast
+        category: { id: category as number }, // TODO: Fix number type cast
+        description: description,
+      })
       reset()
-    }, [onSave, reset, item])
+    }
+    if (onKeyDown) {
+      onKeyDown(field, event)
+    }
+  }, [onKeyDown, onSave, reset, category, value, description])
 
-    return (
-      <ReceiptItem
-        key={item.id}
-        category={item.category}
-        description={item.description}
-        disabled={false}
-        price={item.price}
-        onUpdate={update}
-        onSave={save}
-      >
-        {children(item, reset)}
-      </ReceiptItem>
-    )
-  },
-)
+  // TODO: Fix number type cast
+  return (
+    <ReceiptItem
+      category={category}
+      description={description}
+      disabled={false}
+      value={value}
+      onUpdate={update}
+      addField={addField}
+      onKeyDown={handleKeyDown}
+    >
+      {children(category as number, value as number, description, reset)}
+    </ReceiptItem>
+  )
+}
