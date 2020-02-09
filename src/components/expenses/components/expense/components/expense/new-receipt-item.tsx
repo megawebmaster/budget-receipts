@@ -1,8 +1,8 @@
 import React, { FC, useCallback, useState } from 'react'
 
-import { ReceiptItem } from '../../receipt-item'
-import { NewReceiptItem as NewItemType } from '../../../receipt.types'
-import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
+import { ReceiptItem } from '../../../receipt-item'
+import { NewReceiptItem as NewItemType } from '../../../../receipt.types'
+import { ExpenseFields, FocusableExpenseFields } from '../../expense.types'
 
 type NewReceiptItemProps = {
   addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void

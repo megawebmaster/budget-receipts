@@ -1,7 +1,8 @@
 import React, { FC, useCallback, useState } from 'react'
-import { ReceiptItem } from '../../receipt-item'
-import { ReceiptItem as ItemType } from '../../../receipt.types'
-import { ExpenseFields } from '../expense.types'
+
+import { ReceiptItem } from '../../../receipt-item'
+import { ReceiptItem as ItemType } from '../../../../receipt.types'
+import { ExpenseFields } from '../../expense.types'
 
 type ReceiptItemProps = {
   children: (item: ItemType) => JSX.Element

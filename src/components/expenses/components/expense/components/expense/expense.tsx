@@ -10,8 +10,8 @@ import {
   ReceiptUpdateFields, ReceiptItem,
 } from '../../../../receipt.types'
 import { DeleteReceiptItem, UpdateReceiptItem } from '../../../../expenses.actions'
-import { SavedReceiptItem } from '../saved-receipt-item'
-import { NewReceiptItem } from '../new-receipt-item'
+import { SavedReceiptItem } from './saved-receipt-item'
+import { NewReceiptItem } from './new-receipt-item'
 import { ReceiptHeader } from '../../../receipt-header'
 import { ItemButtons } from '../item-buttons'
 import { NewItemButtons } from '../new-item-buttons'
@@ -74,12 +74,16 @@ export const Expense: FC<ExpenseProps> =
     const handleKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent, newValue: any) => {
       if (event.key === 'Enter' && event.ctrlKey) {
         const fieldName = ['description', 'category', 'value'].includes(field) ? 'item' : field
-        onSave({ [fieldName]: newValue })
+        onSave({
+          day,
+          shop,
+          [fieldName]: newValue
+        })
       }
       if (onKeyDown) {
         onKeyDown(field, event, newValue)
       }
-    }, [onKeyDown, onSave])
+    }, [onKeyDown, onSave, day, shop])
 
     useEffect(() => {
       setDay(receipt.day)
