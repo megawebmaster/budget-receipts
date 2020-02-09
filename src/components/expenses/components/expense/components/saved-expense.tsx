@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { omit, pick } from 'ramda'
 
 import { NewReceiptItem, Receipt, ReceiptUpdateFields } from '../../../receipt.types'
 import {
@@ -33,8 +34,8 @@ export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
   }, [])
 
   const onSave = useCallback((values: ReceiptUpdateFields) =>
-    dispatch(updateReceipt({ ...receipt, ...values })),
-    [dispatch, receipt]
+    dispatch(updateReceipt({ ...omit(['items'], receipt), ...pick(['day', 'shop'], values) })),
+    [dispatch, receipt],
   )
   const addItem = useCallback(
     (item: NewReceiptItem) => dispatch(addReceiptItem({
@@ -50,13 +51,10 @@ export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
   const onKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       switch (field) {
-        case 'day':
-        case 'shop':
+        case 'category':
         case 'value':
         case 'description':
-          if (fields.category !== null) {
-            fields.category.focus()
-          }
+          setTimeout(() => fields.category !== null && fields.category.focus(), 0)
           break
       }
     }
