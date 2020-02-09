@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { Button, Icon, Input, InputOnChangeData, Responsive } from 'semantic-ui-react'
 
 import styles from '../add-button.module.css'
@@ -11,17 +11,16 @@ type AddButtonInputProps = {
   onClose: () => void
 }
 
-// TODO: Fix small changes of size when changing from button to input
 export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size, onSave, onClose }) => {
   const ref = useRef<Input>(null)
   const [value, setValue] = useState('')
-  const updateValue = useCallback((_event, data: InputOnChangeData) => setValue(data.value), [setValue])
-  const saveInput = useCallback(() => {
+  const updateValue = (_event: React.ChangeEvent, data: InputOnChangeData) => setValue(data.value)
+  const saveInput = () => {
     onSave(value)
     setValue('')
-  }, [value, onSave])
+  }
 
-  const onKeyDown = useCallback((event: KeyboardEvent) => {
+  const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter') {
       event.preventDefault()
       event.stopPropagation()
@@ -32,7 +31,7 @@ export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size
       event.stopPropagation()
       onClose()
     }
-  }, [saveInput, onClose])
+  }
 
   useEffect(() => {
     if (ref.current) {
@@ -53,13 +52,13 @@ export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size
       value={value}
     >
       <input />
-      <Button color="teal" onClick={saveInput}>
+      <Button color="teal" onClick={saveInput} size={size}>
         <Icon className={styles.icon} name="plus" />
         <Responsive minWidth={Responsive.onlyTablet.minWidth}>
           Add
         </Responsive>
       </Button>
-      <Button color="red" onClick={onClose}>
+      <Button color="red" onClick={onClose} size={size}>
         <Icon className={styles.icon} name="close" />
         <Responsive minWidth={Responsive.onlyTablet.minWidth}>
           Cancel
