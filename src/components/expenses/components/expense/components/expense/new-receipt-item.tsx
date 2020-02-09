@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from 'react'
 
 import { ReceiptItem } from '../../../receipt-item'
 import { NewReceiptItem as NewItemType } from '../../../../receipt.types'
-import { ExpenseFields, FocusableExpenseFields } from '../../expense.types'
+import { ExpenseFields, FocusableExpenseFields, ReceiptItemFields } from '../../expense.types'
 
 type NewReceiptItemProps = {
   addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
@@ -21,9 +21,9 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, on
     setValue('')
     setDescription('')
   }
-  const update = useCallback((field, value) => {
+  const update = useCallback((field: ReceiptItemFields, value: any) => {
     switch (field) {
-      case 'category':
+      case 'categoryId':
         setCategory(value)
         break
       case 'value':

@@ -11,7 +11,7 @@ type CurrencyInputProps = {
   disabled?: boolean
   label?: string
   narrowOnMobile?: boolean
-  onBlur?: () => void
+  onBlur?: (value: number) => void
   onKeyDown?: (event: React.KeyboardEvent, value: number) => void
   onUpdate?: (value: number) => void
   placeholder?: string
@@ -76,10 +76,9 @@ export const CurrencyInput: FC<CurrencyInputProps> =
         if (value !== numericValue && onUpdate) {
           onUpdate(numericValue)
         }
-      }
-
-      if (onBlur) {
-        onBlur()
+        if (value !== numericValue && onBlur) {
+          onBlur(numericValue)
+        }
       }
     }
 

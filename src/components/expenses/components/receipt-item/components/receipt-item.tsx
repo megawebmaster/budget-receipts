@@ -13,7 +13,7 @@ export type ExpensesListItemProps = {
   children: JSX.Element
   description?: string
   disabled: boolean
-  onBlur?: () => void
+  onBlur?: (field: ExpenseFields, value: any) => void
   onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, item: NewReceiptItem) => void
   onUpdate: (key: ReceiptItemFields, value: any) => void
   value: number | string
@@ -21,16 +21,18 @@ export type ExpensesListItemProps = {
 
 export const ReceiptItem: FC<ExpensesListItemProps> =
   ({ addField, categoryId, children, description, disabled, onBlur, onKeyDown, onUpdate, value }) => {
-    const updateCategory = useCallback((event, data) => onUpdate('category', data.value), [onUpdate])
-    const updateValue = useCallback((value: number) => onUpdate('value', value), [onUpdate])
-    const updateDescription = useCallback((event) => onUpdate('description', event.target.value), [onUpdate])
-
     const addCategoryField = useCallback(
       (input: HTMLInputElement | null) => addField && addField('category', input),
       [addField],
     )
+
+    const updateCategory = useCallback((event, data) => onUpdate('categoryId', data.value), [onUpdate])
+    const updateValue = useCallback((value: number) => onUpdate('value', value), [onUpdate])
+    const updateDescription = (event: React.ChangeEvent<HTMLInputElement>) =>
+      onUpdate('description', event.currentTarget.value)
+
     const categoryKeyDown = useCallback(
-      (event: React.KeyboardEvent, newValue: number) => onKeyDown && onKeyDown('category', event, {
+      (event: React.KeyboardEvent, newValue: number) => onKeyDown && onKeyDown('categoryId', event, {
         description,
         categoryId: newValue,
         value: value as number,
@@ -45,21 +47,33 @@ export const ReceiptItem: FC<ExpensesListItemProps> =
       }),
       [onKeyDown, categoryId, description],
     )
-    const descriptionKeyDown = useCallback(
-      (event: React.KeyboardEvent<HTMLInputElement>) => onKeyDown && onKeyDown('description', event, {
+    const descriptionKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) =>
+      onKeyDown && onKeyDown('description', event, {
         value: value as number,
         categoryId: categoryId as number,
         description: event.currentTarget.value,
-      }),
-      [onKeyDown, categoryId, value],
+      })
+
+    const categoryBlur = useCallback(
+      (newValue: number) => onBlur && onBlur('categoryId', newValue),
+      [onBlur],
     )
+    const valueBlur = useCallback(
+      (newValue: number) => onBlur && onBlur('value', newValue),
+      [onBlur],
+    )
+    const descriptionBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+      if (event.currentTarget.value !== description && onBlur) {
+        onBlur('description', event.currentTarget.value)
+      }
+    }
 
     return (
       <Grid.Row className={styles.item}>
         <Grid.Column mobile={8} tablet={6} computer={6}>
           <CategoryField
             addField={addCategoryField}
-            onBlur={onBlur}
+            onBlur={categoryBlur}
             onChange={updateCategory}
             onKeyDown={categoryKeyDown}
             value={categoryId}
@@ -70,7 +84,7 @@ export const ReceiptItem: FC<ExpensesListItemProps> =
             narrowOnMobile
             currency="PLN"
             disabled={disabled}
-            onBlur={onBlur}
+            onBlur={valueBlur}
             onKeyDown={valueKeyDown}
             onUpdate={updateValue}
             value={value}
@@ -80,7 +94,7 @@ export const ReceiptItem: FC<ExpensesListItemProps> =
           <Input
             fluid
             disabled={disabled}
-            onBlur={onBlur}
+            onBlur={descriptionBlur}
             onChange={updateDescription}
             onKeyDown={descriptionKeyDown}
             placeholder="Description"

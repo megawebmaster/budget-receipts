@@ -62,7 +62,7 @@ export const NewExpense = () => {
     switch (event.key) {
       case 'Enter':
         switch (field) {
-          case 'category':
+          case 'categoryId':
           case 'day':
           case 'shop':
           case 'value':

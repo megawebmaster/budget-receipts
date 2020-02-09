@@ -6,7 +6,7 @@ import { dropdownCategories } from '../../../../../categories'
 
 export type CategoryFieldProps = {
   addField: (input: HTMLInputElement | null) => void
-  onBlur?: () => void
+  onBlur?: (value: number) => void
   onChange: (event: SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void
   onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>, value: any) => void
   value?: number | string
@@ -16,9 +16,12 @@ export const CategoryField: FC<CategoryFieldProps> = ({ addField, onBlur, onChan
   const categories = useSelector(dropdownCategories)
   const dropdownRef = useRef(null)
 
-  const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
-    onKeyDown(event, event.currentTarget.value)
-  }, [onKeyDown])
+  const handleChange = (event: SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => {
+    onChange(event, data)
+    if (onBlur) {
+      onBlur(data.value as number)
+    }
+  }
 
   useEffect(() => {
     const dropdown = dropdownRef.current as any as { searchRef: React.MutableRefObject<HTMLInputElement> }
@@ -28,17 +31,17 @@ export const CategoryField: FC<CategoryFieldProps> = ({ addField, onBlur, onChan
   return (
     <Dropdown
       fluid
-      selection
       search
+      selection
+      selectOnBlur
       value={value}
       options={categories}
       openOnFocus={false}
-      placeholder="Select category…"
       // error={error}
       // disabled={disabled}
-      onBlur={onBlur}
-      onChange={onChange}
-      onKeyDown={handleKeyDown}
+      onChange={handleChange}
+      onKeyDown={onKeyDown}
+      placeholder="Select category…"
       ref={dropdownRef}
     />
   )

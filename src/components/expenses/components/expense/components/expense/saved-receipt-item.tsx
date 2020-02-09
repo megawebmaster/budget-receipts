@@ -18,7 +18,7 @@ export const SavedReceiptItem: FC<ReceiptItemProps> = ({ children, disabled, ite
 
   const update = useCallback((field: ReceiptItemFields, value: any) => {
     switch (field) {
-      case 'category':
+      case 'categoryId':
         return setCategory(value)
       case 'description':
         return setDescription(value)
@@ -40,12 +40,13 @@ export const SavedReceiptItem: FC<ReceiptItemProps> = ({ children, disabled, ite
     }
   }, [onUpdate, item, description, categoryId, value])
 
-  const onBlur = useCallback(() => {
+  const onBlur = useCallback((field: ExpenseFields, newValue: any) => {
     onUpdate({
       ...item,
       categoryId,
       description,
       value,
+      [field]: newValue
     })
   }, [onUpdate, item, description, categoryId, value])
 

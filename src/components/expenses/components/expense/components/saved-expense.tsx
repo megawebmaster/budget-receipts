@@ -51,7 +51,7 @@ export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
   const onKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       switch (field) {
-        case 'category':
+        case 'categoryId':
         case 'value':
         case 'description':
           setTimeout(() => fields.category !== null && fields.category.focus(), 0)
