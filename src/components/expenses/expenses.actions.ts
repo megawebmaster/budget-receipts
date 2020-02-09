@@ -1,5 +1,5 @@
 import { createAction } from 'typesafe-actions'
-import { ApiReceipt, ImageParsingResult, Receipt, ReceiptItem } from './receipt.types'
+import { ApiReceipt, ChangeReceiptItem, ImageParsingResult, Receipt, ReceiptItem } from './receipt.types'
 import { DownloadValue } from '../../connection.types'
 
 export type AddReceipt = {
@@ -13,7 +13,7 @@ export type AddReceiptItem = {
 export type UpdateReceiptItem = {
   id: number
   itemId: number
-  value: ReceiptItem
+  value: ChangeReceiptItem
 }
 export type DeleteReceiptItem = {
   id: number

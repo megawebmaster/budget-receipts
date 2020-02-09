@@ -1,19 +1,20 @@
 import React, { FC } from 'react'
 import { Button, ButtonGroup } from 'semantic-ui-react'
 
-import { Receipt, ReceiptItem as ItemType } from '../../../../receipt.types'
+import { ChangeReceiptItem, Receipt, ReceiptItem } from '../../../../receipt.types'
 import { DeleteReceiptItem, UpdateReceiptItem } from '../../../../expenses.actions'
 
 type ItemButtonsProps = {
   deleteItem: (item: DeleteReceiptItem) => void
-  item: ItemType
+  itemId: ReceiptItem['id']
+  item: ChangeReceiptItem
   receipt: Receipt
   updateItem: (item: UpdateReceiptItem) => void
 }
 
-export const ItemButtons: FC<ItemButtonsProps> = ({ deleteItem, item, receipt: { id, processing }, updateItem }) => {
-  const save = () => updateItem({ id, itemId: item.id, value: item })
-  const remove = () => deleteItem({ id, itemId: item.id })
+export const ItemButtons: FC<ItemButtonsProps> = ({ deleteItem, itemId, item, receipt: { id, processing }, updateItem }) => {
+  const save = () => updateItem({ id, itemId, value: item })
+  const remove = () => deleteItem({ id, itemId })
 
   return (
     <ButtonGroup fluid>

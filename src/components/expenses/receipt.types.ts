@@ -1,17 +1,21 @@
 export type ReceiptItem = {
   id: number
-  category: {
-    id?: number
-  }
+  categoryId: number
   value: number
   description?: string
   receiptId: number
 }
 
 export type NewReceiptItem = {
-  category: number
+  categoryId: number
   value: number
   description?: string
+}
+
+export type ChangeReceiptItem = {
+  categoryId?: ReceiptItem['categoryId']
+  value?: ReceiptItem['value']
+  description?: ReceiptItem['description']
 }
 
 export type Receipt = {

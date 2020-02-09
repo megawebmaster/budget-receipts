@@ -36,7 +36,9 @@ export const NewExpense = () => {
   }, [receipt.id])
 
   const updateItem = useCallback((item: UpdateReceiptItem) => {
-    setItems(items => items.map(currentItem => currentItem.id === item.itemId ? item.value : currentItem))
+    setItems(items => items.map(currentItem =>
+      currentItem.id === item.itemId ? { ...currentItem, ...item.value } : currentItem
+    ))
   }, [])
 
   const deleteItem = useCallback((item: DeleteReceiptItem) => {

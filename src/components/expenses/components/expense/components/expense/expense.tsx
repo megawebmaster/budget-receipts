@@ -7,7 +7,7 @@ import {
   Receipt,
   ReceiptItem as ItemType,
   NewReceiptItem as NewItemType,
-  ReceiptUpdateFields, ReceiptItem,
+  ReceiptUpdateFields, ReceiptItem, ChangeReceiptItem,
 } from '../../../../receipt.types'
 import { DeleteReceiptItem, UpdateReceiptItem } from '../../../../expenses.actions'
 import { SavedReceiptItem } from './saved-receipt-item'
@@ -15,7 +15,7 @@ import { NewReceiptItem } from './new-receipt-item'
 import { ReceiptHeader } from '../../../receipt-header'
 import { ItemButtons } from '../item-buttons'
 import { NewItemButtons } from '../new-item-buttons'
-import { ExpenseFields, FocusableExpenseFields } from '../../expense.types'
+import { ExpenseFields, FocusableExpenseFields, ReceiptFields } from '../../expense.types'
 
 import styles from '../../expense.module.css'
 
@@ -44,7 +44,7 @@ export const Expense: FC<ExpenseProps> =
     const [day, setDay] = useState(receipt.day)
     const [shop, setShop] = useState(receipt.shop)
 
-    const update = useCallback((field: keyof ReceiptUpdateFields, value: any) => {
+    const update = useCallback((field: ReceiptFields, value: any) => {
       switch (field) {
         case 'day':
           return setDay(value)
@@ -55,13 +55,13 @@ export const Expense: FC<ExpenseProps> =
       }
     }, [])
 
-    const renderItemButtons = useCallback((item: ReceiptItem) => (
-      <ItemButtons receipt={receipt} item={item} updateItem={updateItem} deleteItem={deleteItem} />
+    const renderItemButtons = useCallback((itemId: ReceiptItem['id'], item: ChangeReceiptItem) => (
+      <ItemButtons receipt={receipt} itemId={itemId} item={item} updateItem={updateItem} deleteItem={deleteItem} />
     ), [receipt, updateItem, deleteItem])
 
-    const renderNewItemButtons = useCallback((category: number, value: number, description: string, reset) => (
+    const renderNewItemButtons = useCallback((categoryId: number, value: number, description: string, reset) => (
       <NewItemButtons
-        item={{ category, value, description }}
+        item={{ categoryId, value, description }}
         reset={reset}
         addItem={addItem}
       />

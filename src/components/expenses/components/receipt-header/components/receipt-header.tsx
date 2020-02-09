@@ -2,17 +2,16 @@ import React, { FC, ReactNode, useCallback } from 'react'
 import { Grid, Input, Responsive } from 'semantic-ui-react'
 
 import styles from '../receipt-header.module.css'
-import { ReceiptUpdateFields } from '../../../receipt.types'
 import { DayField } from './day-field'
 import { CurrencyInput } from '../../../../currency-input'
-import { ExpenseFields, FocusableExpenseFields } from '../../expense/expense.types'
+import { ExpenseFields, FocusableExpenseFields, ReceiptFields } from '../../expense/expense.types'
 
 type ReceiptHeaderProps = {
   addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
   children: (day?: number, shop?: string) => ReactNode
   day?: number
   onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, value: any) => void
-  onUpdate: (field: keyof ReceiptUpdateFields, value: any) => void
+  onUpdate: (field: ReceiptFields, value: any) => void
   shop?: string
   total?: number
 }

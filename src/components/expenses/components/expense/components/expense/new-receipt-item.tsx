@@ -12,7 +12,7 @@ type NewReceiptItemProps = {
 }
 
 export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, onKeyDown, onSave }) => {
-  const [category, setCategory] = useState<number | string>('')
+  const [categoryId, setCategory] = useState<number | string>('')
   const [value, setValue] = useState<number | string>('')
   const [description, setDescription] = useState<string>('')
 
@@ -46,7 +46,7 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, on
 
   return (
     <ReceiptItem
-      category={category}
+      categoryId={categoryId}
       description={description}
       disabled={false}
       value={value}
@@ -54,7 +54,7 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, on
       addField={addField}
       onKeyDown={handleKeyDown}
     >
-      {children(category as number, value as number, description, reset)}
+      {children(categoryId as number, value as number, description, reset)}
     </ReceiptItem>
   )
 }

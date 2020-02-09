@@ -21,8 +21,8 @@ export function ParsingWorker(this: Worker) {
         id: data.id,
         value: {
           description,
+          categoryId: 1,
           value: item.total,
-          category: { id: 1 },
         },
       } as ProcessingMessage)
     })

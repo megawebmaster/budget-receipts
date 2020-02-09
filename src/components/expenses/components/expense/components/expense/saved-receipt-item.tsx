@@ -1,22 +1,22 @@
 import React, { FC, useCallback, useState } from 'react'
 
 import { ReceiptItem } from '../../../receipt-item'
-import { ReceiptItem as ItemType } from '../../../../receipt.types'
-import { ExpenseFields } from '../../expense.types'
+import { ChangeReceiptItem, ReceiptItem as ItemType } from '../../../../receipt.types'
+import { ExpenseFields, ReceiptItemFields } from '../../expense.types'
 
 type ReceiptItemProps = {
-  children: (item: ItemType) => JSX.Element
+  children: (itemId: ItemType['id'], item: ChangeReceiptItem) => JSX.Element
   disabled: boolean
   item: ItemType
   onUpdate: (item: ItemType) => void
 }
 
 export const SavedReceiptItem: FC<ReceiptItemProps> = ({ children, disabled, item, onUpdate }) => {
-  const [category, setCategory] = useState(item.category.id)
+  const [categoryId, setCategory] = useState(item.categoryId)
   const [description, setDescription] = useState(item.description)
   const [value, setValue] = useState<number>(item.value)
 
-  const update = useCallback((field, value) => {
+  const update = useCallback((field: ReceiptItemFields, value: any) => {
     switch (field) {
       case 'category':
         return setCategory(value)
@@ -33,23 +33,23 @@ export const SavedReceiptItem: FC<ReceiptItemProps> = ({ children, disabled, ite
     if (event.key === 'Enter') {
       onUpdate({
         ...item,
+        categoryId,
         description,
-        category: { id: category },
-        value: value,
+        value,
       })
     }
-  }, [onUpdate, item, description, category, value])
+  }, [onUpdate, item, description, categoryId, value])
 
   return (
     <ReceiptItem
-      category={category}
+      categoryId={categoryId}
       disabled={disabled}
       description={description}
       onKeyDown={onKeyDown}
       onUpdate={update}
       value={value}
     >
-      {children({ description, value, category: { id: category }, id: item.id, receiptId: item.receiptId })}
+      {children(item.id, { description, value, categoryId })}
     </ReceiptItem>
   )
 }

@@ -55,8 +55,8 @@ const receiveExpenseMatchesEpic: Epic<AppAction, AppAction, AppState> = () => ne
           id: response.id,
           value: {
             id: Date.now(),
+            categoryId: response.value.categoryId,
             description: response.value.description,
-            category: response.value.category,
             receiptId: 0, // TODO: Pass proper receipt ID
             value: response.value.value,
           },
