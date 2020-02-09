@@ -13,6 +13,7 @@ export type ExpensesListItemProps = {
   children: JSX.Element
   description?: string
   disabled: boolean
+  onBlur?: () => void
   onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, item: NewReceiptItem) => void
   onUpdate: (key: ReceiptItemFields, value: any) => void
   value: number | string
@@ -58,6 +59,7 @@ export const ReceiptItem: FC<ExpensesListItemProps> =
         <Grid.Column mobile={8} tablet={6} computer={6}>
           <CategoryField
             addField={addCategoryField}
+            onBlur={onBlur}
             onChange={updateCategory}
             onKeyDown={categoryKeyDown}
             value={categoryId}

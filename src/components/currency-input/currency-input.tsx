@@ -11,10 +11,11 @@ type CurrencyInputProps = {
   disabled?: boolean
   label?: string
   narrowOnMobile?: boolean
+  onBlur?: () => void
+  onKeyDown?: (event: React.KeyboardEvent, value: number) => void
+  onUpdate?: (value: number) => void
   placeholder?: string
   value: number | string
-  onUpdate?: (value: number) => void
-  onKeyDown?: (event: React.KeyboardEvent, value: number) => void
 }
 
 const getValueFromEvent = (event: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +25,18 @@ const getValueFromEvent = (event: React.KeyboardEvent<HTMLInputElement> | React.
 }
 
 export const CurrencyInput: FC<CurrencyInputProps> =
-  ({ className, currency, disabled = false, label, narrowOnMobile = false, onUpdate, onKeyDown, placeholder = '0.00', value }) => {
+  ({
+     className,
+     currency,
+     disabled = false,
+     label,
+     narrowOnMobile = false,
+     onBlur,
+     onKeyDown,
+     onUpdate,
+     placeholder = '0.00',
+     value
+  }) => {
     const intl = useIntl()
     const formatCurrency = useCallback(
       (value: number | string, useGrouping = true) =>
@@ -46,7 +58,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
     const [price, setPrice] = useState(formatCurrency(value, false))
     const [formattedPrice, setFormattedPrice] = useState(formatCurrency(value))
 
-    const onFocus = () => {
+    const handleFocus = () => {
       setFocus(true)
       if (price) {
         setPrice(formatCurrency(parseFloat(price.replace(',', '.')), false))
@@ -54,7 +66,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
       ref.current?.select()
     }
 
-    const onBlur = () => {
+    const handleBlur = () => {
       const numericValue = parseFloat(price.replace(',', '.'))
       setFocus(false)
 
@@ -64,6 +76,10 @@ export const CurrencyInput: FC<CurrencyInputProps> =
         if (value !== numericValue && onUpdate) {
           onUpdate(numericValue)
         }
+      }
+
+      if (onBlur) {
+        onBlur()
       }
     }
 
@@ -110,9 +126,9 @@ export const CurrencyInput: FC<CurrencyInputProps> =
         disabled={disabled}
         error={hasError}
         labelPosition="right"
-        onBlur={onBlur}
+        onBlur={handleBlur}
         onChange={update}
-        onFocus={onFocus}
+        onFocus={handleFocus}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         ref={ref}

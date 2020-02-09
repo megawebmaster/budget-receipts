@@ -6,12 +6,13 @@ import { dropdownCategories } from '../../../../../categories'
 
 export type CategoryFieldProps = {
   addField: (input: HTMLInputElement | null) => void
+  onBlur?: () => void
   onChange: (event: SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void
   onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>, value: any) => void
   value?: number | string
 }
 
-export const CategoryField: FC<CategoryFieldProps> = ({ addField, onChange, onKeyDown, value }) => {
+export const CategoryField: FC<CategoryFieldProps> = ({ addField, onBlur, onChange, onKeyDown, value }) => {
   const categories = useSelector(dropdownCategories)
   const dropdownRef = useRef(null)
 
@@ -35,6 +36,7 @@ export const CategoryField: FC<CategoryFieldProps> = ({ addField, onChange, onKe
       placeholder="Select category…"
       // error={error}
       // disabled={disabled}
+      onBlur={onBlur}
       onChange={onChange}
       onKeyDown={handleKeyDown}
       ref={dropdownRef}

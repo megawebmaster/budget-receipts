@@ -40,11 +40,21 @@ export const SavedReceiptItem: FC<ReceiptItemProps> = ({ children, disabled, ite
     }
   }, [onUpdate, item, description, categoryId, value])
 
+  const onBlur = useCallback(() => {
+    onUpdate({
+      ...item,
+      categoryId,
+      description,
+      value,
+    })
+  }, [onUpdate, item, description, categoryId, value])
+
   return (
     <ReceiptItem
       categoryId={categoryId}
       disabled={disabled}
       description={description}
+      onBlur={onBlur}
       onKeyDown={onKeyDown}
       onUpdate={update}
       value={value}
