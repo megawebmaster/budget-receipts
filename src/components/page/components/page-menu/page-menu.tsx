@@ -4,9 +4,10 @@ import { Button, Dropdown, Icon, Menu, Responsive, Segment } from 'semantic-ui-r
 
 import {
   AvailableRoutes,
-  budget as budgetSelector, location,
+  budget as budgetSelector,
   month as monthSelector,
   year as yearSelector,
+  yearByLocation,
 } from '../../../../routes'
 import { useSelector } from 'react-redux'
 import {
@@ -29,7 +30,7 @@ export const PageMenu = React.memo(
     const year = useSelector(yearSelector)
     const month = useSelector(monthSelector)
     const budget = useSelector(budgetSelector)
-    const currentRoute = useSelector(location)
+    const yearChangeRoute = useSelector(yearByLocation)
 
     const [expanded, setExpanded] = useState(false)
     const toggleExpanded = useCallback(() => setExpanded(value => !value), [setExpanded])
@@ -66,7 +67,7 @@ export const PageMenu = React.memo(
                     key={`year-${y}`}
                     text={y}
                     as={NavLink}
-                    to={{ type: currentRoute, payload: { budget, year: y, month: 1 } }}
+                    to={{ type: yearChangeRoute, payload: { budget, year: y } }}
                   />,
                 )}
               </Dropdown.Menu>
@@ -130,11 +131,10 @@ export const PageMenu = React.memo(
                 )}
                 <Menu.Menu>
                   {years && years.map(y => (
-                    // TODO: How to show currently selected year
                     <Menu.Item
                       key={`year-${y}`}
                       as={NavLink}
-                      to={{ type: currentRoute, payload: { budget, year: y, month: 1 } }}
+                      to={{ type: yearChangeRoute, payload: { budget, year: y } }}
                       activeClassName="active"
                       onClick={toggleExpanded}
                     >
