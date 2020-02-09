@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { Input, Label, Responsive } from 'semantic-ui-react'
+import { Input, InputOnChangeData, Label, Responsive } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
 import cx from 'classnames'
 
@@ -14,7 +14,13 @@ type CurrencyInputProps = {
   placeholder?: string
   value: number | string
   onUpdate?: (value: number) => void
-  onKeyDown?: (event: React.KeyboardEvent) => void
+  onKeyDown?: (event: React.KeyboardEvent, value: number) => void
+}
+
+const getValueFromEvent = (event: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
+  const newValue = event.currentTarget?.value.replace(',', '.')
+
+  return parseFloat(newValue)
 }
 
 export const CurrencyInput: FC<CurrencyInputProps> =
@@ -40,54 +46,60 @@ export const CurrencyInput: FC<CurrencyInputProps> =
     const [price, setPrice] = useState(formatCurrency(value, false))
     const [formattedPrice, setFormattedPrice] = useState(formatCurrency(value))
 
-    const onFocus = useCallback(() => {
+    const onFocus = () => {
       setFocus(true)
-      setPrice(formatCurrency(value, false))
-      ref.current?.select()
-    }, [value, formatCurrency])
-    const onBlur = useCallback((event) => {
-      const newValue = event.target.value.replace(',', '.')
-      const numericValue = parseFloat(newValue)
-
-      setFocus(false)
-      setPrice(formatCurrency(newValue, false))
-
-      if (!isNaN(numericValue) && value !== numericValue && onUpdate) {
-        onUpdate(numericValue)
+      if (price) {
+        setPrice(formatCurrency(parseFloat(price.replace(',', '.')), false))
       }
-    }, [value, formatCurrency, onUpdate])
+      ref.current?.select()
+    }
 
-    const update = useCallback((event) => {
-      const newValue = event.target.value.replace(',', '.')
+    const onBlur = () => {
+      const numericValue = parseFloat(price.replace(',', '.'))
+      setFocus(false)
 
+      if (!isNaN(numericValue)) {
+        setPrice(formatCurrency(numericValue, false))
+
+        if (value !== numericValue && onUpdate) {
+          onUpdate(numericValue)
+        }
+      }
+    }
+
+    const update = (event: React.ChangeEvent<HTMLInputElement>, data: InputOnChangeData) => {
+      setPrice(data.value)
       setError(false)
-      setPrice(event.target.value)
 
+      if (data.value.length === 0) {
+        setFormattedPrice('')
+        return
+      }
+
+      const newValue = getValueFromEvent(event)
       if (isNaN(newValue)) {
         setError(true)
         return
       }
 
-      setFormattedPrice(formatCurrency(parseFloat(newValue)))
-    }, [formatCurrency])
+      setFormattedPrice(formatCurrency(newValue))
+    }
 
-    const handleKeyDown = useCallback((event: React.KeyboardEvent) => {
-      if (event.key === 'Enter') {
-        const element = event.target as HTMLInputElement
-        const newValue = element?.value.replace(',', '.')
-        const numericValue = parseFloat(newValue)
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      const newValue = getValueFromEvent(event)
 
-        if (newValue && !isNaN(numericValue) && onUpdate) {
-          onUpdate(numericValue)
-        }
-      }
       if (onKeyDown) {
-        onKeyDown(event)
+        if (event.key === 'Enter') {
+          setPrice('')
+          setFormattedPrice('')
+        }
+        onKeyDown(event, isNaN(newValue) ? value as number : newValue)
       }
-    }, [onUpdate, onKeyDown])
+    }
 
     useEffect(() => {
       setError(false)
+      setPrice(typeof value === 'number' ? formatCurrency(value, false) : value)
       setFormattedPrice(formatCurrency(value))
     }, [value, formatCurrency])
 

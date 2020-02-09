@@ -18,7 +18,7 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, on
 
   const reset = useCallback(() => {
     setCategory('')
-    setValue(0)
+    setValue('')
     setDescription('')
   }, [])
   const update = useCallback((field, value) => {
