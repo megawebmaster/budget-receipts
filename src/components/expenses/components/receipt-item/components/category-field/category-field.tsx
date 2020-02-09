@@ -1,25 +1,19 @@
-import React, { FC, SyntheticEvent, useCallback, useEffect, useRef } from 'react'
+import React, { FC, SyntheticEvent, useEffect, useRef } from 'react'
 import { Dropdown, DropdownProps } from 'semantic-ui-react'
-import { dropdownCategories } from '../../../../../categories'
 import { useSelector } from 'react-redux'
+
+import { dropdownCategories } from '../../../../../categories'
 
 export type CategoryFieldProps = {
   addField: (input: HTMLInputElement | null) => void
   onChange: (event: SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void
+  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
   value?: number | string
 }
 
-
-export const CategoryField: FC<CategoryFieldProps> = ({ addField, onChange, value }) => {
+export const CategoryField: FC<CategoryFieldProps> = ({ addField, onChange, onKeyDown, value }) => {
   const categories = useSelector(dropdownCategories)
   const dropdownRef = useRef(null)
-
-  const blockKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (event.key === 'Enter') {
-      event.stopPropagation()
-      event.preventDefault()
-    }
-  }, [])
 
   useEffect(() => {
     const dropdown = dropdownRef.current as any as { searchRef: React.MutableRefObject<HTMLInputElement> }
@@ -38,7 +32,7 @@ export const CategoryField: FC<CategoryFieldProps> = ({ addField, onChange, valu
       // error={error}
       // disabled={disabled}
       onChange={onChange}
-      onKeyDown={blockKeyDown}
+      onKeyDown={onKeyDown}
       ref={dropdownRef}
     />
   )

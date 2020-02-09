@@ -18,7 +18,7 @@ export type Receipt = {
   processing?: boolean
 }
 
-export type ReceiptUpdateFields = Pick<Receipt, 'day' | 'shop'>
+export type ReceiptUpdateFields = Partial<Pick<Receipt, 'day' | 'shop'>>
 
 export type ApiReceipt = {
   id: number

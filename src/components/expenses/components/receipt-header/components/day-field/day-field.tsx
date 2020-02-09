@@ -10,7 +10,7 @@ import { month as monthSelector, year as yearSelector } from '../../../../../../
 export type DayFieldProps = {
   addField: (input: HTMLInputElement | null) => void
   onChange: (day: string) => void
-  onKeyDown: (event: React.KeyboardEvent) => void
+  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
   value: string
 }
 

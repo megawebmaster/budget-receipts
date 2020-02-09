@@ -11,7 +11,7 @@ type ReceiptHeaderProps = {
   addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
   children: (day?: number, shop?: string) => ReactNode
   day?: number
-  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent) => void
+  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, value: any) => void
   onUpdate: (field: keyof ReceiptUpdateFields, value: any) => void
   shop?: string
   total?: number
@@ -26,11 +26,11 @@ export const ReceiptHeader: FC<ReceiptHeaderProps> = ({ day, shop, total, onUpda
     [addField],
   )
   const dayKeyDown = useCallback(
-    (event: React.KeyboardEvent) => onKeyDown && onKeyDown('day', event),
+    (event: React.KeyboardEvent<HTMLInputElement>) => onKeyDown && onKeyDown('day', event, event.currentTarget.value),
     [onKeyDown],
   )
   const shopKeyDown = useCallback(
-    (event: React.KeyboardEvent) => onKeyDown && onKeyDown('shop', event),
+    (event: React.KeyboardEvent<HTMLInputElement>) => onKeyDown && onKeyDown('shop', event, event.currentTarget.value),
     [onKeyDown],
   )
 

@@ -7,7 +7,7 @@ import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
 type NewReceiptItemProps = {
   addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
   children: (category: number, value: number, description: string, reset: () => void) => JSX.Element
-  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent) => void
+  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, value: any) => void
   onSave: (item: NewItemType) => void
 }
 
@@ -16,11 +16,11 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, on
   const [value, setValue] = useState<number | string>('')
   const [description, setDescription] = useState<string>('')
 
-  const reset = useCallback(() => {
+  const reset = () => {
     setCategory('')
     setValue('')
     setDescription('')
-  }, [])
+  }
   const update = useCallback((field, value) => {
     switch (field) {
       case 'category':
@@ -33,21 +33,22 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, on
         setDescription(value)
     }
   }, [])
-  const handleKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
+
+  const handleKeyDown = (field: ExpenseFields, event: React.KeyboardEvent, newValue: any) => {
     if (event.key === 'Enter') {
       onSave({
-        value: value as number, // TODO: Fix number type cast
-        category: { id: category as number }, // TODO: Fix number type cast
+        value: value as number,
+        category: { id: category as number },
         description: description,
+        [field]: newValue
       })
       reset()
     }
     if (onKeyDown) {
-      onKeyDown(field, event)
+      onKeyDown(field, event, newValue)
     }
-  }, [onKeyDown, onSave, reset, category, value, description])
+  }
 
-  // TODO: Fix number type cast
   return (
     <ReceiptItem
       category={category}

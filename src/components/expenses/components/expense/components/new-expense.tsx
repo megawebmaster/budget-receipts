@@ -1,6 +1,7 @@
 import React, { Fragment, useCallback, useState } from 'react'
 import { Button, ButtonGroup, Responsive } from 'semantic-ui-react'
 import { useDispatch } from 'react-redux'
+import { pick } from 'ramda'
 
 import { NewReceiptItem, Receipt, ReceiptItem, ReceiptUpdateFields } from '../../../receipt.types'
 import { PhotoButton } from './photo-button'
@@ -41,30 +42,32 @@ export const NewExpense = () => {
     setItems(items => items.filter(currentItem => currentItem.id !== item.itemId))
   }, [])
 
-  const reset = useCallback(() => {
+  const saveReceipt = useCallback((values: ReceiptUpdateFields) => {
+    dispatch(addReceipt({
+      items,
+      receipt: {
+        ...receipt,
+        ...pick(['day', 'shop'], values),
+        expanded: false
+      }
+    }))
     setReceipt(emptyReceipt())
     setItems([])
-  }, [])
-
-  const saveReceipt = useCallback((values: ReceiptUpdateFields) => {
-    dispatch(addReceipt({ receipt: { ...receipt, ...values, expanded: false }, items }))
-    reset()
-  }, [dispatch, reset, items, receipt])
+  }, [dispatch, items, receipt])
 
   const onKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
     switch (event.key) {
       case 'Enter':
         switch (field) {
+          case 'category':
           case 'day':
           case 'shop':
           case 'value':
           case 'description':
             if (event.ctrlKey) {
-              if (fields.day !== null) {
-                fields.day.focus()
-              }
-            } else if (fields.category !== null) {
-              fields.category.focus()
+              setTimeout(() => fields.day !== null && fields.day.focus(), 0)
+            } else {
+              setTimeout(() => fields.category !== null && fields.category.focus(), 0)
             }
             break
         }
@@ -73,9 +76,7 @@ export const NewExpense = () => {
         switch (field) {
           case 'value':
           case 'description':
-            if (fields.day !== null) {
-              fields.day.focus()
-            }
+            setTimeout(() => fields.day !== null && fields.day.focus(), 0)
             break
         }
         break
@@ -89,7 +90,7 @@ export const NewExpense = () => {
         <Responsive maxWidth={Responsive.onlyTablet.maxWidth} as={ButtonGroup} fluid>
           <PhotoButton />
           <Button.Or />
-          <Button color="green" icon="plus" onClick={onSave} />
+          <Button color="green" icon="plus" tabIndex={-1} onClick={onSave} />
         </Responsive>
         <Responsive
           {...Responsive.onlyComputer}
@@ -97,6 +98,7 @@ export const NewExpense = () => {
           fluid
           color="green"
           icon="plus"
+          tabIndex={-1}
           onClick={onSave} />
       </Fragment>
     )

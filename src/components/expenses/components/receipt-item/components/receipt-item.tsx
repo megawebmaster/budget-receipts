@@ -13,7 +13,7 @@ export type ExpensesListItemProps = {
   children: JSX.Element
   description?: string
   disabled: boolean
-  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent) => void
+  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, value: any) => void
   onUpdate: (key: keyof ItemType, value: any) => void
   value: number | string
 }
@@ -28,12 +28,16 @@ export const ReceiptItem: FC<ExpensesListItemProps> =
       (input: HTMLInputElement | null) => addField && addField('category', input),
       [addField],
     )
+    const categoryKeyDown = useCallback(
+      (event: React.KeyboardEvent) => onKeyDown && onKeyDown('category', event, null),
+      [onKeyDown],
+    )
     const valueKeyDown = useCallback(
-      (event: React.KeyboardEvent) => onKeyDown && onKeyDown('value', event),
+      (event: React.KeyboardEvent, value: number) => onKeyDown && onKeyDown('value', event, value),
       [onKeyDown],
     )
     const descriptionKeyDown = useCallback(
-      (event: React.KeyboardEvent) => onKeyDown && onKeyDown('description', event),
+      (event: React.KeyboardEvent<HTMLInputElement>) => onKeyDown && onKeyDown('description', event, event.currentTarget.value),
       [onKeyDown],
     )
 
@@ -43,6 +47,7 @@ export const ReceiptItem: FC<ExpensesListItemProps> =
           <CategoryField
             addField={addCategoryField}
             onChange={updateCategory}
+            onKeyDown={categoryKeyDown}
             value={category}
           />
         </Grid.Column>

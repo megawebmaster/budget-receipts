@@ -26,7 +26,7 @@ type ExpenseProps = {
   deleteItem: (item: DeleteReceiptItem) => void
   expanded: boolean
   items: ItemType[]
-  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent) => void
+  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, value: any) => void
   onSave: (values: ReceiptUpdateFields) => void
   receipt: Receipt
   updateItem: (item: UpdateReceiptItem) => void
@@ -72,14 +72,14 @@ export const Expense: FC<ExpenseProps> =
       updateItem({ id: receipt.id, itemId: item.id, value: item })
     ), [updateItem, receipt.id])
 
-    const handleKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
+    const handleKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent, newValue: any) => {
       if (event.key === 'Enter' && event.ctrlKey) {
-        onSave({ day, shop })
+        onSave({ [field]: newValue })
       }
       if (onKeyDown) {
-        onKeyDown(field, event)
+        onKeyDown(field, event, newValue)
       }
-    }, [onKeyDown, onSave, day, shop])
+    }, [onKeyDown, onSave])
 
     useEffect(() => {
       setDay(receipt.day)
