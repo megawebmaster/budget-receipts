@@ -2,7 +2,7 @@ import React, { FC, useCallback } from 'react'
 import { Grid, Input } from 'semantic-ui-react'
 
 import styles from '../receipt-item.module.css'
-import { ReceiptItem as ItemType } from '../../../receipt.types'
+import { NewReceiptItem, ReceiptItem as ItemType } from '../../../receipt.types'
 import { CategoryField } from './category-field'
 import { CurrencyInput } from '../../../../currency-input'
 import { ExpenseFields, FocusableExpenseFields } from '../../expense/expense.types'
@@ -13,7 +13,7 @@ export type ExpensesListItemProps = {
   children: JSX.Element
   description?: string
   disabled: boolean
-  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, value: any) => void
+  onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, item: NewReceiptItem) => void
   onUpdate: (key: keyof ItemType, value: any) => void
   value: number | string
 }
@@ -29,16 +29,28 @@ export const ReceiptItem: FC<ExpensesListItemProps> =
       [addField],
     )
     const categoryKeyDown = useCallback(
-      (event: React.KeyboardEvent) => onKeyDown && onKeyDown('category', event, null),
-      [onKeyDown],
+      (event: React.KeyboardEvent, newValue: number) => onKeyDown && onKeyDown('category', event, {
+        description,
+        category: newValue,
+        value: value as number,
+      }),
+      [onKeyDown, description, value],
     )
     const valueKeyDown = useCallback(
-      (event: React.KeyboardEvent, value: number) => onKeyDown && onKeyDown('value', event, value),
-      [onKeyDown],
+      (event: React.KeyboardEvent, newValue: number) => onKeyDown && onKeyDown('value', event, {
+        description,
+        category: category as number,
+        value: newValue,
+      }),
+      [onKeyDown, category, description],
     )
     const descriptionKeyDown = useCallback(
-      (event: React.KeyboardEvent<HTMLInputElement>) => onKeyDown && onKeyDown('description', event, event.currentTarget.value),
-      [onKeyDown],
+      (event: React.KeyboardEvent<HTMLInputElement>) => onKeyDown && onKeyDown('description', event, {
+        value: value as number,
+        category: category as number,
+        description: event.currentTarget.value,
+      }),
+      [onKeyDown, category, value],
     )
 
     return (

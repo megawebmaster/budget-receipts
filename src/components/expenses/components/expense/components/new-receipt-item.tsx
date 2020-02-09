@@ -34,14 +34,9 @@ export const NewReceiptItem: FC<NewReceiptItemProps> = ({ addField, children, on
     }
   }, [])
 
-  const handleKeyDown = (field: ExpenseFields, event: React.KeyboardEvent, newValue: any) => {
+  const handleKeyDown = (field: ExpenseFields, event: React.KeyboardEvent, newValue: NewItemType) => {
     if (event.key === 'Enter') {
-      onSave({
-        value: value as number,
-        category: { id: category as number },
-        description: description,
-        [field]: newValue
-      })
+      onSave(newValue)
       reset()
     }
     if (onKeyDown) {

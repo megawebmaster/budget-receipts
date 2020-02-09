@@ -8,7 +8,11 @@ export type ReceiptItem = {
   receiptId: number
 }
 
-export type NewReceiptItem = Omit<ReceiptItem, 'id' | 'receiptId'>
+export type NewReceiptItem = {
+  category: number
+  value: number
+  description?: string
+}
 
 export type Receipt = {
   id: number
@@ -18,7 +22,11 @@ export type Receipt = {
   processing?: boolean
 }
 
-export type ReceiptUpdateFields = Partial<Pick<Receipt, 'day' | 'shop'>>
+export type ReceiptUpdateFields = {
+  day?: Receipt['day']
+  shop?: Receipt['shop']
+  item?: NewReceiptItem
+}
 
 export type ApiReceipt = {
   id: number

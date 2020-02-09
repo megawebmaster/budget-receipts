@@ -60,9 +60,8 @@ export const Expense: FC<ExpenseProps> =
     ), [receipt, updateItem, deleteItem])
 
     const renderNewItemButtons = useCallback((category: number, value: number, description: string, reset) => (
-      // TODO: Make it easier to work with
       <NewItemButtons
-        item={{ category: { id: category }, value, description }}
+        item={{ category, value, description }}
         reset={reset}
         addItem={addItem}
       />
@@ -74,7 +73,8 @@ export const Expense: FC<ExpenseProps> =
 
     const handleKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent, newValue: any) => {
       if (event.key === 'Enter' && event.ctrlKey) {
-        onSave({ [field]: newValue })
+        const fieldName = ['description', 'category', 'value'].includes(field) ? 'item' : field
+        onSave({ [fieldName]: newValue })
       }
       if (onKeyDown) {
         onKeyDown(field, event, newValue)

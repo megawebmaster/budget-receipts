@@ -8,6 +8,7 @@ import { PhotoButton } from './photo-button'
 import { Expense } from './expense'
 import { addReceipt, DeleteReceiptItem, UpdateReceiptItem } from '../../../expenses.actions'
 import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
+import { createItem } from '../expense.helpers'
 
 const emptyReceipt = (): Receipt => ({
   id: Date.now(),
@@ -31,7 +32,7 @@ export const NewExpense = () => {
   }, [])
 
   const addItem = useCallback((item: NewReceiptItem) => {
-    setItems(items => [...items, { ...item, id: Date.now(), receiptId: receipt.id }])
+    setItems(items => [...items, createItem(receipt.id, item)])
   }, [receipt.id])
 
   const updateItem = useCallback((item: UpdateReceiptItem) => {
@@ -44,7 +45,7 @@ export const NewExpense = () => {
 
   const saveReceipt = useCallback((values: ReceiptUpdateFields) => {
     dispatch(addReceipt({
-      items,
+      items: values.item ? [...items, createItem(receipt.id, values.item)] : items,
       receipt: {
         ...receipt,
         ...pick(['day', 'shop'], values),

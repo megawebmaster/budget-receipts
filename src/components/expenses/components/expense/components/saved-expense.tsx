@@ -14,6 +14,7 @@ import { ReceiptControls } from './receipt-controls'
 import { Expense } from './expense'
 import { createExpenseItemsSelector } from '../../../expenses.selectors'
 import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
+import { createItem } from '../expense.helpers'
 
 type SavedExpenseProps = {
   receipt: Receipt
@@ -38,7 +39,7 @@ export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
   const addItem = useCallback(
     (item: NewReceiptItem) => dispatch(addReceiptItem({
       id: receipt.id,
-      value: { ...item, id: Date.now(), receiptId: receipt.id },
+      value: createItem(receipt.id, item),
     })),
     [dispatch, receipt.id],
   )
