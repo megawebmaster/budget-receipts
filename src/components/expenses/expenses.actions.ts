@@ -43,8 +43,9 @@ export const receiptUpdated = createAction('EXPENSES/receiptUpdated')<SaveValue<
 export const deleteReceipt = createAction('EXPENSES/deleteReceipt')<number>()
 
 export const addReceiptItem = createAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
-export const receiptItemCreated = createAction('EXPENSES/receiptCreated')<SaveValue<ReceiptItem>>()
+export const receiptItemCreated = createAction('EXPENSES/receiptItemCreated')<SaveValue<ReceiptItem>>()
 export const updateReceiptItem = createAction('EXPENSES/updateReceiptItem')<UpdateReceiptItem>()
+export const receiptItemUpdated = createAction('EXPENSES/receiptItemUpdated')<SaveValue<ReceiptItem>>()
 export const deleteReceiptItem = createAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()
 
 export const processReceiptImage = createAction('EXPENSES/processReceiptImage')<Blob>()

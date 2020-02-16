@@ -15,9 +15,9 @@ import {
 } from '../../routes'
 import { ConnectionService } from '../../connection.service'
 import { decryptAction, encryptAction } from '../../encryption'
-import { createReceiptSelector } from './expenses.selectors'
+import { createReceiptItemSelector, createReceiptSelector } from './expenses.selectors'
 import { ApiRequest } from '../../connection.types'
-import { ApiReceipt, Receipt } from './receipt.types'
+import { ApiReceipt, ReceiptItem } from './receipt.types'
 
 const decryptReceipts = decryptAction({
   actionCreator: Actions.updateReceipts,
@@ -68,7 +68,7 @@ const createReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
       return {
         value: {
           ...payload.receipt,
-          items: payload.items
+          items: payload.items,
         },
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}`,
       }
@@ -81,8 +81,8 @@ const createReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
         items: {
           value: true,
           description: true,
-        }
-      }
+        },
+      },
     })),
   )
 
@@ -155,7 +155,41 @@ const createReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
       fields: {
         value: true,
         description: true,
+      },
+    })),
+  )
+
+const updateReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.updateReceiptItem)),
+    map(({ payload }) => {
+      const currentItem = createReceiptItemSelector(payload.id, payload.itemId)(state$.value)
+
+      if (!currentItem) {
+        return null
       }
+
+      const budget = budgetSelector(state$.value)
+      const year = yearSelector(state$.value)
+      const month = monthSelector(state$.value)
+
+      return {
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${payload.id}/items/${payload.itemId}`,
+        value: {
+          ...currentItem,
+          value: payload.value.value ?? currentItem.value,
+          description: payload.value.description ?? currentItem.description,
+        },
+      }
+    }),
+    filter((result: ApiRequest<ReceiptItem> | null): result is ApiRequest<ReceiptItem> => Boolean(result)),
+    map(encryptAction({
+      api: ConnectionService.update,
+      actionCreator: Actions.receiptItemUpdated,
+      fields: {
+        value: true,
+        description: true,
+      },
     })),
   )
 
@@ -182,5 +216,6 @@ export const expensesEpic = combineEpics(
   updateReceiptEpic,
   deleteReceiptEpic,
   createReceiptItemEpic,
+  updateReceiptItemEpic,
   deleteReceiptItemEpic,
 )
