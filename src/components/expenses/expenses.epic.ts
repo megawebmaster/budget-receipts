@@ -15,6 +15,9 @@ import {
 } from '../../routes'
 import { ConnectionService } from '../../connection.service'
 import { decryptAction, encryptAction } from '../../encryption'
+import { createReceiptSelector } from './expenses.selectors'
+import { ApiRequest } from '../../connection.types'
+import { ApiReceipt, Receipt } from './receipt.types'
 
 const decryptReceipts = decryptAction({
   actionCreator: Actions.updateReceipts,
@@ -39,8 +42,8 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
       `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}`
     )),
     mergeMap((url) => of(
-      ConnectionService.fetchFromNetwork(url, Actions.loadReceiptsFromApi),
       ConnectionService.loadFromCache(url, Actions.loadReceiptsFromApi),
+      ConnectionService.fetchFromNetwork(url, Actions.loadReceiptsFromApi),
     )),
     mergeAll(),
   )
@@ -83,6 +86,40 @@ const createReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
     })),
   )
 
+const updateReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.updateReceipt)),
+    map(({ payload }) => {
+      const currentReceipt = createReceiptSelector(payload.id)(state$.value)
+
+      if (!currentReceipt) {
+        return null
+      }
+
+      const budget = budgetSelector(state$.value)
+      const year = yearSelector(state$.value)
+      const month = monthSelector(state$.value)
+
+      return {
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${payload.id}`,
+        value: {
+          ...currentReceipt,
+          day: payload.day ?? currentReceipt.day,
+          shop: payload.shop ?? currentReceipt.shop,
+          items: [],
+        },
+      }
+    }),
+    filter((result: ApiRequest<ApiReceipt> | null): result is ApiRequest<ApiReceipt> => Boolean(result)),
+    map(encryptAction({
+      api: ConnectionService.update,
+      actionCreator: Actions.receiptUpdated,
+      fields: {
+        shop: true,
+      },
+    })),
+  )
+
 const deleteReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.deleteReceipt)),
@@ -109,7 +146,7 @@ const createReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
 
       return {
         value: payload.value,
-        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${payload.id}`,
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${payload.id}/items`,
       }
     }),
     map(encryptAction({
@@ -131,7 +168,7 @@ const deleteReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
       const month = monthSelector(state$.value)
 
       return {
-        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${id}/${itemId}`,
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${id}/items/${itemId}`,
         body: {},
       }
     }),
@@ -142,6 +179,7 @@ export const expensesEpic = combineEpics(
   pageLoadEpic,
   loadReceiptsFromApiEpic,
   createReceiptEpic,
+  updateReceiptEpic,
   deleteReceiptEpic,
   createReceiptItemEpic,
   deleteReceiptItemEpic,

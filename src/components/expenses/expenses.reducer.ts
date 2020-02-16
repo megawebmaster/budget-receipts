@@ -49,9 +49,9 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
     case getType(Actions.addReceipt):
       return prepend(action.payload.receipt, state)
     case getType(Actions.updateReceipt): {
-      const { id, day, shop } = action.payload
+      const { id, ...values } = action.payload
 
-      return state.map(receipt => receipt.id === id ? { ...receipt, day, shop } : receipt)
+      return state.map(receipt => receipt.id === id ? { ...receipt, ...values } : receipt)
     }
     case getType(Actions.deleteReceipt):
       return filter(complement(propEq('id', action.payload)), state)

@@ -6,6 +6,12 @@ export type AddReceipt = {
   receipt: Receipt,
   items: ReceiptItem[]
 }
+export type UpdateReceipt = {
+  id: Receipt['id'],
+  day?: Receipt['day']
+  shop?: Receipt['shop']
+}
+
 export type AddReceiptItem = {
   id: number
   value: ReceiptItem
@@ -32,7 +38,8 @@ export const updateReceiptItems = createAction('EXPENSES/updateReceiptsItems')<D
 
 export const addReceipt = createAction('EXPENSES/addReceipt')<AddReceipt>()
 export const receiptCreated = createAction('EXPENSES/receiptCreated')<SaveValue<ApiReceipt>>()
-export const updateReceipt = createAction('EXPENSES/updateReceipt')<Receipt>()
+export const updateReceipt = createAction('EXPENSES/updateReceipt')<UpdateReceipt>()
+export const receiptUpdated = createAction('EXPENSES/receiptUpdated')<SaveValue<ApiReceipt>>()
 export const deleteReceipt = createAction('EXPENSES/deleteReceipt')<number>()
 
 export const addReceiptItem = createAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
