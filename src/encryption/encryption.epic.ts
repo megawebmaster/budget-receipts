@@ -10,6 +10,7 @@ import { Encryption } from './encryption'
 import { budget as budgetSelector } from '../routes'
 import { ApiAction } from '../api.actions'
 import { requirePassword } from '../components/password-requirement'
+import { noop } from '../system.actions'
 
 // const retryStrategy = ({ maxAttempts, state }: { maxAttempts: number, state: AppState }) =>
 //   (attempts: Observable<any>) =>
@@ -47,8 +48,8 @@ const overFieldsOf = async <T extends { [k: string]: any }, K>(
       const processedValue = await Promise.all(
         item[field].map(async (subitem: any) => ({
           ...subitem,
-          ...(await overFieldsOf(subitem, fields[field] as Fields<any>, process))
-        }))
+          ...(await overFieldsOf(subitem, fields[field] as Fields<any>, process)),
+        })),
       )
 
       return [field, processedValue]
@@ -117,13 +118,19 @@ const encryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
           },
         }
 
-        return await api(request, ({ currentId, value }) => actionCreator({
-          currentId,
-          value: {
-            ...data.value,
-            id: value.id,
-          },
-        }))
+        if (actionCreator) {
+          return await api(request, ({ currentId, value }) => actionCreator({
+            currentId,
+            value: {
+              ...data.value,
+              id: value.id,
+            },
+          }))
+        }
+
+        api(request)
+
+        return noop()
       },
     ),
     // retryWhen(retryStrategy({ maxAttempts: 3, state: state$.value }))

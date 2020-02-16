@@ -1,5 +1,5 @@
 export type SaveValue<TValue> = {
-  currentId: number
+  currentId?: number
   value: TValue
 }
 
@@ -11,5 +11,5 @@ export type DownloadValue<TValue> = {
 export type ApiRequest<TValue extends { id: number }> = {
   params?: Record<string, any>
   url: string
-  value: TValue
+  value?: TValue
 }

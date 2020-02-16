@@ -9,7 +9,7 @@ type DecryptionActionCreator<TValue> = PayloadActionCreator<ActionType<ApiAction
 type EncryptionActionCreator<TValue> = PayloadActionCreator<ActionType<ApiAction>, SaveValue<TValue>>
 type ApiCall<TValue extends TypeWithId> = (
   data: ApiRequest<TValue>,
-  actionCreator: PayloadActionCreator<ActionType<ApiAction>, SaveValue<TValue>>,
+  actionCreator?: PayloadActionCreator<ActionType<ApiAction>, SaveValue<TValue>>,
 ) => Promise<any>
 
 export type Fields<TValue> = Partial<{
@@ -24,15 +24,15 @@ type DecryptionActionParams<TValue> = {
 
 type EncryptionActionParams<TValue extends TypeWithId> = {
   api: ApiCall<TValue>
-  actionCreator: EncryptionActionCreator<TValue>
+  actionCreator?: EncryptionActionCreator<TValue>
   fields?: Fields<TValue>
 }
 
 export const decrypt = createAction('ENCRYPTION/decrypt',
   <TValue>(
     action: TValue,
-    actionCreator: DecryptionActionCreator<TValue>,
     name: string,
+    actionCreator: DecryptionActionCreator<TValue>,
     fields?: Fields<TValue>,
     numericFields?: Fields<TValue>,
   ) => ({ action, actionCreator, fields, name, numericFields }),
@@ -42,19 +42,21 @@ export const encrypt = createAction(
   'ENCRYPTION/encrypt',
   <TValue extends TypeWithId>(
     api: ApiCall<TValue>,
-    actionCreator: EncryptionActionCreator<TValue>,
     data: TValue,
     name: string,
+    actionCreator?: EncryptionActionCreator<TValue>,
     fields?: Fields<TValue>,
   ) => ({ api, actionCreator, data, fields }),
 )()
 
 export const decryptAction =
   <TValue>({ actionCreator, fields, numericFields }: DecryptionActionParams<TValue>) =>
-    (payload: DownloadValue<TValue>) => decrypt(payload, actionCreator, getType(actionCreator), fields, numericFields)
+    (payload: DownloadValue<TValue>) =>
+      decrypt(payload, getType(actionCreator), actionCreator, fields, numericFields)
 
 export const encryptAction =
   <TValue extends TypeWithId>({ api, actionCreator, fields }: EncryptionActionParams<TValue>) =>
-    (data: ApiRequest<TValue>) => encrypt(api, actionCreator, data, getType(actionCreator), fields)
+    (data: ApiRequest<TValue>) =>
+      encrypt(api, data, actionCreator ? getType(actionCreator) : 'noop', actionCreator, fields)
 
 

@@ -53,9 +53,20 @@ export const categories: Record<CategoryType, Selector<AppState, Category[]>> = 
   saving: createCategoriesSelector(accessibleCategories, 'saving'),
 }
 
+export const receiptCategories = createSelector(
+  [categories.expense, categories.irregular],
+  (expenseCategories, irregularCategories): Category[] =>
+    flattenCategories(expenseCategories).concat(flattenCategories(irregularCategories)),
+)
+
+const flattenCategories = (categories: Category[]): Category[] =>
+  categories.flatMap(category =>
+    category.children && category.children.length > 0 ? category.children : [category]
+  )
+
 export const hasVisibleCategories = createSelector(
   [accessibleCategories, yearCategories],
-  (regularCategories, yearlyCategories) => regularCategories.length > 0 || yearlyCategories.length > 0
+  (regularCategories, yearlyCategories) => regularCategories.length > 0 || yearlyCategories.length > 0,
 )
 
 export const createCategorySelector = (categoryId: number) =>

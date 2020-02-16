@@ -13,7 +13,7 @@ import {
 } from '../../../expenses.actions'
 import { ReceiptControls } from './receipt-controls'
 import { Expense } from './expense'
-import { createExpenseItemsSelector } from '../../../expenses.selectors'
+import { createReceiptItemsSelector } from '../../../expenses.selectors'
 import { ExpenseFields, FocusableExpenseFields, ReceiptFields } from '../expense.types'
 import { createItem } from '../expense.helpers'
 
@@ -23,7 +23,7 @@ type SavedExpenseProps = {
 
 export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
   const dispatch = useDispatch()
-  const itemsSelector = useMemo(() => createExpenseItemsSelector(receipt.id), [receipt.id])
+  const itemsSelector = useMemo(() => createReceiptItemsSelector(receipt.id), [receipt.id])
   const [fields, setFields] = useState<Record<FocusableExpenseFields, HTMLInputElement | null>>({
     day: null,
     category: null,

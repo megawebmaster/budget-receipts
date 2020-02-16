@@ -48,6 +48,18 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
     }
     case getType(Actions.addReceipt):
       return prepend(action.payload.receipt, state)
+    case getType(Actions.receiptCreated): {
+      const { currentId, value } = action.payload
+
+      return set(
+        lensPath([
+          findIndex(propEq('id', currentId), state),
+          'id'
+        ]),
+        value.id,
+        state
+      )
+    }
     case getType(Actions.updateReceipt): {
       const { id, ...values } = action.payload
 
@@ -86,6 +98,7 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
         return state
       }
       // TODO: Make it more beautiful
+      // TODO: Fix updating with network values - they are always better
       return mergeDeepWith(
         (newValues: ReceiptItem[], currentValues: ReceiptItem[]) => sort(descend(prop('id')), values(
           mergeWith(
@@ -102,7 +115,19 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
       return set(lensProp(action.payload.id.toString()), [], state)
     case getType(Actions.addReceipt):
       return set(lensProp(action.payload.receipt.id.toString()), action.payload.items, state)
-    case getType(Actions.receiptItemCreated):{
+    case getType(Actions.receiptCreated): {
+      const { currentId, value } = action.payload
+
+      if (!currentId) {
+        return state
+      }
+
+      return {
+        ...state,
+        [value.id]: state[currentId]
+      }
+    }
+    case getType(Actions.receiptItemCreated): {
       const { currentId, value } = action.payload
       const receiptId = (value as ReceiptItem).receiptId
 

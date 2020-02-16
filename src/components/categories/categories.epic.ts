@@ -23,7 +23,7 @@ const decryptCategories = decryptAction({
   actionCreator: Actions.updateCategories,
   fields: {
     name: true,
-  }
+  },
 })
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
@@ -88,7 +88,7 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
       actionCreator: Actions.categoryCreated,
       fields: {
         name: true,
-      }
+      },
     })),
   )
 
@@ -121,28 +121,27 @@ const updateCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
       actionCreator: Actions.categoryUpdated,
       fields: {
         name: true,
-      }
+      },
     })),
   )
 
 const deleteCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.deleteCategory)),
-    map(({ payload: { id, type } }) => {
+    concatMap(({ payload: { id, type } }) => {
       const budget = budgetSelector(state$.value)
       const year = yearSelector(state$.value)
       const month = monthSelector(state$.value)
 
-      return {
+      return ConnectionService.delete({
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories/${id}`,
-        body: {
+        params: {
           year,
           month,
           type,
         },
-      }
+      })
     }),
-    concatMap(({ url, body }) => ConnectionService.delete(url, body)),
   )
 
 export const categoriesEpic = combineEpics(

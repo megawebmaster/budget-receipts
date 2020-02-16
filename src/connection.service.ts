@@ -72,52 +72,25 @@ export class ConnectionService {
     }
   }
 
-  static delete = async (url: string, body: any): Promise<AppAction> => {
-    try {
-      const response = await fetch(new Request(url, {
-        body: JSON.stringify(decamelizeKeys(body)),
-        headers: new Headers({
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Authenticator.getToken()}`,
-        }),
-        method: 'DELETE',
-      }))
-
-      if (!response.ok) {
-        const result = await response.json()
-
-        return pageError({
-          sticky: false,
-          text: Object.values(result).join('\n'),
-          type: AppMessageType.ERROR,
-        })
-      }
-
-      return noop()
-    } catch (err) {
-      return pageError({
-        sticky: false,
-        text: 'Network connection failed',
-        type: AppMessageType.ERROR,
-      })
-    }
-  }
+  static delete = async <TValue extends { id: number }>(
+    data: ApiRequest<TValue>,
+    actionCreator?: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
+  ): Promise<AppAction> => ConnectionService._doRequest(data, 'DELETE', actionCreator)
 
   static create = async <TValue extends { id: number }>(
     data: ApiRequest<TValue>,
-    actionCreator: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
-  ): Promise<AppAction> => ConnectionService._doRequest(data, actionCreator, 'POST')
+    actionCreator?: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
+  ): Promise<AppAction> => ConnectionService._doRequest(data, 'POST', actionCreator)
 
   static update = async <TValue extends { id: number }>(
     data: ApiRequest<TValue>,
-    actionCreator: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
-  ): Promise<AppAction> => ConnectionService._doRequest(data, actionCreator, 'PUT')
+    actionCreator?: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
+  ): Promise<AppAction> => ConnectionService._doRequest(data, 'PUT', actionCreator)
 
   static _doRequest = async <TValue extends { id: number }>(
     data: ApiRequest<TValue>,
-    actionCreator: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
-    method: 'POST' | 'PUT'
+    method: 'POST' | 'PUT' | 'DELETE',
+    actionCreator?: PayloadActionCreator<ActionType<AppAction>, SaveValue<TValue>>,
   ): Promise<AppAction> => {
     try {
       const response = await fetch(new Request(data.url, {
@@ -143,10 +116,14 @@ export class ConnectionService {
         })
       }
 
-      return actionCreator({
-        currentId: data.value.id,
-        value: result as TValue,
-      })
+      if (actionCreator) {
+        return actionCreator({
+          currentId: data.value?.id,
+          value: result as TValue,
+        })
+      }
+
+      return noop();
     } catch (err) {
       return pageError({
         sticky: false,
