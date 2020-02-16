@@ -5,7 +5,9 @@ import {
   complement,
   descend,
   filter,
+  findIndex,
   indexBy,
+  lensPath,
   lensProp,
   map,
   mergeDeepWith,
@@ -100,6 +102,20 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
       return set(lensProp(action.payload.id.toString()), [], state)
     case getType(Actions.addReceipt):
       return set(lensProp(action.payload.receipt.id.toString()), action.payload.items, state)
+    case getType(Actions.receiptItemCreated):{
+      const { currentId, value } = action.payload
+      const receiptId = (value as ReceiptItem).receiptId
+
+      return set(
+        lensPath([
+          receiptId,
+          findIndex(propEq('id', currentId), state[receiptId]),
+          'id'
+        ]),
+        value.id,
+        state
+      )
+    }
     case getType(Actions.deleteReceipt): {
       return omit([action.payload.toString()], state)
     }

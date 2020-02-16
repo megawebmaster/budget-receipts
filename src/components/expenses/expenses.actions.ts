@@ -36,6 +36,7 @@ export const updateReceipt = createAction('EXPENSES/updateReceipt')<Receipt>()
 export const deleteReceipt = createAction('EXPENSES/deleteReceipt')<number>()
 
 export const addReceiptItem = createAction('EXPENSES/addReceiptItem')<AddReceiptItem>()
+export const receiptItemCreated = createAction('EXPENSES/receiptCreated')<SaveValue<ReceiptItem>>()
 export const updateReceiptItem = createAction('EXPENSES/updateReceiptItem')<UpdateReceiptItem>()
 export const deleteReceiptItem = createAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()
 

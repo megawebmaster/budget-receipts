@@ -99,9 +99,50 @@ const deleteReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
     concatMap(({ url, body }) => ConnectionService.delete(url, body)),
   )
 
+const createReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.addReceiptItem)),
+    map(({ payload }) => {
+      const budget = budgetSelector(state$.value)
+      const year = yearSelector(state$.value)
+      const month = monthSelector(state$.value)
+
+      return {
+        value: payload.value,
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${payload.id}`,
+      }
+    }),
+    map(encryptAction({
+      api: ConnectionService.create,
+      actionCreator: Actions.receiptItemCreated,
+      fields: {
+        value: true,
+        description: true,
+      }
+    })),
+  )
+
+const deleteReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.deleteReceiptItem)),
+    map(({ payload: { id, itemId } }) => {
+      const budget = budgetSelector(state$.value)
+      const year = yearSelector(state$.value)
+      const month = monthSelector(state$.value)
+
+      return {
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${id}/${itemId}`,
+        body: {},
+      }
+    }),
+    concatMap(({ url, body }) => ConnectionService.delete(url, body)),
+  )
+
 export const expensesEpic = combineEpics(
   pageLoadEpic,
   loadReceiptsFromApiEpic,
   createReceiptEpic,
   deleteReceiptEpic,
+  createReceiptItemEpic,
+  deleteReceiptItemEpic,
 )
