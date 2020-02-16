@@ -4,10 +4,11 @@ import { sum } from 'ramda'
 import cx from 'classnames'
 
 import {
+  NewReceiptItem as NewItemType,
   Receipt,
   ReceiptItem as ItemType,
-  NewReceiptItem as NewItemType,
-  ReceiptUpdateFields, ReceiptItem, ChangeReceiptItem,
+  ReceiptItem,
+  ReceiptUpdateFields,
 } from '../../../../receipt.types'
 import { DeleteReceiptItem, UpdateReceiptItem } from '../../../../expenses.actions'
 import { SavedReceiptItem } from './saved-receipt-item'
@@ -26,6 +27,7 @@ type ExpenseProps = {
   deleteItem: (item: DeleteReceiptItem) => void
   expanded: boolean
   items: ItemType[]
+  onBlur?: (field: ReceiptFields, value: any) => void
   onKeyDown?: (field: ExpenseFields, event: React.KeyboardEvent, value: any) => void
   onSave: (values: ReceiptUpdateFields) => void
   receipt: Receipt
@@ -39,7 +41,7 @@ const round = (number: number, precision: number) => {
 }
 
 export const Expense: FC<ExpenseProps> =
-  ({ addField, addItem, children, deleteItem, expanded, items, onKeyDown, onSave, receipt, updateItem }) => {
+  ({ addField, addItem, children, deleteItem, expanded, items, onBlur, onKeyDown, onSave, receipt, updateItem }) => {
     const processing = receipt.processing || false
     const [day, setDay] = useState(receipt.day)
     const [shop, setShop] = useState(receipt.shop)
@@ -55,9 +57,9 @@ export const Expense: FC<ExpenseProps> =
       }
     }, [])
 
-    const renderItemButtons = useCallback((itemId: ReceiptItem['id'], item: ChangeReceiptItem) => (
-      <ItemButtons receipt={receipt} itemId={itemId} item={item} updateItem={updateItem} deleteItem={deleteItem} />
-    ), [receipt, updateItem, deleteItem])
+    const renderItemButtons = useCallback((itemId: ReceiptItem['id']) => (
+      <ItemButtons receipt={receipt} itemId={itemId} deleteItem={deleteItem} />
+    ), [receipt, deleteItem])
 
     const renderNewItemButtons = useCallback((categoryId: number, value: number, description: string, reset) => (
       <NewItemButtons
@@ -77,7 +79,7 @@ export const Expense: FC<ExpenseProps> =
         onSave({
           day,
           shop,
-          [fieldName]: newValue
+          [fieldName]: newValue,
         })
       }
       if (onKeyDown) {
@@ -98,6 +100,7 @@ export const Expense: FC<ExpenseProps> =
         <ReceiptHeader
           addField={addField}
           day={day}
+          onBlur={onBlur}
           onKeyDown={handleKeyDown}
           onUpdate={update}
           shop={shop}

@@ -14,7 +14,7 @@ import {
 import { ReceiptControls } from './receipt-controls'
 import { Expense } from './expense'
 import { createExpenseItemsSelector } from '../../../expenses.selectors'
-import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
+import { ExpenseFields, FocusableExpenseFields, ReceiptFields } from '../expense.types'
 import { createItem } from '../expense.helpers'
 
 type SavedExpenseProps = {
@@ -48,6 +48,13 @@ export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
   const deleteItem = useCallback((item: DeleteReceiptItem) => dispatch(deleteReceiptItem(item)), [dispatch])
   const items = useSelector(itemsSelector)
 
+  const onBlur = useCallback((field: ReceiptFields, newValue: any) => {
+    dispatch(updateReceipt({
+      ...receipt,
+      [field]: newValue,
+    }))
+  }, [dispatch, receipt])
+
   const onKeyDown = useCallback((field: ExpenseFields, event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       switch (field) {
@@ -78,6 +85,7 @@ export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
       expanded={expanded}
       items={items}
       receipt={receipt}
+      onBlur={onBlur}
       onKeyDown={onKeyDown}
       onSave={onSave}
       updateItem={updateItem}

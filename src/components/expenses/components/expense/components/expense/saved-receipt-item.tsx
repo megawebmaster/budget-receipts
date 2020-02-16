@@ -1,11 +1,11 @@
 import React, { FC, useCallback, useState } from 'react'
 
 import { ReceiptItem } from '../../../receipt-item'
-import { ChangeReceiptItem, ReceiptItem as ItemType } from '../../../../receipt.types'
+import { ReceiptItem as ItemType } from '../../../../receipt.types'
 import { ExpenseFields, ReceiptItemFields } from '../../expense.types'
 
 type ReceiptItemProps = {
-  children: (itemId: ItemType['id'], item: ChangeReceiptItem) => JSX.Element
+  children: (itemId: ItemType['id']) => JSX.Element
   disabled: boolean
   item: ItemType
   onUpdate: (item: ItemType) => void
@@ -46,7 +46,7 @@ export const SavedReceiptItem: FC<ReceiptItemProps> = ({ children, disabled, ite
       categoryId,
       description,
       value,
-      [field]: newValue
+      [field]: newValue,
     })
   }, [onUpdate, item, description, categoryId, value])
 
@@ -60,7 +60,7 @@ export const SavedReceiptItem: FC<ReceiptItemProps> = ({ children, disabled, ite
       onUpdate={update}
       value={value}
     >
-      {children(item.id, { description, value, categoryId })}
+      {children(item.id)}
     </ReceiptItem>
   )
 }

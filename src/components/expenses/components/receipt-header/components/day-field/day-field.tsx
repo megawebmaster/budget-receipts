@@ -9,12 +9,13 @@ import { month as monthSelector, year as yearSelector } from '../../../../../../
 
 export type DayFieldProps = {
   addField: (input: HTMLInputElement | null) => void
+  onBlur: (event: React.ChangeEvent<HTMLInputElement>) => void
   onChange: (day: string) => void
   onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
   value: string
 }
 
-export const DayField: FC<DayFieldProps> = ({ addField, onChange, onKeyDown, value }) => {
+export const DayField: FC<DayFieldProps> = ({ addField, onBlur, onChange, onKeyDown, value }) => {
   const inputRef = useRef<Input>(null)
   const year = useSelector(yearSelector)
   const month = useSelector(monthSelector)
@@ -62,10 +63,11 @@ export const DayField: FC<DayFieldProps> = ({ addField, onChange, onKeyDown, val
       inputProps={{
         // disabled: this.props.disabled,
         // error: this.props.error,
+        onBlur,
+        onKeyDown,
         fluid: true,
-        ref: inputRef,
-        onKeyDown: onKeyDown,
         onFocus: onFocus,
+        ref: inputRef,
       }}
       dayPickerProps={{
         canChangeMonth: false,
