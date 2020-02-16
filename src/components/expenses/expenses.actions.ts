@@ -1,6 +1,6 @@
 import { createAction } from 'typesafe-actions'
 import { ApiReceipt, ChangeReceiptItem, ImageParsingResult, Receipt, ReceiptItem } from './receipt.types'
-import { DownloadValue } from '../../connection.types'
+import { DownloadValue, SaveValue } from '../../connection.types'
 
 export type AddReceipt = {
   receipt: Receipt,
@@ -31,6 +31,7 @@ export const updateReceipts = createAction('EXPENSES/updateReceipts')<DownloadVa
 export const updateReceiptItems = createAction('EXPENSES/updateReceiptsItems')<DownloadValue<ReceiptItem>>()
 
 export const addReceipt = createAction('EXPENSES/addReceipt')<AddReceipt>()
+export const receiptCreated = createAction('EXPENSES/receiptCreated')<SaveValue<ApiReceipt>>()
 export const updateReceipt = createAction('EXPENSES/updateReceipt')<Receipt>()
 export const deleteReceipt = createAction('EXPENSES/deleteReceipt')<number>()
 

@@ -6,9 +6,15 @@ import { of } from 'rxjs'
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
 import * as Actions from './expenses.actions'
-import { AvailableRoutes, ExpenseRouteAction } from '../../routes'
+import {
+  AvailableRoutes,
+  budget as budgetSelector,
+  ExpenseRouteAction,
+  month as monthSelector,
+  year as yearSelector,
+} from '../../routes'
 import { ConnectionService } from '../../connection.service'
-import { decryptAction } from '../../encryption'
+import { decryptAction, encryptAction } from '../../encryption'
 
 const decryptReceipts = decryptAction({
   actionCreator: Actions.updateReceipts,
@@ -48,7 +54,54 @@ const loadReceiptsFromApiEpic: Epic<AppAction, AppAction, AppState> = (action$) 
     ]),
   )
 
+const createReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.addReceipt)),
+    map(({ payload }) => {
+      const budget = budgetSelector(state$.value)
+      const year = yearSelector(state$.value)
+      const month = monthSelector(state$.value)
+
+      return {
+        value: {
+          ...payload.receipt,
+          items: payload.items
+        },
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}`,
+      }
+    }),
+    map(encryptAction({
+      api: ConnectionService.create,
+      actionCreator: Actions.receiptCreated,
+      fields: {
+        shop: true,
+        items: {
+          value: true,
+          description: true,
+        }
+      }
+    })),
+  )
+
+const deleteReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.deleteReceipt)),
+    map(({ payload }) => {
+      const budget = budgetSelector(state$.value)
+      const year = yearSelector(state$.value)
+      const month = monthSelector(state$.value)
+
+      return {
+        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${payload}`,
+        body: {},
+      }
+    }),
+    concatMap(({ url, body }) => ConnectionService.delete(url, body)),
+  )
+
 export const expensesEpic = combineEpics(
   pageLoadEpic,
   loadReceiptsFromApiEpic,
+  createReceiptEpic,
+  deleteReceiptEpic,
 )
