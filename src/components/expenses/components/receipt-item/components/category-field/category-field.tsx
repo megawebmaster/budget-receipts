@@ -1,4 +1,4 @@
-import React, { FC, SyntheticEvent, useCallback, useEffect, useRef } from 'react'
+import React, { FC, SyntheticEvent, useEffect, useRef } from 'react'
 import { Dropdown, DropdownProps } from 'semantic-ui-react'
 import { useSelector } from 'react-redux'
 

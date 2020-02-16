@@ -3,6 +3,7 @@ import { getType } from 'typesafe-actions'
 import {
   append,
   complement,
+  descend,
   filter,
   indexBy,
   lensProp,
@@ -18,6 +19,7 @@ import {
   prop,
   propEq,
   set,
+  sort,
   toString,
   values,
   when,
@@ -40,14 +42,7 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
     case AvailableRoutes.EXPENSES_MONTH:
       return []
     case getType(Actions.updateReceipts): {
-      const receipts = action.payload.value.filter(receipt => receipt.items?.length > 0)
-      return values(
-        mergeWith(
-          mergeRight,
-          indexBy(pipe(prop('id'), toString), state),
-          indexBy(pipe(prop('id'), toString), receipts),
-        ),
-      )
+      return sort(descend(prop('id')), action.payload.value)
     }
     case getType(Actions.addReceipt):
       return prepend(action.payload.receipt, state)
@@ -90,13 +85,13 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
       }
       // TODO: Make it more beautiful
       return mergeDeepWith(
-        (newValues: ReceiptItem[], currentValues: ReceiptItem[]) => values(
+        (newValues: ReceiptItem[], currentValues: ReceiptItem[]) => sort(descend(prop('id')), values(
           mergeWith(
             mergeRight,
             indexBy(pipe(prop('id'), toString), currentValues),
             indexBy(pipe(prop('id'), toString), newValues),
           ),
-        ),
+        )),
         { [action.payload.value[0].receiptId]: action.payload.value },
         state,
       )

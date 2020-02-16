@@ -32,7 +32,7 @@ export const NewExpense = () => {
   }, [])
 
   const addItem = useCallback((item: NewReceiptItem) => {
-    setItems(items => [...items, createItem(receipt.id, item)])
+    setItems(items => [createItem(receipt.id, item), ...items])
   }, [receipt.id])
 
   const updateItem = useCallback((item: UpdateReceiptItem) => {
@@ -47,7 +47,7 @@ export const NewExpense = () => {
 
   const saveReceipt = useCallback((values: ReceiptUpdateFields) => {
     dispatch(addReceipt({
-      items: values.item ? [...items, createItem(receipt.id, values.item)] : items,
+      items: values.item ? [createItem(receipt.id, values.item), ...items] : items,
       receipt: {
         ...receipt,
         ...pick(['day', 'shop'], values),
