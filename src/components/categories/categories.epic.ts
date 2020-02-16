@@ -21,7 +21,9 @@ import { Category } from './category.types'
 
 const decryptCategories = decryptAction({
   actionCreator: Actions.updateCategories,
-  fields: ['name'],
+  fields: {
+    name: true,
+  }
 })
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
@@ -84,7 +86,9 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
     map(encryptAction({
       api: ConnectionService.create,
       actionCreator: Actions.categoryCreated,
-      fields: ['name'],
+      fields: {
+        name: true,
+      }
     })),
   )
 
@@ -115,7 +119,9 @@ const updateCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
     map(encryptAction({
       api: ConnectionService.update,
       actionCreator: Actions.categoryUpdated,
-      fields: ['name'],
+      fields: {
+        name: true,
+      }
     })),
   )
 

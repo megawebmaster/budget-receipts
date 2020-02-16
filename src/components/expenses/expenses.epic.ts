@@ -12,12 +12,18 @@ import { decryptAction } from '../../encryption'
 
 const decryptReceipts = decryptAction({
   actionCreator: Actions.updateReceipts,
-  fields: ['shop'],
+  fields: {
+    shop: true,
+  },
 })
 const decryptReceiptItems = decryptAction({
   actionCreator: Actions.updateReceiptItems,
-  fields: ['description'],
-  numericFields: ['value'],
+  fields: {
+    description: true,
+  },
+  numericFields: {
+    value: true,
+  },
 })
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>

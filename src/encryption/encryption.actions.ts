@@ -11,7 +11,10 @@ type ApiCall<TValue extends TypeWithId> = (
   data: ApiRequest<TValue>,
   actionCreator: PayloadActionCreator<ActionType<ApiAction>, SaveValue<TValue>>,
 ) => Promise<any>
-type Fields<TValue> = (keyof TValue)[]
+
+export type Fields<TValue> = Partial<{
+  [K in keyof TValue]: TValue[K] extends any[] ? Fields<TValue[K][0]> : boolean
+}>
 
 type DecryptionActionParams<TValue> = {
   actionCreator: DecryptionActionCreator<TValue>

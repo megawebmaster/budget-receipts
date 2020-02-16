@@ -18,7 +18,10 @@ import { createCategoryEntrySelector } from './budget.selectors'
 
 const decryptEntries = decryptAction({
   actionCreator: Actions.updateEntries,
-  numericFields: ['plan', 'real'],
+  numericFields: {
+    plan: true,
+    real: true,
+  },
 })
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
@@ -54,7 +57,10 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
     map(encryptAction({
       api: ConnectionService.update,
       actionCreator: Actions.entryUpdated,
-      fields: ['plan', 'real'],
+      fields: {
+        plan: true,
+        real: true,
+      },
     })),
   )
 
