@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@formatjs/intl-pluralrules": "^1.5.2",
+    "@formatjs/intl-relativetimeformat": "^4.5.9",
     "@types/classnames": "^2.2.9",
     "@types/humps": "^1.1.2",
     "@types/jest": "24.0.25",

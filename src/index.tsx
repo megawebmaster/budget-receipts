@@ -1,5 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+
+// Intl polyfills for IE11, Edge and Safari
+import '@formatjs/intl-pluralrules/polyfill'
+import '@formatjs/intl-pluralrules/dist/locale-data/pl'
+import '@formatjs/intl-relativetimeformat/polyfill'
+import '@formatjs/intl-relativetimeformat/dist/locale-data/pl'
+
 import 'semantic-ui-css/semantic.css'
 
 import { App } from './app'
