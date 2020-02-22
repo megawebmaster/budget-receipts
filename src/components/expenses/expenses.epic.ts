@@ -19,7 +19,7 @@ import { ConnectionService } from '../../connection.service'
 import { decryptAction, encryptAction } from '../../encryption'
 import { createCategorySpentSelector, createReceiptItemSelector, createReceiptSelector } from './expenses.selectors'
 import { ApiRequest } from '../../connection.types'
-import { ApiReceipt, ReceiptItem } from './receipt.types'
+import { ApiReceipt } from './receipt.types'
 import { receiptCategories } from '../categories'
 
 const decryptReceipts = decryptAction({
@@ -235,8 +235,8 @@ const updateReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
         value: true,
         description: true,
         budgetValues: {
-          value: true
-        }
+          value: true,
+        },
       },
     })),
   )

@@ -7,7 +7,7 @@ import { CategoryField } from './category-field'
 import { CurrencyInput } from '../../../../currency-input'
 import { ExpenseFields, FocusableExpenseFields, ReceiptItemFields } from '../../expense/expense.types'
 
-export type ExpensesListItemProps = {
+type ReceiptItemProps = {
   addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
   categoryId?: number | string
   children: JSX.Element
@@ -19,7 +19,7 @@ export type ExpensesListItemProps = {
   value: number | string
 }
 
-export const ReceiptItem: FC<ExpensesListItemProps> =
+export const ReceiptItem: FC<ReceiptItemProps> =
   ({ addField, categoryId, children, description, disabled, onBlur, onKeyDown, onUpdate, value }) => {
     const addCategoryField = useCallback(
       (input: HTMLInputElement | null) => addField && addField('category', input),
@@ -63,7 +63,7 @@ export const ReceiptItem: FC<ExpensesListItemProps> =
       [onBlur],
     )
     const descriptionBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-      if (event.currentTarget.value !== description && onBlur) {
+      if (onBlur) {
         onBlur('description', event.currentTarget.value)
       }
     }
