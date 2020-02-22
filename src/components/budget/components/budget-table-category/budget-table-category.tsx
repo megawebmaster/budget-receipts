@@ -1,7 +1,8 @@
 import React, { FC, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import cx from 'classnames'
 import { Responsive, Table } from 'semantic-ui-react'
+import { useIntl } from 'react-intl'
+import cx from 'classnames'
 
 import {
   CategoryType,
@@ -19,10 +20,10 @@ import {
 import { BudgetTableSubcategory } from '../budget-table-subcategory'
 import { CurrencyInput } from '../../../currency-input'
 import { updateEntry } from '../../budget.actions'
-
-import styles from './budget-table-category.module.css'
 import { AddButton } from '../add-button'
 import { EditableText } from '../editable-text'
+
+import styles from './budget-table-category.module.css'
 
 type BudgetTableCategoryProps = {
   categoryId: number
@@ -32,6 +33,7 @@ type BudgetTableCategoryProps = {
 
 // TODO: Add navigable table
 export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType, categoryId, editable }) => {
+  const intl = useIntl()
   const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
   const entrySelector = useMemo(() => createCategoryEntrySelector(categoryId), [categoryId])
 
@@ -100,7 +102,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             <CurrencyInput
               currency="PLN"
               disabled={hasChildren || loading || saving || plannedValueDisabled(categoryType)}
-              label="Planned"
+              label={intl.formatMessage({ id: 'budget.table.planned' })}
               value={entry.plan}
               onUpdate={updatePlanned}
             />
@@ -109,7 +111,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             <CurrencyInput
               currency="PLN"
               disabled={hasChildren || loading || saving || realValueDisabled(categoryType)}
-              label="Real"
+              label={intl.formatMessage({ id: 'budget.table.real' })}
               value={entry.real}
               onUpdate={updateReal}
             />
@@ -135,7 +137,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             <Table.Cell colSpan={3}>
               <AddButton
                 disabled={loading || saving}
-                label="Add subcategory…"
+                label={intl.formatMessage({ id: 'budget.table.add-subcategory' })}
                 size="mini"
                 onSave={createSubcategory}
               />

@@ -1,6 +1,7 @@
 import React, { FC, Fragment, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Responsive, Table } from 'semantic-ui-react'
+import { useIntl } from 'react-intl'
 
 import { CurrencyInput } from '../../../currency-input'
 import { CategoryType, createCategorySelector, deleteCategory, updateCategory } from '../../../categories'
@@ -13,7 +14,6 @@ import {
 import { updateEntry } from '../../budget.actions'
 import { EditableText } from '../editable-text'
 
-
 type BudgetTableSubcategoryProps = {
   categoryId: number
   categoryType: CategoryType
@@ -24,6 +24,7 @@ type BudgetTableSubcategoryProps = {
 // TODO: Navigable table
 export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
   ({ categoryType, categoryId, editable, subcategoryId }) => {
+    const intl = useIntl()
     const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
     const subcategorySelector = useMemo(() => createCategorySelector(subcategoryId), [subcategoryId])
     const entrySelector = useMemo(() => createCategoryEntrySelector(subcategoryId), [subcategoryId])
@@ -75,7 +76,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
           <CurrencyInput
             currency="PLN"
             disabled={loading || saving || plannedValueDisabled(categoryType)}
-            label="Planned"
+            label={intl.formatMessage({ id: 'budget.table.planned' })}
             value={entry.plan}
             onUpdate={updatePlanned}
           />
@@ -84,7 +85,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
           <CurrencyInput
             currency="PLN"
             disabled={loading || saving || realValueDisabled(categoryType)}
-            label="Real"
+            label={intl.formatMessage({ id: 'budget.table.real' })}
             value={entry.real}
             onUpdate={updateReal}
           />

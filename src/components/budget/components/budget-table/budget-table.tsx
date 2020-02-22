@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
 
 import { categories as categoriesSelectors, CategoryType, addCategory } from '../../../categories'
@@ -49,15 +49,21 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
 
   return categories.length === 0 && !editable ? null : (
     <Segment.Group>
-      <Segment.Group horizontal>
+      <Segment.Group horizontal className={styles.headerContainer}>
         <Segment basic color={color} className={styles.header}>
           <Header as="h3">{label}</Header>
         </Segment>
         <Segment basic color={color} className={styles.header}>
-          <strong>Planned: {formatCurrency(plannedSummary)} PLN</strong>
+          <strong>
+            <span className={styles.headerTitle}><FormattedMessage id="budget.table.planned" />:</span>
+            <span className={styles.headerValue}>{formatCurrency(plannedSummary)} PLN</span>
+          </strong>
         </Segment>
         <Segment basic color={color} className={styles.header}>
-          <strong>Real: {formatCurrency(realSummary)} PLN</strong>
+          <strong>
+            <span className={styles.headerTitle}><FormattedMessage id="budget.table.real" />:</span>
+            <span className={styles.headerValue}>{formatCurrency(realSummary)} PLN</span>
+          </strong>
         </Segment>
       </Segment.Group>
       <Segment className={styles.content}>
@@ -73,7 +79,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
           <AddButton
             className={styles.addCategory}
             disabled={loading}
-            label="Add category…"
+            label={intl.formatMessage({ id: 'budget.table.add-category' })}
             size="large"
             onSave={createCategory}
           />

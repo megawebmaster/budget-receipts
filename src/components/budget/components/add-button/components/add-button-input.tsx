@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { Button, Icon, Input, InputOnChangeData, Responsive } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
 import styles from '../add-button.module.css'
 
@@ -55,13 +56,13 @@ export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size
       <Button color="teal" onClick={saveInput} size={size}>
         <Icon className={styles.icon} name="plus" />
         <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-          Add
+          <FormattedMessage id="budget.add-button.add" />
         </Responsive>
       </Button>
       <Button color="red" onClick={onClose} size={size}>
         <Icon className={styles.icon} name="close" />
         <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-          Cancel
+          <FormattedMessage id="budget.add-button.cancel" />
         </Responsive>
       </Button>
     </Input>

@@ -6,6 +6,16 @@ button.addCategory.addCategory.addCategory {
     padding: .85em 1.5em;
 }
 
+.headerContainer {}
+
+.headerValue {
+    display: inline-block;
+}
+
+.headerTitle {
+    margin-right: .25em;
+}
+
 .header.header.header.header {
     flex-basis: 0;
 }
@@ -13,4 +23,30 @@ button.addCategory.addCategory.addCategory {
 .content.content.content {
     padding: 0;
     box-shadow: none;
+}
+
+@media screen and (max-width: 767px) {
+    .headerContainer.headerContainer.headerContainer {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .header.header.header.header:first-child {
+        display: block;
+        width: 100%;
+        flex: none;
+    }
+
+    .header + .header {
+        border-left: none !important;
+    }
+    .header + .header + .header {
+        border-left: 1px solid rgba(34, 36, 38, 0.15) !important;
+    }
+    .header.header.header.header:not(:first-child) {
+        border-top: 1px solid rgba(34, 36, 38, 0.15) !important;
+    }
+    .headerValue {
+        display: block;
+    }
 }
