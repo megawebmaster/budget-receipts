@@ -1,12 +1,12 @@
 import { combineEpics, Epic, ofType } from 'redux-observable'
-import { filter, map, mergeAll, mergeMap } from 'rxjs/operators'
+import { distinctUntilChanged, filter, map, mergeAll, mergeMap } from 'rxjs/operators'
 import { isActionOf } from 'typesafe-actions'
 import { redirect } from 'redux-first-router'
 
 import { AppAction } from '../../app.actions'
 import { AppState } from '../../app.store'
 import { ConnectionService } from '../../connection.service'
-import { AvailableRoutes, budget, RouteAction } from '../../routes'
+import { AvailableRoutes, budget as budgetSelector, RouteAction } from '../../routes'
 import * as Actions from './page.actions'
 
 const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
@@ -24,9 +24,12 @@ const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 
 const loadBudgetYearsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
-    filter(isActionOf(Actions.loadBudgets)),
-    map(() => (
-      `${process.env.REACT_APP_API_URL}/v2/budgets/${budget(state$.value)}`
+    filter(isActionOf([Actions.loadBudgets, Actions.updateBudgets])),
+    map(() => budgetSelector(state$.value)),
+    distinctUntilChanged(),
+    filter(Boolean),
+    map(budget => (
+      `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}`
     )),
     mergeMap((url) => [
       ConnectionService.fetchFromNetwork(url, Actions.updateBudgetYears),

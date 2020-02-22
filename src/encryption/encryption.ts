@@ -18,11 +18,13 @@ export class EncryptionError extends Error {
 }
 
 export class Encryption {
-  static setPassword(budget: string, password: string): void {
-    const storedBudgetsPasswords = JSON.parse(localStorage.getItem('encryption-passwords-budgets') || '[]')
-    storedBudgetsPasswords.push(budget)
-    localStorage.setItem(`encryption-password-${budget}`, password)
-    localStorage.setItem('encryption-passwords-budgets', JSON.stringify(storedBudgetsPasswords))
+  static setPassword(budget: string | undefined, password: string): void {
+    if (budget) {
+      const storedBudgetsPasswords = JSON.parse(localStorage.getItem('encryption-passwords-budgets') || '[]')
+      storedBudgetsPasswords.push(budget)
+      localStorage.setItem(`encryption-password-${budget}`, password)
+      localStorage.setItem('encryption-passwords-budgets', JSON.stringify(storedBudgetsPasswords))
+    }
   }
 
   static movePassword(oldBudget: string, newBudget: string): void {
@@ -45,31 +47,41 @@ export class Encryption {
     localStorage.removeItem(`encryption-password-${budget}`)
   }
 
-  static hasEncryptionPassword(budget: string): boolean {
-    return this.getPassword(budget) !== null
+  static hasEncryptionPassword(budget: string | undefined): boolean {
+    if (budget) {
+      return this.getPassword(budget) !== null
+    }
+
+    return false
   }
 
   static getPassword(budget: string): string | null {
     return localStorage.getItem(`encryption-password-${budget}`)
   }
 
-  static async encrypt(budget: string, text: string): Promise<string> {
-    const password = this.getPassword(budget)
-    const encrypted = await openpgp.encrypt({
-      message: message.fromText(text),
-      passwords: [password],
-      armor: false,
-    })
-    const result = encrypted.message.packets.write() as Uint8Array
+  static async encrypt(budget: string | undefined, text: string): Promise<string> {
+    if (budget) {
+      const password = this.getPassword(budget)
+      const encrypted = await openpgp.encrypt({
+        message: message.fromText(text),
+        passwords: [password],
+        armor: false,
+      })
+      const result = encrypted.message.packets.write() as Uint8Array
 
-    return util.Uint8Array_to_b64(result)
+      return util.Uint8Array_to_b64(result)
+    }
+
+    return ''
   }
 
-  static async decrypt(budget: string, encryptedText: string): Promise<string> {
-    const password = this.getPassword(budget)
+  static async decrypt(budget: string | undefined, encryptedText: string): Promise<string> {
+    if (budget) {
+      const password = this.getPassword(budget)
 
-    if (password !== null) {
-      return this._decryptWithPassword(password, encryptedText)
+      if (password !== null) {
+        return this._decryptWithPassword(password, encryptedText)
+      }
     }
 
     return encryptedText
