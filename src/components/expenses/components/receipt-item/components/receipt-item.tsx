@@ -1,5 +1,6 @@
 import React, { FC, useCallback } from 'react'
 import { Grid, Input } from 'semantic-ui-react'
+import { useIntl } from 'react-intl'
 
 import styles from '../receipt-item.module.css'
 import { NewReceiptItem } from '../../../receipt.types'
@@ -21,6 +22,8 @@ type ReceiptItemProps = {
 
 export const ReceiptItem: FC<ReceiptItemProps> =
   ({ addField, categoryId, children, description, disabled, onBlur, onKeyDown, onUpdate, value }) => {
+    const intl = useIntl()
+
     const addCategoryField = useCallback(
       (input: HTMLInputElement | null) => addField && addField('category', input),
       [addField],
@@ -97,7 +100,7 @@ export const ReceiptItem: FC<ReceiptItemProps> =
             onBlur={descriptionBlur}
             onChange={updateDescription}
             onKeyDown={descriptionKeyDown}
-            placeholder="Description"
+            placeholder={intl.formatMessage({ id: 'expenses.description' })}
             value={description}
           />
         </Grid.Column>

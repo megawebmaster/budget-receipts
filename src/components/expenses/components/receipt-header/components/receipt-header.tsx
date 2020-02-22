@@ -1,5 +1,6 @@
 import React, { FC, ReactNode, useCallback } from 'react'
 import { Grid, Input, Responsive } from 'semantic-ui-react'
+import { useIntl } from 'react-intl'
 
 import styles from '../receipt-header.module.css'
 import { DayField } from './day-field'
@@ -19,6 +20,7 @@ type ReceiptHeaderProps = {
 
 export const ReceiptHeader: FC<ReceiptHeaderProps> =
   ({ addField, children, day, onBlur, onKeyDown, onUpdate, shop, total }) => {
+    const intl = useIntl()
     const updateDate = useCallback((day) => onUpdate('day', day), [onUpdate])
     const updateShop = useCallback((event) => onUpdate('shop', event.target.value), [onUpdate])
 
@@ -61,7 +63,7 @@ export const ReceiptHeader: FC<ReceiptHeaderProps> =
             onChange={updateShop}
             onBlur={shopBlur}
             onKeyDown={shopKeyDown}
-            placeholder="Shop"
+            placeholder={intl.formatMessage({ id: 'expenses.shop' })}
             value={shop}
           />
         </Grid.Column>
@@ -71,7 +73,6 @@ export const ReceiptHeader: FC<ReceiptHeaderProps> =
             className={styles.disabledInput}
             currency="PLN"
             disabled={true}
-            placeholder="Total"
             value={total || 0}
           />
         </Grid.Column>

@@ -1,6 +1,7 @@
 import React, { FC, SyntheticEvent, useEffect, useRef } from 'react'
 import { Dropdown, DropdownProps } from 'semantic-ui-react'
 import { useSelector } from 'react-redux'
+import { useIntl } from 'react-intl'
 
 import { dropdownCategories } from '../../../../../categories'
 
@@ -13,6 +14,7 @@ export type CategoryFieldProps = {
 }
 
 export const CategoryField: FC<CategoryFieldProps> = ({ addField, onBlur, onChange, onKeyDown, value }) => {
+  const intl = useIntl()
   const categories = useSelector(dropdownCategories)
   const dropdownRef = useRef(null)
 
@@ -41,7 +43,7 @@ export const CategoryField: FC<CategoryFieldProps> = ({ addField, onBlur, onChan
       // disabled={disabled}
       onChange={handleChange}
       onKeyDown={onKeyDown}
-      placeholder="Select category…"
+      placeholder={intl.formatMessage({ id: 'expenses.category' })}
       ref={dropdownRef}
     />
   )
