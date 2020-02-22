@@ -1,0 +1,9 @@
+{
+  "app.header": "Cześć, jestem pies!",
+  "menu.budget": "Budżet",
+  "menu.expenses": "Wydatki",
+  "menu.available-years": "Rok budżetu",
+  "menu.your-budgets": "Twoje budżety",
+  "menu.year": "Rok",
+  "menu.logout": "Wyloguj się"
+}

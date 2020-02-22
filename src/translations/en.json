@@ -1,3 +1,9 @@
 {
-  "app.header": "Hello, this is dog!"
+  "app.header": "Hello, this is dog!",
+  "menu.budget": "Budget",
+  "menu.expenses": "Expenses",
+  "menu.available-years": "Available years",
+  "menu.your-budgets": "Your budgets",
+  "menu.year": "Year",
+  "menu.logout": "Log out"
 }

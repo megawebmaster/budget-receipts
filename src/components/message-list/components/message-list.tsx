@@ -30,13 +30,11 @@ const DismissableMessage: FC<DismissableMessageProps> = ({ message }) => {
   )
 }
 
-export const MessageList: FC<MessageListProps> = React.memo(
-  ({ messages }) => (
-    <Fragment>
-      {messages.map((message, idx) => (
-        <DismissableMessage key={`${idx}-${message.text}`} message={message} />
-      ))}
-    </Fragment>
-  ),
+export const MessageList: FC<MessageListProps> = ({ messages }) => (
+  <Fragment>
+    {messages.map((message, idx) => (
+      <DismissableMessage key={`${idx}-${message.text}`} message={message} />
+    ))}
+  </Fragment>
 )
 
