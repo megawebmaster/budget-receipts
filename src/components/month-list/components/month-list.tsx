@@ -1,8 +1,10 @@
-import React, { ComponentType, FC, Fragment, ReactNode, useCallback } from 'react'
+import React, { FC, Fragment, ReactNode } from 'react'
 import { useSelector } from 'react-redux'
-import { NavLink, NavLinkProps } from 'redux-first-router-link'
+import { NavLink } from 'redux-first-router-link'
 import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive } from 'semantic-ui-react'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { times } from 'ramda'
+
 import {
   AvailableRoutes,
   budget as budgetSelector,
@@ -18,47 +20,35 @@ type MonthListProps = {
   children: ReactNode
 }
 
-type MonthItem = {
-  month: number
-  key: string
-  as: ComponentType<NavLinkProps>
-  activeClassName: string
-  to: object
-}
-
 type MonthItemsProps = {
   route: AvailableRoutes,
-  children: (props: MonthItem) => JSX.Element
+  as: any
 }
 
-const MonthItems: FC<MonthItemsProps> = ({ route, children }) => {
+const MonthItems: FC<MonthItemsProps> = ({ route, as: Item }) => {
   const budget = useSelector(budgetSelector)
   const year = useSelector(yearSelector)
 
   return (
     <Fragment>
       {times((month) => (
-        children({
-          month: month + 1,
-          key: `month-${month + 1}`,
-          as: NavLink,
-          activeClassName: 'active',
-          to: { type: route, payload: { budget, year, month: month + 1 } },
-        })
+        <Item
+          key={`month-${month + 1}`}
+          as={NavLink}
+          activeClassName="active"
+          to={{ type: route, payload: { budget, year, month: month + 1 } }}
+        >
+          <FormattedMessage id={`month-${month + 1}`} defaultMessage={`Month ${month + 1}`} />
+        </Item>
       ), 12)}
     </Fragment>
   )
 }
 
 export const MonthList: FC<MonthListProps> = ({ route, label, children }) => {
-  const renderDropdownItem = useCallback(({ month, ...props }) => (
-    <DropdownItem {...props}>Month {month}</DropdownItem>
-  ), [])
-  const renderMenuItem = useCallback(({ month, ...props }) => (
-    <MenuItem {...props}>Month {month}</MenuItem>
-  ), [])
-
   const month = useSelector(monthSelector)
+  const year = useSelector(yearSelector)
+  const intl = useIntl()
 
   return (
     <Fragment>
@@ -67,11 +57,15 @@ export const MonthList: FC<MonthListProps> = ({ route, label, children }) => {
         maxWidth={Responsive.onlyTablet.maxWidth}
         className={styles.dropdownContainer}
       >
-        <Dropdown text={`${label}: month ${month}`} button fluid scrolling className={styles.dropdown}>
+        <Dropdown
+          button
+          fluid
+          scrolling
+          className={styles.dropdown}
+          text={`${label}: ${intl.formatMessage({ id: `month-${month + 1}` })} ${year}`}
+        >
           <DropdownMenu>
-            <MonthItems route={route}>
-              {renderDropdownItem}
-            </MonthItems>
+            <MonthItems route={route} as={DropdownItem} />
           </DropdownMenu>
         </Dropdown>
         {children}
@@ -81,9 +75,7 @@ export const MonthList: FC<MonthListProps> = ({ route, label, children }) => {
         {...Responsive.onlyComputer}
       >
         <Menu vertical fluid>
-          <MonthItems route={route}>
-            {renderMenuItem}
-          </MonthItems>
+          <MonthItems route={route} as={MenuItem} />
         </Menu>
       </Responsive>
     </Fragment>
