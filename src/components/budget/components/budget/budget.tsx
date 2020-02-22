@@ -43,7 +43,7 @@ export const Budget = () => {
         <GridColumn mobile={16} tablet={16} computer={3}>
           <MonthList
             route={AvailableRoutes.BUDGET_MONTH_ENTRIES}
-            label={intl.formatMessage({ id: 'budget.header' })}
+            label={intl.formatMessage({ id: 'budget.month-header' })}
           >
             <Responsive as={Button} {...Responsive.onlyTablet} {...editCategoriesButtonProps} />
             {loading && (
@@ -54,7 +54,10 @@ export const Budget = () => {
         <GridColumn mobile={16} tablet={16} computer={13}>
           <Responsive as={Segment} {...Responsive.onlyComputer} color="grey" className={styles.mainHeader}>
             <Header as="h3" className={styles.mainHeaderContent}>
-              <FormattedMessage id="budget.header" />: <FormattedMessage id={`month-${month}`} /> {year}
+              <FormattedMessage
+                id="budget.header"
+                values={{ month: intl.formatMessage({ id: `month-${month}` }), year }}
+              />
               {loading && (
                 <Segment basic loading size="mini" floated="right" />
               )}

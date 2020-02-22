@@ -60,7 +60,7 @@ export const PageMenu = () => {
           <Dropdown
             item
             loading={loadingYears}
-            text={`${intl.formatMessage({ id: 'menu.year' })}: ${year.toString()}`}
+            text={`${intl.formatMessage({ id: 'menu.year' }, { year })}`}
           >
             <Dropdown.Menu>
               {years.map(y =>

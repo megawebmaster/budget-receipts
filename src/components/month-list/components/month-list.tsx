@@ -62,7 +62,10 @@ export const MonthList: FC<MonthListProps> = ({ route, label, children }) => {
           fluid
           scrolling
           className={styles.dropdown}
-          text={`${label}: ${intl.formatMessage({ id: `month-${month + 1}` })} ${year}`}
+          text={intl.formatMessage(
+            { id: 'month-list.dropdown-label' },
+            { label, year, month: intl.formatMessage({ id: `month-${month + 1}` }) },
+          )}
         >
           <DropdownMenu>
             <MonthItems route={route} as={DropdownItem} />
