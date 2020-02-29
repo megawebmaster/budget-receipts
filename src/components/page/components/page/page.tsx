@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Container } from 'semantic-ui-react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,6 +9,7 @@ import { loadBudgets } from '../../page.actions'
 import { PageMenu } from '../page-menu/page-menu'
 
 import styles from './page.module.css'
+import { PasswordRequirement } from '../../../password-requirement'
 
 const transitionStyles = {
   enter: styles['navigation-enter'],
@@ -20,14 +21,14 @@ const transitionTimeouts = { enter: 300, exit: 500 }
 export const Page = () => {
   const location = useSelector(locationSelector)
   const dispatch = useDispatch()
-  const { component: Component } = pages[location]
+  const { component: Component, requiresPassword } = pages[location]
 
   useEffect(() => {
     dispatch(loadBudgets())
   }, [dispatch])
 
   return (
-    <Fragment>
+    <PasswordRequirement required={requiresPassword}>
       <PageMenu />
       <TransitionGroup component={null}>
         <CSSTransition
@@ -46,6 +47,6 @@ export const Page = () => {
           </div>
         </CSSTransition>
       </TransitionGroup>
-    </Fragment>
+    </PasswordRequirement>
   )
 }

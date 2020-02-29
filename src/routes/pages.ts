@@ -6,28 +6,46 @@ import { Budget } from '../components/budget'
 import { Expenses } from '../components/expenses'
 import { NotFound } from '../components/not-found'
 
-type Page = { component: ComponentType }
+type Page = {
+  component: ComponentType
+  requiresLogin: boolean
+  requiresPassword: boolean
+}
 
 export const pages: Record<AvailableRoutes, Page> = {
   'ROUTES/Home': {
-    component: Home
+    component: Home,
+    requiresLogin: false,
+    requiresPassword: false
   },
   'ROUTES/BudgetMonthEntries': {
-    component: Budget
+    component: Budget,
+    requiresLogin: true,
+    requiresPassword: true
   },
   'ROUTES/ExpensesMonth': {
-    component: Expenses
+    component: Expenses,
+    requiresLogin: true,
+    requiresPassword: true
   },
   'ROUTES/BudgetEntries': {
-    component: NotFound
+    component: NotFound,
+    requiresLogin: true,
+    requiresPassword: false
   },
   'ROUTES/Budget': {
-    component: NotFound
+    component: NotFound,
+    requiresLogin: true,
+    requiresPassword: false
   },
   'ROUTES/Expenses': {
-    component: NotFound
+    component: NotFound,
+    requiresLogin: true,
+    requiresPassword: false
   },
   [NOT_FOUND]: {
-    component: NotFound
+    component: NotFound,
+    requiresLogin: false,
+    requiresPassword: false
   },
 }

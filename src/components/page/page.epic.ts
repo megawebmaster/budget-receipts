@@ -42,6 +42,7 @@ const loadDefaultBudgetEpic: Epic<AppAction, AppAction, AppState> = (action$, st
   action$.pipe(
     filter(isActionOf(Actions.updateBudgets)),
     filter(() => state$.value.location.type === AvailableRoutes.HOME),
+    // TODO: Redirect if user is logged in only!
     map(({ payload: { value } }) => (
       redirect({
         type: AvailableRoutes.BUDGET_MONTH_ENTRIES,

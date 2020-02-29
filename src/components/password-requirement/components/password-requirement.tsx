@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useCallback, useState } from 'react'
+import React, { Fragment, FC, ReactNode, useCallback, useState } from 'react'
 import { Button, Dimmer, Form, Header, Segment } from 'semantic-ui-react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -9,9 +9,10 @@ import '../password-requirement.css'
 
 type PasswordRequirementProps = {
   children: ReactNode
+  required: boolean
 }
 
-export const PasswordRequirement: FC<PasswordRequirementProps> = ({ children }) => {
+export const PasswordRequirement: FC<PasswordRequirementProps> = ({ children, required }) => {
   const requirePassword = useSelector(passwordRequired)
   const isProcessing = useSelector(processing)
   const [password, setPassword] = useState('')
@@ -22,6 +23,14 @@ export const PasswordRequirement: FC<PasswordRequirementProps> = ({ children }) 
   const updateEncryptionPassword = useCallback(() => {
     dispatch(setEncryptionPassword(password))
   }, [password, dispatch])
+
+  if (!required) {
+    return (
+      <Fragment>
+        {children}
+      </Fragment>
+    )
+  }
 
   return (
     <Dimmer.Dimmable as="div" dimmed={requirePassword}>
