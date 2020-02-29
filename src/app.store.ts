@@ -3,6 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import { connectRoutes, LocationState } from 'redux-first-router'
 import { createEpicMiddleware } from 'redux-observable'
 
+import { AuthState, reducer as authReducer } from './auth'
 import { BudgetState, reducer as budgetReducer } from './components/budget'
 import { ExpensesState, reducer as expensesReducer } from './components/expenses'
 import { CategoriesState, reducer as categoriesReducer } from './components/categories'
@@ -13,6 +14,7 @@ import { appEpic } from './app.epic'
 import { AppAction } from './app.actions'
 
 export type AppState = {
+  auth: AuthState
   budget: BudgetState
   categories: CategoriesState
   expenses: ExpensesState
@@ -30,6 +32,7 @@ export const configureStore = () => {
 
   const rootReducer = combineReducers<AppState>({
     location: locationReducer,
+    auth: authReducer,
     budget: budgetReducer,
     expenses: expensesReducer,
     categories: categoriesReducer,
