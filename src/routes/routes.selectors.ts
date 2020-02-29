@@ -13,23 +13,21 @@ export const yearByLocation = createSelector(
       : AvailableRoutes.EXPENSES
 )
 
-const commonPayload = (state: AppState) => state.location.payload as CommonRoutePayload
-// const expensesPayload = (state: AppState) => state.location.payload as ExpensesRoutePayload
-// const budgetPayload = (state: AppState) => state.location.payload as BudgetRoutePayload
+export const payload = (state: AppState) => state.location.payload as CommonRoutePayload
 
 const defaultBudget = (state: AppState) => state.page.budgets.find(budget => budget.isDefault)
 
 export const budget = createSelector(
-  [commonPayload, defaultBudget],
+  [payload, defaultBudget],
   (payload, budget) => payload.budget || (budget ? budget.slug : undefined),
 )
 
 export const year = createSelector(
-  commonPayload,
+  payload,
   (payload) => payload.year as number || new Date().getFullYear(),
 )
 
 export const month = createSelector(
-  commonPayload,
+  payload,
   (payload) => payload.month as number || new Date().getMonth() + 1,
 )

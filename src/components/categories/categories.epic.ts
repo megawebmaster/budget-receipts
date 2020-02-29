@@ -6,13 +6,14 @@ import { pick } from 'ramda'
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
 import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../../routes'
-import * as Actions from './categories.actions'
 import { ConnectionService } from '../../connection.service'
 import { decryptAction, encryptAction } from '../../encryption'
-import { createCategorySelector } from './categories.selectors'
 import { ApiRequest } from '../../connection.types'
+import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
+
+import * as Actions from './categories.actions'
 import { Category } from './category.types'
-import { Selectors as AuthSelectors } from '../../auth'
+import { createCategorySelector } from './categories.selectors'
 
 const decryptCategories = decryptAction({
   actionCreator: Actions.updateCategories,
@@ -25,10 +26,16 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_MONTH),
     filter(() => AuthSelectors.isLoggedIn(state$.value)),
-    distinctUntilChanged(({ payload: { budget: prevBudget } }, { payload: { budget } }) =>
-      prevBudget === budget,
-    ),
-    map(({ payload: { budget } }) => (
+    map(() => Actions.loadCategories())
+  )
+
+const loadCategoriesEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf([Actions.loadCategories, AuthActions.loggedIn])),
+    map(() => RouteSelectors.budget(state$.value)),
+    filter(Boolean), // This filters cases where budget is `undefined` as we are redirecting to default budget
+    distinctUntilChanged((prevBudget, budget) => prevBudget === budget),
+    map((budget) => (
       `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories`
     )),
     concatMap((url) => [
@@ -142,6 +149,7 @@ const deleteCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
 
 export const categoriesEpic = combineEpics(
   pageLoadEpic,
+  loadCategoriesEpic,
   addCategoryEpic,
   createCategoryEpic,
   updateCategoryEpic,

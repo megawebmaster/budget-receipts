@@ -3,11 +3,12 @@ import { combineEpics, Epic, ofType } from 'redux-observable'
 import { Observable } from 'rxjs'
 import { filter, ignoreElements, map, switchMap, tap } from 'rxjs/operators'
 import { isActionOf } from 'typesafe-actions'
+import { redirect } from 'redux-first-router'
 
 import { AppAction } from '../app.actions'
 import { AppState } from '../app.store'
 import * as Actions from './auth0.actions'
-import { AvailableRoutes, RouteAction } from '../routes'
+import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../routes'
 import { Authenticator } from '../app.auth'
 import { Encryption } from '../encryption/encryption'
 
@@ -19,11 +20,16 @@ const auth0 = new WebAuth({
   responseType: 'token id_token',
 })
 
-const loginEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+const loginEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.login)),
     filter(() => !window.location.hash.includes('access_token=')),
-    tap(() => auth0.authorize()), // TODO: Support redirecting back to correct page
+    tap(() => {
+      const location = RouteSelectors.location(state$.value)
+      const payload = RouteSelectors.payload(state$.value)
+      localStorage.setItem('referrer', JSON.stringify({ location, payload }))
+      auth0.authorize()
+    }),
     ignoreElements(),
   )
 
@@ -34,6 +40,12 @@ const parseLoginEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
     filter((hash) => hash.includes('access_token=')),
     switchMap((hash) =>
       new Observable<AppAction>(observer => {
+        const { location, payload } = JSON.parse(localStorage.getItem('referrer') || '{}')
+
+        if (location && location !== AvailableRoutes.HOME) {
+          observer.next(redirect({ type: location, payload }) as RouteAction)
+        }
+
         observer.next(Actions.loggingIn())
 
         auth0.parseHash({ hash },(error: Auth0ParseHashError | null, authentication: Auth0DecodedHash | null) => {

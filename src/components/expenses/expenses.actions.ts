@@ -44,6 +44,7 @@ type ImageProcessingRequest = {
   parsingResult: ImageParsingResult
 }
 
+export const loadReceipts = createAction('EXPENSES/loadReceipts')()
 export const loadReceiptsFromApi = createAction('EXPENSES/loadReceiptsFromApi')<DownloadValue<ApiReceipt>>()
 
 export const updateReceipts = createAction('EXPENSES/updateReceipts')<DownloadValue<ApiReceipt>>()

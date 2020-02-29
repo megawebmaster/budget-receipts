@@ -8,6 +8,7 @@ type UpdateBudgetEntry = {
   value: number
 }
 
+export const loadEntries = createAction('BUDGET/loadEntries')()
 export const updateEntries = createAction('BUDGET/updateBudgetEntries')<DownloadValue<BudgetEntry>>()
 export const updateEntry = createAction('BUDGET/updateBudgetEntry')<UpdateBudgetEntry>()
 export const entryUpdated = createAction('BUDGET/budgetEntryUpdated')<SaveValue<BudgetEntry>>()

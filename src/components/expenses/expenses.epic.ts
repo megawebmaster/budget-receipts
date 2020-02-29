@@ -11,7 +11,7 @@ import { ConnectionService } from '../../connection.service'
 import { decryptAction, encryptAction } from '../../encryption'
 import { ApiRequest } from '../../connection.types'
 import { receiptCategories } from '../categories'
-import { Selectors as AuthSelectors } from '../../auth'
+import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
 
 import { ExpenseDeleted, ReceiptItemCreated } from './expenses.actions'
 import * as Actions from './expenses.actions'
@@ -38,9 +38,20 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     ofType<AppAction, ExpenseRouteAction>(AvailableRoutes.EXPENSES_MONTH),
     filter(() => AuthSelectors.isLoggedIn(state$.value)),
-    map(({ payload: { budget, year, month } }) => (
-      `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}`
-    )),
+    map(() => Actions.loadReceipts()),
+  )
+
+const loadReceiptsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf([Actions.loadReceipts, AuthActions.loggedIn])),
+    filter(() => RouteSelectors.location(state$.value) === AvailableRoutes.EXPENSES_MONTH),
+    map(() => {
+      const budget = RouteSelectors.budget(state$.value)
+      const year = RouteSelectors.year(state$.value)
+      const month = RouteSelectors.month(state$.value)
+
+      return `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}`
+    }),
     mergeMap((url) => of(
       ConnectionService.loadFromCache(url, Actions.loadReceiptsFromApi),
       ConnectionService.fetchFromNetwork(url, Actions.loadReceiptsFromApi),
@@ -271,6 +282,7 @@ const deleteReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
 
 export const expensesEpic = combineEpics(
   pageLoadEpic,
+  loadReceiptsEpic,
   loadReceiptsFromApiEpic,
   createReceiptEpic,
   updateReceiptEpic,
