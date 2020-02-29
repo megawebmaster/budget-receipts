@@ -4,34 +4,22 @@ import Link, { NavLink } from 'redux-first-router-link'
 import { Button, Dropdown, Icon, Menu, Responsive, Segment } from 'semantic-ui-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
-import {
-  AvailableRoutes,
-  budget as budgetSelector,
-  month as monthSelector,
-  year as yearSelector,
-  yearByLocation,
-} from '../../../../routes'
-import {
-  budgets,
-  budgetsLoading,
-  budgetYears,
-  budgetYearsLoading,
-  currentBudget as currentBudgetSelector,
-} from '../../page.selectors'
+import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes'
+import * as PageSelectors from '../../page.selectors'
 
 import styles from './page-menu.module.css'
 
 export const PageMenu = () => {
   const intl = useIntl()
-  const currentBudget = useSelector(currentBudgetSelector)
-  const loadingBudgets = useSelector(budgetsLoading)
-  const loadingYears = useSelector(budgetYearsLoading)
-  const availableBudgets = useSelector(budgets)
-  const years = useSelector(budgetYears)
-  const year = useSelector(yearSelector)
-  const month = useSelector(monthSelector)
-  const budget = useSelector(budgetSelector)
-  const yearChangeRoute = useSelector(yearByLocation)
+  const currentBudget = useSelector(PageSelectors.currentBudget)
+  const loadingBudgets = useSelector(PageSelectors.budgetsLoading)
+  const loadingYears = useSelector(PageSelectors.budgetYearsLoading)
+  const availableBudgets = useSelector(PageSelectors.budgets)
+  const years = useSelector(PageSelectors.budgetYears)
+  const year = useSelector(RouteSelectors.year)
+  const month = useSelector(RouteSelectors.month)
+  const budget = useSelector(RouteSelectors.budget)
+  const yearChangeRoute = useSelector(RouteSelectors.yearByLocation)
 
   const [expanded, setExpanded] = useState(false)
   const toggleExpanded = useCallback(() => setExpanded(value => !value), [setExpanded])

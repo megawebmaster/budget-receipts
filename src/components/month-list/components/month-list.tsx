@@ -5,12 +5,7 @@ import { Dropdown, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive } from
 import { FormattedMessage, useIntl } from 'react-intl'
 import { times } from 'ramda'
 
-import {
-  AvailableRoutes,
-  budget as budgetSelector,
-  month as monthSelector,
-  year as yearSelector,
-} from '../../../routes'
+import { AvailableRoutes, Selectors as RouteSelectors } from '../../../routes'
 
 import styles from './month-list.module.css'
 
@@ -26,8 +21,8 @@ type MonthItemsProps = {
 }
 
 const MonthItems: FC<MonthItemsProps> = ({ route, as: Item }) => {
-  const budget = useSelector(budgetSelector)
-  const year = useSelector(yearSelector)
+  const budget = useSelector(RouteSelectors.budget)
+  const year = useSelector(RouteSelectors.year)
 
   return (
     <Fragment>
@@ -46,8 +41,8 @@ const MonthItems: FC<MonthItemsProps> = ({ route, as: Item }) => {
 }
 
 export const MonthList: FC<MonthListProps> = ({ route, label, children }) => {
-  const month = useSelector(monthSelector)
-  const year = useSelector(yearSelector)
+  const month = useSelector(RouteSelectors.month)
+  const year = useSelector(RouteSelectors.year)
   const intl = useIntl()
 
   return (

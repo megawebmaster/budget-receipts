@@ -6,10 +6,10 @@ import { redirect } from 'redux-first-router'
 import { AppAction } from '../../app.actions'
 import { AppState } from '../../app.store'
 import { ConnectionService } from '../../connection.service'
-import { AvailableRoutes, budget as budgetSelector, RouteAction } from '../../routes'
+import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../../routes'
 import * as Actions from './page.actions'
 
-const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.loadBudgets)),
     map(() => (
@@ -25,9 +25,8 @@ const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
 const loadBudgetYearsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf([Actions.loadBudgets, Actions.updateBudgets])),
-    map(() => budgetSelector(state$.value)),
+    map(() => RouteSelectors.budget(state$.value)),
     distinctUntilChanged(),
-    filter(Boolean),
     map(budget => (
       `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}`
     )),

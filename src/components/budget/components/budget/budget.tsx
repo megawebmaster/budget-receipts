@@ -5,14 +5,14 @@ import Helmet from 'react-helmet'
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { MonthList } from '../../../month-list'
-import { AvailableRoutes, month as monthSelector, year as yearSelector } from '../../../../routes'
+import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes'
 import { MessageList } from '../../../message-list'
-import { pageMessages } from '../../../page/page.selectors'
 import { budgetLoading } from '../../budget.selectors'
 import { BudgetTable } from '../budget-table'
+import { hasVisibleCategories } from '../../../categories'
+import { pageMessages } from '../../../page/page.selectors'
 
 import styles from './budget.module.css'
-import { hasVisibleCategories } from '../../../categories'
 
 export const Budget = () => {
   const intl = useIntl()
@@ -20,8 +20,8 @@ export const Budget = () => {
   const hasCategories = useSelector(hasVisibleCategories)
   const [editable, setEditable] = useState(!loading && !hasCategories)
   const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
-  const year = useSelector(yearSelector)
-  const month = useSelector(monthSelector)
+  const year = useSelector(RouteSelectors.year)
+  const month = useSelector(RouteSelectors.month)
   const messages = useSelector(pageMessages)
 
   const editCategoriesButtonProps: ButtonProps = {

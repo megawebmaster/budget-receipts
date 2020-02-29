@@ -5,20 +5,20 @@ import { Grid, GridColumn, Header, Responsive, Segment } from 'semantic-ui-react
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { MonthList } from '../../../month-list'
-import { AvailableRoutes, month as monthSelector, year as yearSelector } from '../../../../routes'
-import { pageMessages } from '../../../page/page.selectors'
+import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes'
 import { ExpensesList } from '../expenses-list'
 import { MessageList } from '../../../message-list'
 import { expensesLoading } from '../../expenses.selectors'
+import { pageMessages } from '../../../page/page.selectors'
 
 import styles from './expenses.module.css'
 
 export const Expenses = () => {
-  const year = useSelector(yearSelector)
-  const month = useSelector(monthSelector)
-  const messages = useSelector(pageMessages)
-  const loading = useSelector(expensesLoading)
   const intl = useIntl()
+  const year = useSelector(RouteSelectors.year)
+  const month = useSelector(RouteSelectors.month)
+  const loading = useSelector(expensesLoading)
+  const messages = useSelector(pageMessages)
 
   return (
     <Fragment>

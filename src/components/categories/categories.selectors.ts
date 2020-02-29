@@ -2,12 +2,12 @@ import { createSelector, Selector } from 'reselect'
 import { DropdownItemProps } from 'semantic-ui-react'
 
 import { AppState } from '../../app.store'
-import { month, year } from '../../routes'
+import { Selectors as RouteSelectors } from '../../routes'
 
 import { Category, CategoryType } from './category.types'
 
 export const accessibleCategories = createSelector(
-  [year, month, (state: AppState) => state.categories.categories],
+  [RouteSelectors.year, RouteSelectors.month, (state: AppState) => state.categories.categories],
   (year, month, categories) => categories.filter(category => {
     const started = new Date(category.startedAt)
     const startMatched = category.startedAt === null || (
@@ -23,7 +23,7 @@ export const accessibleCategories = createSelector(
 )
 
 const yearCategories = createSelector(
-  [year, (state: AppState) => state.categories.categories],
+  [RouteSelectors.year, (state: AppState) => state.categories.categories],
   (year, categories) => categories.filter(category => {
     const started = new Date(category.startedAt)
 

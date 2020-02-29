@@ -7,7 +7,8 @@ export enum AppMessageType {
 }
 
 export type AppMessage = {
-  text: string,
-  sticky: boolean,
+  text: string
+  sticky?: boolean
+  translate?: boolean
   type: AppMessageType
 }

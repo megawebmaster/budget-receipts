@@ -5,20 +5,14 @@ import { pick } from 'ramda'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
-import {
-  AvailableRoutes,
-  budget as budgetSelector,
-  month as monthSelector,
-  RouteAction,
-  year as yearSelector,
-} from '../../routes'
+import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../../routes'
 import * as Actions from './categories.actions'
 import { ConnectionService } from '../../connection.service'
 import { decryptAction, encryptAction } from '../../encryption'
 import { createCategorySelector } from './categories.selectors'
 import { ApiRequest } from '../../connection.types'
 import { Category } from './category.types'
-import { isLoggedIn } from '../../auth'
+import { Selectors as AuthSelectors } from '../../auth'
 
 const decryptCategories = decryptAction({
   actionCreator: Actions.updateCategories,
@@ -30,7 +24,7 @@ const decryptCategories = decryptAction({
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_MONTH),
-    filter(() => isLoggedIn(state$.value)),
+    filter(() => AuthSelectors.isLoggedIn(state$.value)),
     distinctUntilChanged(({ payload: { budget: prevBudget } }, { payload: { budget } }) =>
       prevBudget === budget,
     ),
@@ -49,8 +43,8 @@ const addCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
     filter(isActionOf(Actions.addCategory)),
     map(({ payload: { id, name, type, parentId } }) => {
       const parent = parentId ? createCategorySelector(parentId)(state$.value) : null
-      const year = yearSelector(state$.value)
-      const month = monthSelector(state$.value)
+      const year = RouteSelectors.year(state$.value)
+      const month = RouteSelectors.month(state$.value)
 
       return Actions.createCategory({
         id,
@@ -69,9 +63,9 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
   action$.pipe(
     filter(isActionOf(Actions.createCategory)),
     map(({ payload }) => {
-      const budget = budgetSelector(state$.value)
-      const year = yearSelector(state$.value)
-      const month = monthSelector(state$.value)
+      const budget = RouteSelectors.budget(state$.value)
+      const year = RouteSelectors.year(state$.value)
+      const month = RouteSelectors.month(state$.value)
 
       return {
         value: {
@@ -104,7 +98,7 @@ const updateCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
         return null
       }
 
-      const budget = budgetSelector(state$.value)
+      const budget = RouteSelectors.budget(state$.value)
       const parent = payload.parent ?? currentCategory.parent
 
       return {
@@ -131,9 +125,9 @@ const deleteCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
   action$.pipe(
     filter(isActionOf(Actions.deleteCategory)),
     concatMap(({ payload: { id, type } }) => {
-      const budget = budgetSelector(state$.value)
-      const year = yearSelector(state$.value)
-      const month = monthSelector(state$.value)
+      const budget = RouteSelectors.budget(state$.value)
+      const year = RouteSelectors.year(state$.value)
+      const month = RouteSelectors.month(state$.value)
 
       return ConnectionService.delete({
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories/${id}`,

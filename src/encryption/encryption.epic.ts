@@ -7,7 +7,7 @@ import { AppAction } from '../app.actions'
 import * as Actions from './encryption.actions'
 import { Fields } from './encryption.actions'
 import { Encryption } from './encryption'
-import { budget as budgetSelector } from '../routes'
+import { Selectors as RouteSelectors } from '../routes'
 import { ApiAction } from '../api.actions'
 import { requirePassword } from '../components/password-requirement'
 import { noop } from '../system.actions'
@@ -32,7 +32,7 @@ import { noop } from '../system.actions'
 const setPasswordEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.setEncryptionPassword)),
-    tap(({ payload }) => Encryption.setPassword(budgetSelector(state$.value), payload)),
+    tap(({ payload }) => Encryption.setPassword(RouteSelectors.budget(state$.value), payload)),
     ignoreElements(),
   )
 
@@ -66,7 +66,7 @@ const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
     filter(isActionOf(Actions.decrypt)),
     mergeMap(
       async (decryptionAction) => {
-        const budget = budgetSelector(state$.value)
+        const budget = RouteSelectors.budget(state$.value)
         if (!Encryption.hasEncryptionPassword(budget)) {
           return requirePassword(decryptionAction)
         }
@@ -102,7 +102,7 @@ const encryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
     filter(isActionOf(Actions.encrypt)),
     mergeMap(
       async (encryptAction) => {
-        const budget = budgetSelector(state$.value)
+        const budget = RouteSelectors.budget(state$.value)
         if (!Encryption.hasEncryptionPassword(budget)) {
           return requirePassword(encryptAction)
         }

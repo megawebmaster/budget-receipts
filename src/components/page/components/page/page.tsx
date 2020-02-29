@@ -3,12 +3,12 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { Container } from 'semantic-ui-react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { location as locationSelector } from '../../../../routes'
+import { Selectors as RouteSelectors } from '../../../../routes'
 import { pages } from '../../../../routes/pages'
 import { loadBudgets } from '../../page.actions'
-import { PageMenu } from '../page-menu/page-menu'
 import { PasswordRequirement } from '../../../password-requirement'
-import { isLoggedIn as isLoggedInSelector, login } from '../../../../auth'
+import { Selectors as AuthSelectors } from '../../../../auth'
+import { PageMenu } from '../page-menu/page-menu'
 
 import styles from './page.module.css'
 
@@ -20,19 +20,15 @@ const transitionStyles = {
 const transitionTimeouts = { enter: 300, exit: 500 }
 
 export const Page = () => {
-  const location = useSelector(locationSelector)
-  const isLoggedIn = useSelector(isLoggedInSelector)
+  const location = useSelector(RouteSelectors.location)
+  const isLoggedIn = useSelector(AuthSelectors.isLoggedIn)
   const dispatch = useDispatch()
 
   const { component: Component, requiresPassword, requiresLogin } = pages[location]
 
   useEffect(() => {
-    if (requiresLogin && !isLoggedIn) {
-      dispatch(login())
-    } else {
-      dispatch(loadBudgets())
-    }
-  }, [dispatch, requiresLogin, isLoggedIn])
+    dispatch(loadBudgets())
+  }, [dispatch])
 
   if (requiresLogin && !isLoggedIn) {
     return null;

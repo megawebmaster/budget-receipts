@@ -4,18 +4,13 @@ import { isActionOf } from 'typesafe-actions'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
-import {
-  AvailableRoutes,
-  budget as budgetSelector,
-  month as monthSelector,
-  RouteAction,
-  year as yearSelector,
-} from '../../routes'
+import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../../routes'
 import { ConnectionService } from '../../connection.service'
-import * as Actions from './budget.actions'
 import { decryptAction, encryptAction } from '../../encryption'
+import { Selectors as AuthSelectors } from '../../auth'
+
+import * as Actions from './budget.actions'
 import { createCategoryEntrySelector } from './budget.selectors'
-import { isLoggedIn } from '../../auth'
 
 const decryptEntries = decryptAction({
   actionCreator: Actions.updateEntries,
@@ -28,7 +23,7 @@ const decryptEntries = decryptAction({
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES),
-    filter(() => isLoggedIn(state$.value)),
+    filter(() => AuthSelectors.isLoggedIn(state$.value)),
     map(({ payload: { budget, year, month } }) => (
       `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}`
     )),
@@ -44,9 +39,9 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
     filter(isActionOf(Actions.updateEntry)),
     map(({ payload: { categoryId, value, type } }) => {
       const entry = createCategoryEntrySelector(categoryId)(state$.value)
-      const budget = budgetSelector(state$.value)
-      const year = yearSelector(state$.value)
-      const month = monthSelector(state$.value)
+      const budget = RouteSelectors.budget(state$.value)
+      const year = RouteSelectors.year(state$.value)
+      const month = RouteSelectors.month(state$.value)
 
       return {
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}/${categoryId}`,
