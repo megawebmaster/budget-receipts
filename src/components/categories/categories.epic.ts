@@ -18,6 +18,7 @@ import { decryptAction, encryptAction } from '../../encryption'
 import { createCategorySelector } from './categories.selectors'
 import { ApiRequest } from '../../connection.types'
 import { Category } from './category.types'
+import { isLoggedIn } from '../../auth'
 
 const decryptCategories = decryptAction({
   actionCreator: Actions.updateCategories,
@@ -26,9 +27,10 @@ const decryptCategories = decryptAction({
   },
 })
 
-const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_MONTH),
+    filter(() => isLoggedIn(state$.value)),
     distinctUntilChanged(({ payload: { budget: prevBudget } }, { payload: { budget } }) =>
       prevBudget === budget,
     ),

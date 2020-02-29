@@ -21,6 +21,7 @@ import { createCategorySpentSelector, createReceiptItemSelector, createReceiptSe
 import { ApiRequest } from '../../connection.types'
 import { ApiReceipt } from './receipt.types'
 import { receiptCategories } from '../categories'
+import { isLoggedIn } from '../../auth'
 
 const decryptReceipts = decryptAction({
   actionCreator: Actions.updateReceipts,
@@ -38,9 +39,10 @@ const decryptReceiptItems = decryptAction({
   },
 })
 
-const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     ofType<AppAction, ExpenseRouteAction>(AvailableRoutes.EXPENSES_MONTH),
+    filter(() => isLoggedIn(state$.value)),
     map(({ payload: { budget, year, month } }) => (
       `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}`
     )),

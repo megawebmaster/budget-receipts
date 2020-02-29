@@ -15,6 +15,7 @@ import { ConnectionService } from '../../connection.service'
 import * as Actions from './budget.actions'
 import { decryptAction, encryptAction } from '../../encryption'
 import { createCategoryEntrySelector } from './budget.selectors'
+import { isLoggedIn } from '../../auth'
 
 const decryptEntries = decryptAction({
   actionCreator: Actions.updateEntries,
@@ -24,9 +25,10 @@ const decryptEntries = decryptAction({
   },
 })
 
-const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES),
+    filter(() => isLoggedIn(state$.value)),
     map(({ payload: { budget, year, month } }) => (
       `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}`
     )),
