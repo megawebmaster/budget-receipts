@@ -18,6 +18,7 @@
   "menu.available-years": "Available years",
   "menu.your-budgets": "Your budgets",
   "menu.year": "Year: {year}",
+  "menu.login": "Log in",
   "menu.logout": "Log out",
   "budget.title": "Budget - Simply Budget Receipts",
   "budget.month-header": "Budget",
@@ -39,5 +40,12 @@
   "expenses.header": "Expenses: {month} {year}",
   "expenses.category": "Select category…",
   "expenses.description": "Description",
-  "expenses.shop": "Shop"
+  "expenses.shop": "Shop",
+  "login.error.invalid_request": "Application configuration error. We've sent notification to the administration.",
+  "login.error.invalid_token": "Authentication error: please try again.",
+  "login.error.access_denied": "Wrong email or password!",
+  "login.error.blocked_user": "Your account has been blocked!",
+  "login.error.password_leaked": "We detected a data breach in another application where your password leaked. Logging in is blocked, please contact administrator.",
+  "login.error.too_many_attempts": "Your account has been blocked after multiple consecutive login attempts. We’ve sent you an email with instructions on how to unblock it.",
+  "login.error.authentication_missing": "Authentication error: please try again."
 }

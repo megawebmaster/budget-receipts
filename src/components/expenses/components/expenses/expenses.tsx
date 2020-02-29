@@ -9,7 +9,6 @@ import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes
 import { ExpensesList } from '../expenses-list'
 import { MessageList } from '../../../message-list'
 import { expensesLoading } from '../../expenses.selectors'
-import { pageMessages } from '../../../page/page.selectors'
 
 import styles from './expenses.module.css'
 
@@ -18,7 +17,6 @@ export const Expenses = () => {
   const year = useSelector(RouteSelectors.year)
   const month = useSelector(RouteSelectors.month)
   const loading = useSelector(expensesLoading)
-  const messages = useSelector(pageMessages)
 
   return (
     <Fragment>
@@ -46,7 +44,7 @@ export const Expenses = () => {
               {loading && <Segment basic loading size="mini" floated="right" />}
             </Header>
           </Responsive>
-          <MessageList messages={messages} />
+          <MessageList />
           <ExpensesList />
         </GridColumn>
       </Grid>

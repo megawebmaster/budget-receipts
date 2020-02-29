@@ -2,6 +2,7 @@ import openpgp, { message, util } from 'openpgp'
 import { of } from 'rxjs'
 import { mergeAll } from 'rxjs/operators'
 import { AfterAction, requirePassword } from '../components/password-requirement'
+import { append, uniq } from 'ramda'
 
 export const initEncryption = () => {
   openpgp.initWorker({
@@ -20,10 +21,9 @@ export class EncryptionError extends Error {
 export class Encryption {
   static setPassword(budget: string | undefined, password: string): void {
     if (budget) {
-      const storedBudgetsPasswords = JSON.parse(localStorage.getItem('encryption-passwords-budgets') || '[]')
-      storedBudgetsPasswords.push(budget)
+      const storedBudgetsPasswords: string[] = JSON.parse(localStorage.getItem('encryption-passwords-budgets') || '[]')
       localStorage.setItem(`encryption-password-${budget}`, password)
-      localStorage.setItem('encryption-passwords-budgets', JSON.stringify(storedBudgetsPasswords))
+      localStorage.setItem('encryption-passwords-budgets', JSON.stringify(uniq(append(budget, storedBudgetsPasswords))))
     }
   }
 

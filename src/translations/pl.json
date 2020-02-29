@@ -18,6 +18,7 @@
   "menu.available-years": "Rok budżetu",
   "menu.your-budgets": "Twoje budżety",
   "menu.year": "Rok: {year}",
+  "menu.login": "Zaloguj się",
   "menu.logout": "Wyloguj się",
   "budget.title": "Budżet - Simply Budget Receipts",
   "budget.month-header": "Budżet",
@@ -39,5 +40,12 @@
   "expenses.header": "Wydatki: {month} {year}",
   "expenses.category": "Wybierz kategorię…",
   "expenses.description": "Opis",
-  "expenses.shop": "Sklep"
+  "expenses.shop": "Sklep",
+  "login.error.invalid_request": "Błąd konfiguracji aplikacji. Powiadomienie zostało wysłane do administratora.",
+  "login.error.invalid_token": "Wystąpił błąd logowania: spróbuj ponownie.",
+  "login.error.access_denied": "Nieprawidłowy login i/lub hasło!",
+  "login.error.blocked_user": "Użytkownik został zablokowany!",
+  "login.error.password_leaked": "Wykryliśmy wyciek Twojego hasła z innej aplikacji. Logowanie zostało zablokowane. Prosimy o kontakt z administratorem.",
+  "login.error.too_many_attempts": "Zbyt wiele prób logowania. Instrukcje odblokowania zostały wysłane na Twojego maila.",
+  "login.error.authentication_missing": "Wystąpił błąd logowania: spróbuj ponownie."
 }

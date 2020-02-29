@@ -9,7 +9,7 @@ import { ConnectionService } from '../../connection.service'
 import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../../routes'
 import * as Actions from './page.actions'
 
-const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+const loadBudgetsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
   action$.pipe(
     filter(isActionOf(Actions.loadBudgets)),
     map(() => (
@@ -27,6 +27,7 @@ const loadBudgetYearsEpic: Epic<AppAction, AppAction, AppState> = (action$, stat
     filter(isActionOf([Actions.loadBudgets, Actions.updateBudgets])),
     map(() => RouteSelectors.budget(state$.value)),
     distinctUntilChanged(),
+    filter(Boolean), // This filters cases where budget is `undefined` as we are redirecting to default budget
     map(budget => (
       `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}`
     )),
@@ -40,8 +41,7 @@ const loadBudgetYearsEpic: Epic<AppAction, AppAction, AppState> = (action$, stat
 const loadDefaultBudgetEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.updateBudgets)),
-    filter(() => state$.value.location.type === AvailableRoutes.HOME),
-    // TODO: Redirect if user is logged in only!
+    filter(() => RouteSelectors.location(state$.value) === AvailableRoutes.HOME),
     map(({ payload: { value } }) => (
       redirect({
         type: AvailableRoutes.BUDGET_MONTH_ENTRIES,

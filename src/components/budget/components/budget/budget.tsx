@@ -10,7 +10,6 @@ import { MessageList } from '../../../message-list'
 import { budgetLoading } from '../../budget.selectors'
 import { BudgetTable } from '../budget-table'
 import { hasVisibleCategories } from '../../../categories'
-import { pageMessages } from '../../../page/page.selectors'
 
 import styles from './budget.module.css'
 
@@ -22,7 +21,6 @@ export const Budget = () => {
   const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
   const year = useSelector(RouteSelectors.year)
   const month = useSelector(RouteSelectors.month)
-  const messages = useSelector(pageMessages)
 
   const editCategoriesButtonProps: ButtonProps = {
     color: editable ? 'red' : 'blue',
@@ -66,7 +64,7 @@ export const Budget = () => {
             <Button floated="right" {...editCategoriesButtonProps} />
           </Responsive>
           <Responsive as={Button} fluid{...Responsive.onlyMobile}{...editCategoriesButtonProps} />
-          <MessageList messages={messages} />
+          <MessageList />
           <BudgetTable
             color="green"
             categoryType="income"

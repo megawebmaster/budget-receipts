@@ -1,8 +1,11 @@
 import React, { FC, Fragment, useCallback, useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Message } from 'semantic-ui-react'
+import { useSelector } from 'react-redux'
 
 import { AppMessage, AppMessageType } from '../app-message'
+// This is explicitly taken selector to avoid circular dependency
+import { messages as pageMessages } from '../../page/page.selectors'
 
 type DismissableMessageProps = {
   message: AppMessage
@@ -29,7 +32,9 @@ const DismissableMessage: FC<DismissableMessageProps> = ({ message }) => {
   )
 }
 
-export const MessageList: FC<{ messages: AppMessage[] }> = ({ messages }) => {
+export const MessageList = () => {
+  const messages = useSelector(pageMessages)
+
   return (
     <Fragment>
       {messages.map((message, idx) => (

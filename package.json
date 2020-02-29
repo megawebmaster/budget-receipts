@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@auth0/auth0-spa-js": "^1.6.4",
     "@formatjs/intl-pluralrules": "^1.5.2",
     "@formatjs/intl-relativetimeformat": "^4.5.9",
+    "@types/auth0-js": "^9.12.4",
     "@types/classnames": "^2.2.9",
     "@types/humps": "^1.1.2",
     "@types/jest": "24.0.25",
@@ -19,6 +19,7 @@
     "@types/react-transition-group": "^4.2.3",
     "@types/redux-first-router": "^2.1.4",
     "@types/redux-first-router-link": "^1.4.4",
+    "auth0-js": "^9.12.2",
     "classnames": "^2.2.6",
     "dotenv": "^8.2.0",
     "humps": "^2.0.1",

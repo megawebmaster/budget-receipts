@@ -3,11 +3,14 @@ import { Header } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import Helmet from 'react-helmet'
 
+import { MessageList } from '../../message-list'
+
 export const Home = () => (
   <Fragment>
     <Helmet>
       <title>Home - Simply Budget Receipts</title>
     </Helmet>
+    <MessageList />
     <Header as="h1">
       <FormattedMessage id="app.header" />
     </Header>
