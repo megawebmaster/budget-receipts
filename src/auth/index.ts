@@ -1,6 +1,6 @@
-import * as Actions from './auth0.actions'
-import * as Selectors from './auth0.selectors'
+import * as Actions from './auth.actions'
+import * as Selectors from './auth.selectors'
 
 export { Actions, Selectors }
-export * from './auth0.epic'
-export * from './auth0.reducer'
+export * from './auth.epic'
+export * from './auth.reducer'

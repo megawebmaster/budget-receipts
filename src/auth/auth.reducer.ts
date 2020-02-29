@@ -3,7 +3,7 @@ import { getType } from 'typesafe-actions'
 
 import { AppAction } from '../app.actions'
 import { Authenticator } from '../app.auth'
-import * as Actions from './auth0.actions'
+import * as Actions from './auth.actions'
 
 export type AuthState = {
   isLogged: boolean

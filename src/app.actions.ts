@@ -3,7 +3,7 @@ import { ActionType } from 'typesafe-actions'
 import { RouteAction } from './routes'
 import * as EncryptionActions from './encryption/encryption.actions'
 import * as PasswordRequirementActions from './components/password-requirement/password-requirement.actions'
-import * as AuthActions from './auth/auth0.actions'
+import * as AuthActions from './auth/auth.actions'
 import { ApiAction } from './api.actions'
 import { NoopAction } from './system.actions'
 

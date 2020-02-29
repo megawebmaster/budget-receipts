@@ -4,7 +4,7 @@ export class Authenticator {
   static isLoggedIn(): boolean {
     const expiresAt = parseInt(localStorage.getItem('expires_at') || '0', 10);
 
-    return expiresAt !== null && new Date().getTime() < expiresAt;
+    return new Date().getTime() < expiresAt;
   }
 
   static getToken(): string {

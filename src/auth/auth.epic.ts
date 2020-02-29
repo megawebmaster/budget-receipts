@@ -7,7 +7,7 @@ import { redirect } from 'redux-first-router'
 
 import { AppAction } from '../app.actions'
 import { AppState } from '../app.store'
-import * as Actions from './auth0.actions'
+import * as Actions from './auth.actions'
 import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../routes'
 import { Authenticator } from '../app.auth'
 import { Encryption } from '../encryption/encryption'
