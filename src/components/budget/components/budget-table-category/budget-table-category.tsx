@@ -5,7 +5,11 @@ import { useIntl } from 'react-intl'
 import cx from 'classnames'
 
 import { Actions as CategoryActions, CategoryType, Selectors as CategorySelectors } from '../../../categories'
-import { createCategoryEntrySelector, plannedValueDisabled, realValueDisabled } from '../../budget.selectors'
+import {
+  createCategoryEntrySelector,
+  createPlannedValueDisabledSelector,
+  createRealValueDisabledSelector,
+} from '../../budget.selectors'
 import { BudgetTableSubcategory } from '../budget-table-subcategory'
 import { CurrencyInput } from '../../../currency-input'
 import { updateEntry } from '../../budget.actions'
@@ -26,9 +30,13 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
   const intl = useIntl()
   const categorySelector = useMemo(() => CategorySelectors.createCategorySelector(categoryId), [categoryId])
   const entrySelector = useMemo(() => createCategoryEntrySelector(categoryId), [categoryId])
+  const plannedValueDisabledSelector = useMemo(() => createPlannedValueDisabledSelector(categoryType), [categoryType])
+  const realValueDisabledSelector = useMemo(() => createRealValueDisabledSelector(categoryType), [categoryType])
 
   const category = useSelector(categorySelector)
   const entry = useSelector(entrySelector)
+  const plannedValueDisabled = useSelector(plannedValueDisabledSelector)
+  const realValueDisabled = useSelector(realValueDisabledSelector)
 
   const dispatch = useDispatch()
   const updatePlanned = useCallback(
@@ -44,7 +52,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
       id: Date.now(),
       name: value,
       parentId: categoryId,
-      type: categoryType
+      type: categoryType,
     })),
     [dispatch, categoryId, categoryType],
   )
@@ -90,7 +98,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           <Table.HeaderCell width={4}>
             <CurrencyInput
               currency="PLN"
-              disabled={hasChildren || loading || saving || plannedValueDisabled(categoryType)}
+              disabled={hasChildren || loading || saving || plannedValueDisabled}
               label={intl.formatMessage({ id: 'budget.table.planned' })}
               value={entry.plan}
               onUpdate={updatePlanned}
@@ -99,7 +107,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           <Table.HeaderCell width={4}>
             <CurrencyInput
               currency="PLN"
-              disabled={hasChildren || loading || saving || realValueDisabled(categoryType)}
+              disabled={hasChildren || loading || saving || realValueDisabled}
               label={intl.formatMessage({ id: 'budget.table.real' })}
               value={entry.real}
               onUpdate={updateReal}

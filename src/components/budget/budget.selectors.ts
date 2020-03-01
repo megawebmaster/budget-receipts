@@ -1,6 +1,7 @@
 import { createSelector, Selector } from 'reselect'
 import { AppState } from '../../app.store'
 import { CategoryType } from '../categories'
+import { AvailableRoutes, Selectors as RouteSelectors } from '../../routes'
 import { BudgetEntry, BudgetEntryValueType } from './budget-entry.types'
 
 export const budgetLoading = (state: AppState) => state.budget.loading || state.categories.loading
@@ -48,5 +49,9 @@ export const createCategoryEntrySelector = (categoryId: number): Selector<AppSta
       ) as BudgetEntry,
   )
 
-export const plannedValueDisabled = (type: CategoryType) => type === 'irregular'
-export const realValueDisabled = (type: CategoryType) => type === 'irregular' || type === 'expense'
+export const createPlannedValueDisabledSelector = (type: CategoryType) => createSelector(
+  [RouteSelectors.location],
+  (location) => location !== AvailableRoutes.BUDGET_IRREGULAR && type === 'irregular'
+)
+export const createRealValueDisabledSelector = (type: CategoryType) =>
+  () => type === 'irregular' || type === 'expense'
