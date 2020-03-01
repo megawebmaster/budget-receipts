@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { Grid, GridColumn, Header, Responsive, Segment } from 'semantic-ui-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
-import { MonthList } from '../../../month-list'
+import { MonthList } from '../month-list'
 import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes'
 import { ExpensesList } from '../expenses-list'
 import { MessageList } from '../../../message-list'
@@ -25,10 +25,7 @@ export const Expenses = () => {
       </Helmet>
       <Grid className={styles.container}>
         <GridColumn mobile={16} tablet={16} computer={3}>
-          <MonthList
-            route={AvailableRoutes.EXPENSES_MONTH}
-            label={intl.formatMessage({ id: 'expenses.month-header' })}
-          >
+          <MonthList>
             {loading && (
               <Segment basic loading size="tiny" className={styles.inlineLoader} />
             )}

@@ -35,6 +35,7 @@
   "budget.table.add-subcategory": "Add subcategory…",
   "budget.add-button.add": "Add",
   "budget.add-button.cancel": "Cancel",
+  "budget.irregular.menu": "Irregular",
   "expenses.title": "Expenses - Simply Budget Receipts",
   "expenses.month-header": "Expenses",
   "expenses.header": "Expenses: {month} {year}",

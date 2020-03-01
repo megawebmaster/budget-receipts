@@ -4,8 +4,8 @@ import { Button, ButtonProps, Grid, GridColumn, Header, Responsive, Segment } fr
 import Helmet from 'react-helmet'
 import { FormattedMessage, useIntl } from 'react-intl'
 
-import { MonthList } from '../../../month-list'
-import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes'
+import { Menu } from '../menu'
+import { Selectors as RouteSelectors } from '../../../../routes'
 import { MessageList } from '../../../message-list'
 import { budgetLoading } from '../../budget.selectors'
 import { BudgetTable } from '../budget-table'
@@ -40,15 +40,12 @@ export const Budget = () => {
       </Helmet>
       <Grid className={styles.container}>
         <GridColumn mobile={16} tablet={16} computer={3}>
-          <MonthList
-            route={AvailableRoutes.BUDGET_MONTH_ENTRIES}
-            label={intl.formatMessage({ id: 'budget.month-header' })}
-          >
+          <Menu>
             <Responsive as={Button} {...Responsive.onlyTablet} {...editCategoriesButtonProps} />
             {loading && (
               <Segment basic loading size="tiny" className={styles.inlineLoader} />
             )}
-          </MonthList>
+          </Menu>
         </GridColumn>
         <GridColumn mobile={16} tablet={16} computer={13}>
           <Responsive as={Segment} {...Responsive.onlyComputer} color="grey" className={styles.mainHeader}>
