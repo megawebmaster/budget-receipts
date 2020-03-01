@@ -8,9 +8,7 @@ import { ResponsiveMenu } from '../../../responsive-menu'
 
 export const MonthList: FC = ({ children }) => {
   const intl = useIntl()
-  const budget = useSelector(RouteSelectors.budget)
-  const year = useSelector(RouteSelectors.year)
-  const month = useSelector(RouteSelectors.month)
+  const { budget, year, month } = useSelector(RouteSelectors.budgetParams)
 
   const dropdownLabel = intl.formatMessage(
     { id: 'month-list.dropdown-label' },

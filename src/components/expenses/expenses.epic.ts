@@ -46,9 +46,7 @@ const loadReceiptsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
     filter(isActionOf([Actions.loadReceipts, AuthActions.loggedIn])),
     filter(() => RouteSelectors.location(state$.value) === AvailableRoutes.EXPENSES_MONTH),
     map(() => {
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       return `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}`
     }),
@@ -72,9 +70,7 @@ const createReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
   action$.pipe(
     filter(isActionOf(Actions.addReceipt)),
     map(({ payload: { receipt, items } }) => {
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       const updatedCategories = items.map(prop('categoryId'))
       const budgetValues = updatedCategories.map(
@@ -116,9 +112,7 @@ const updateReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
         return null
       }
 
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       return {
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${payload.id}`,
@@ -144,9 +138,7 @@ const deleteReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
   action$.pipe(
     filter(isActionOf(Actions.deleteReceipt)),
     map(({ payload: id }) => {
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       const updatedCategories = CategorySelectors.receiptCategories(state$.value).map(prop('id'))
       const budgetValues = updatedCategories.map(
@@ -175,9 +167,7 @@ const createReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
   action$.pipe(
     filter(isActionOf(Actions.addReceiptItem)),
     map(({ payload }) => {
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       const budgetValues = [{
         categoryId: payload.value.categoryId,
@@ -215,9 +205,7 @@ const updateReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
         return null
       }
 
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       const updatedCategories = CategorySelectors.receiptCategories(state$.value).map(prop('id'))
       const budgetValues = updatedCategories.map(
@@ -253,9 +241,7 @@ const deleteReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
   action$.pipe(
     filter(isActionOf(Actions.deleteReceiptItem)),
     map(({ payload: { id, itemId } }) => {
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       const updatedCategories = CategorySelectors.receiptCategories(state$.value).map(prop('id'))
       const budgetValues = updatedCategories.map(

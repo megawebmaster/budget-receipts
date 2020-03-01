@@ -12,9 +12,7 @@ type MenuProps = {
 
 export const Menu: FC<MenuProps> = ({ label, children }) => {
   const intl = useIntl()
-  const budget = useSelector(RouteSelectors.budget)
-  const year = useSelector(RouteSelectors.year)
-  const month = useSelector(RouteSelectors.month)
+  const { budget, year, month } = useSelector(RouteSelectors.budgetParams)
 
   const dropdownLabel = label(year.toString(), intl.formatMessage({ id: `month-${month}` }))
   const items = [

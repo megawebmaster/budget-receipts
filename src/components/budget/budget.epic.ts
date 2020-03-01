@@ -35,10 +35,7 @@ const loadEntriesEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
         .includes(RouteSelectors.location(state$.value))
     ),
     map(() => {
-      // TODO: Maybe it's worth to extract it to a separate selector?
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       return `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}`
     }),
@@ -54,9 +51,7 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
     filter(isActionOf(Actions.updateEntry)),
     map(({ payload: { categoryId, value, type } }) => {
       const entry = createCategoryEntrySelector(categoryId)(state$.value)
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
       const url = `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}/${categoryId}`
 
       if (entry.category.type === 'irregular' && type === 'plan') {

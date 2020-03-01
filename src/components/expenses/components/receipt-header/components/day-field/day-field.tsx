@@ -17,8 +17,7 @@ export type DayFieldProps = {
 
 export const DayField: FC<DayFieldProps> = ({ addField, onBlur, onChange, onKeyDown, value }) => {
   const inputRef = useRef<Input>(null)
-  const year = useSelector(RouteSelectors.year)
-  const month = useSelector(RouteSelectors.month)
+  const { year, month } = useSelector(RouteSelectors.budgetParams)
 
   const onDayChange = useCallback((day) => {
     if (day) {

@@ -31,3 +31,8 @@ export const month = createSelector(
   payload,
   (payload) => payload.month as number || new Date().getMonth() + 1,
 )
+
+export const budgetParams = createSelector(
+  [budget, year, month],
+  (budget, year, month) => ({ budget, year, month })
+)

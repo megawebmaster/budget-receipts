@@ -14,8 +14,7 @@ import styles from './expenses.module.css'
 
 export const Expenses = () => {
   const intl = useIntl()
-  const year = useSelector(RouteSelectors.year)
-  const month = useSelector(RouteSelectors.month)
+  const { year, month } = useSelector(RouteSelectors.budgetParams)
   const loading = useSelector(expensesLoading)
 
   return (

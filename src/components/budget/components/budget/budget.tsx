@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react'
+import React, { Fragment, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Button, ButtonProps, Grid, GridColumn, Header, Responsive, Segment } from 'semantic-ui-react'
 import Helmet from 'react-helmet'
@@ -19,8 +19,7 @@ export const Budget = () => {
   const hasCategories = useSelector(CategorySelectors.hasVisibleCategories)
   const [editable, setEditable] = useState(!loading && !hasCategories)
   const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
-  const year = useSelector(RouteSelectors.year)
-  const month = useSelector(RouteSelectors.month)
+  const { year, month } = useSelector(RouteSelectors.budgetParams)
 
   const editCategoriesButtonProps: ButtonProps = {
     color: editable ? 'red' : 'blue',

@@ -1,28 +1,24 @@
 import { redirect, RoutesMap, StateGetter } from 'redux-first-router'
 import { Dispatch } from 'redux'
 import { AppState } from '../app.store'
-import { budget as budgetSelector, year as yearSelector, month as monthSelector } from './routes.selectors'
+import { budgetParams } from './routes.selectors'
 import { AvailableRoutes } from './routes.types'
 
 const redirectToBudgetMonth = (dispatch: Dispatch, getState: StateGetter) => {
   const state: AppState = getState()
-  const budget = budgetSelector(state)
-  const year = yearSelector(state)
-  const month = monthSelector(state)
+
   dispatch(redirect({
     type: AvailableRoutes.BUDGET_MONTH_ENTRIES,
-    payload: { budget, year, month },
+    payload: budgetParams(state),
   }))
 }
 
 const redirectToMonthExpenses = (dispatch: Dispatch, getState: StateGetter) => {
   const state: AppState = getState()
-  const budget = budgetSelector(state)
-  const year = yearSelector(state)
-  const month = monthSelector(state)
+
   dispatch(redirect({
     type: AvailableRoutes.EXPENSES_MONTH,
-    payload: { budget, year, month },
+    payload: budgetParams(state),
   }))
 }
 

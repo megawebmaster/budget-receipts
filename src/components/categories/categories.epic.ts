@@ -50,8 +50,7 @@ const addCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
     filter(isActionOf(Actions.addCategory)),
     map(({ payload: { id, name, type, parentId } }) => {
       const parent = parentId ? createCategorySelector(parentId)(state$.value) : null
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { year, month } = RouteSelectors.budgetParams(state$.value)
       const isIrregular = type === 'irregular'
 
       return Actions.createCategory({
@@ -71,9 +70,7 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
   action$.pipe(
     filter(isActionOf(Actions.createCategory)),
     map(({ payload }) => {
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       return {
         value: {
@@ -133,9 +130,7 @@ const deleteCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
   action$.pipe(
     filter(isActionOf(Actions.deleteCategory)),
     concatMap(({ payload: { id, type } }) => {
-      const budget = RouteSelectors.budget(state$.value)
-      const year = RouteSelectors.year(state$.value)
-      const month = RouteSelectors.month(state$.value)
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 
       return ConnectionService.delete({
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories/${id}`,

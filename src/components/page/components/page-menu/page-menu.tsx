@@ -22,9 +22,7 @@ export const PageMenu = () => {
   const availableBudgets = useSelector(PageSelectors.budgets)
   const years = useSelector(PageSelectors.budgetYears)
   const location = useSelector(RouteSelectors.location)
-  const year = useSelector(RouteSelectors.year)
-  const month = useSelector(RouteSelectors.month)
-  const budget = useSelector(RouteSelectors.budget)
+  const { budget, year, month } = useSelector(RouteSelectors.budgetParams)
   const yearChangeRoute = useSelector(RouteSelectors.yearByLocation)
   const isLoggedIn = useSelector(AuthSelectors.isLoggedIn)
 
