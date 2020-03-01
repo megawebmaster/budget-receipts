@@ -5,7 +5,7 @@ import { Grid, GridColumn, Header, Responsive, Segment } from 'semantic-ui-react
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { MonthList } from '../month-list'
-import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes'
+import { Selectors as RouteSelectors } from '../../../../routes'
 import { ExpensesList } from '../expenses-list'
 import { MessageList } from '../../../message-list'
 import { expensesLoading } from '../../expenses.selectors'

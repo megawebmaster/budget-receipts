@@ -10,7 +10,7 @@ import { ExpensesService } from './expenses.service'
 import { isActionOf } from 'typesafe-actions'
 import { ProcessingMessage } from './receipt.types'
 import { ParsingWorker } from './expense-parsing-worker'
-import { accessibleCategories } from '../categories'
+import { Selectors as CategorySelectors } from '../categories'
 
 const parsingWorker = WebWorker.build(ParsingWorker)
 
@@ -27,7 +27,7 @@ const checkImageProcessingStatusEpic: Epic<AppAction, AppAction, AppState> = (ac
     mergeMap(({ payload: token }) => from(ExpensesService.getReceiptParsingResult(token)).pipe(
       map(result => Actions.processParsedImage({
         id: Date.now(),
-        categories: accessibleCategories(state$.value),
+        categories: CategorySelectors.accessibleCategories(state$.value),
         parsingResult: result,
       })),
       catchError(() => of(Actions.checkProcessingStatus(token)).pipe(delay(10000))),

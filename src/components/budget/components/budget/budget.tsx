@@ -9,14 +9,14 @@ import { Selectors as RouteSelectors } from '../../../../routes'
 import { MessageList } from '../../../message-list'
 import { budgetLoading } from '../../budget.selectors'
 import { BudgetTable } from '../budget-table'
-import { hasVisibleCategories } from '../../../categories'
+import { Selectors as CategorySelectors } from '../../../categories'
 
 import styles from './budget.module.css'
 
 export const Budget = () => {
   const intl = useIntl()
   const loading = useSelector(budgetLoading)
-  const hasCategories = useSelector(hasVisibleCategories)
+  const hasCategories = useSelector(CategorySelectors.hasVisibleCategories)
   const [editable, setEditable] = useState(!loading && !hasCategories)
   const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
   const year = useSelector(RouteSelectors.year)

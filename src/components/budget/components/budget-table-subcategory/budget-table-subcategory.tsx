@@ -4,7 +4,7 @@ import { Responsive, Table } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
 
 import { CurrencyInput } from '../../../currency-input'
-import { CategoryType, createCategorySelector, deleteCategory, updateCategory } from '../../../categories'
+import { Actions as CategoryActions, CategoryType, Selectors as CategorySelectors } from '../../../categories'
 import {
   budgetLoading,
   createCategoryEntrySelector,
@@ -25,8 +25,8 @@ type BudgetTableSubcategoryProps = {
 export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
   ({ categoryType, categoryId, editable, subcategoryId }) => {
     const intl = useIntl()
-    const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
-    const subcategorySelector = useMemo(() => createCategorySelector(subcategoryId), [subcategoryId])
+    const categorySelector = useMemo(() => CategorySelectors.createCategorySelector(categoryId), [categoryId])
+    const subcategorySelector = useMemo(() => CategorySelectors.createCategorySelector(subcategoryId), [subcategoryId])
     const entrySelector = useMemo(() => createCategoryEntrySelector(subcategoryId), [subcategoryId])
 
     const category = useSelector(categorySelector)
@@ -44,11 +44,11 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
       [dispatch, subcategoryId],
     )
     const editCategory = useCallback(
-      (name: string) => dispatch(updateCategory({ name, id: subcategoryId })),
+      (name: string) => dispatch(CategoryActions.updateCategory({ name, id: subcategoryId })),
       [dispatch, subcategoryId],
     )
     const removeCategory = useCallback(
-      () => dispatch(deleteCategory({ id: subcategoryId, type: categoryType })),
+      () => dispatch(CategoryActions.deleteCategory({ id: subcategoryId, type: categoryType })),
       [dispatch, subcategoryId, categoryType],
     )
 

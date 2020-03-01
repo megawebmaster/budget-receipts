@@ -18,10 +18,10 @@ import {
 } from 'ramda'
 import { AvailableRoutes } from '../../routes'
 import { AppAction } from '../../app.actions'
+import { Actions as CategoryActions } from '../categories'
 
 import * as Actions from './budget.actions'
 import { BudgetEntry } from './budget-entry.types'
-import { categoryCreated, updateCategories } from '../categories'
 
 export type BudgetState = {
   entries: BudgetEntry[]
@@ -32,13 +32,13 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
   switch (action.type) {
     case AvailableRoutes.BUDGET_MONTH_ENTRIES:
       return []
-    case getType(categoryCreated):
+    case getType(CategoryActions.categoryCreated):
       return append({
         category: action.payload.value,
         plan: 0,
         real: 0,
       })(state)
-    case getType(updateCategories):
+    case getType(CategoryActions.updateCategories):
       return values(
         mergeWith(
           mergeRight,

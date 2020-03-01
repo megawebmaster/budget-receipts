@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
 
-import { categories as categoriesSelectors, CategoryType, addCategory } from '../../../categories'
+import { Actions as CategoryActions, Selectors as CategorySelectors, CategoryType } from '../../../categories'
 import { budgetLoading, createSummarySelector } from '../../budget.selectors'
 import { BudgetTableCategory } from '../budget-table-category'
 import { AddButton } from '../add-button'
@@ -32,14 +32,14 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
   const plannedSelector = useMemo(() => createSummarySelector(categoryType, 'plan'), [categoryType])
   const realSelector = useMemo(() => createSummarySelector(categoryType, 'real'), [categoryType])
 
-  const categories = useSelector(categoriesSelectors[categoryType])
+  const categories = useSelector(CategorySelectors.categories[categoryType])
   const plannedSummary = useSelector(plannedSelector)
   const realSummary = useSelector(realSelector)
   const loading = useSelector(budgetLoading)
 
   const dispatch = useDispatch()
   const createCategory = useCallback(
-    (value: string) => dispatch(addCategory({
+    (value: string) => dispatch(CategoryActions.addCategory({
       id: Date.now(),
       name: value,
       type: categoryType

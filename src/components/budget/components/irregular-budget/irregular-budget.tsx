@@ -8,14 +8,14 @@ import { Menu } from '../menu'
 import { Selectors as RouteSelectors } from '../../../../routes'
 import { MessageList } from '../../../message-list'
 import { BudgetTable } from '../budget-table'
-import { hasVisibleCategories } from '../../../categories'
+import { Selectors as CategorySelectors } from '../../../categories'
 
 import styles from './irregular-budget.module.css'
 
 export const IrregularBudget = () => {
   const intl = useIntl()
   const loading = false // useSelector(budgetLoading)
-  const hasCategories = useSelector(hasVisibleCategories)
+  const hasCategories = useSelector(CategorySelectors.hasVisibleCategories)
   const [editable, setEditable] = useState(!loading && !hasCategories)
   const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
   const year = useSelector(RouteSelectors.year)

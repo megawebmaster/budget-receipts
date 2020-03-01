@@ -10,7 +10,7 @@ import { AvailableRoutes, ExpenseRouteAction, Selectors as RouteSelectors } from
 import { ConnectionService } from '../../connection.service'
 import { decryptAction, encryptAction } from '../../encryption'
 import { ApiRequest } from '../../connection.types'
-import { receiptCategories } from '../categories'
+import { Selectors as CategorySelectors } from '../categories'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
 
 import { ExpenseDeleted, ReceiptItemCreated } from './expenses.actions'
@@ -148,7 +148,7 @@ const deleteReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
       const year = RouteSelectors.year(state$.value)
       const month = RouteSelectors.month(state$.value)
 
-      const updatedCategories = receiptCategories(state$.value).map(prop('id'))
+      const updatedCategories = CategorySelectors.receiptCategories(state$.value).map(prop('id'))
       const budgetValues = updatedCategories.map(
         categoryId => ({ categoryId, value: createCategorySpentSelector(categoryId)(state$.value) }),
       )
@@ -219,7 +219,7 @@ const updateReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
       const year = RouteSelectors.year(state$.value)
       const month = RouteSelectors.month(state$.value)
 
-      const updatedCategories = receiptCategories(state$.value).map(prop('id'))
+      const updatedCategories = CategorySelectors.receiptCategories(state$.value).map(prop('id'))
       const budgetValues = updatedCategories.map(
         categoryId => ({ categoryId, value: createCategorySpentSelector(categoryId)(state$.value) }),
       )
@@ -257,7 +257,7 @@ const deleteReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
       const year = RouteSelectors.year(state$.value)
       const month = RouteSelectors.month(state$.value)
 
-      const updatedCategories = receiptCategories(state$.value).map(prop('id'))
+      const updatedCategories = CategorySelectors.receiptCategories(state$.value).map(prop('id'))
       const budgetValues = updatedCategories.map(
         categoryId => ({ categoryId, value: createCategorySpentSelector(categoryId)(state$.value) }),
       )

@@ -4,13 +4,7 @@ import { Responsive, Table } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
 import cx from 'classnames'
 
-import {
-  CategoryType,
-  addCategory,
-  createCategorySelector,
-  deleteCategory,
-  updateCategory,
-} from '../../../categories'
+import { Actions as CategoryActions, CategoryType, Selectors as CategorySelectors } from '../../../categories'
 import {
   budgetLoading,
   createCategoryEntrySelector,
@@ -34,7 +28,7 @@ type BudgetTableCategoryProps = {
 // TODO: Add navigable table
 export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType, categoryId, editable }) => {
   const intl = useIntl()
-  const categorySelector = useMemo(() => createCategorySelector(categoryId), [categoryId])
+  const categorySelector = useMemo(() => CategorySelectors.createCategorySelector(categoryId), [categoryId])
   const entrySelector = useMemo(() => createCategoryEntrySelector(categoryId), [categoryId])
 
   const category = useSelector(categorySelector)
@@ -51,7 +45,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
     [dispatch, categoryId],
   )
   const createSubcategory = useCallback(
-    (value: string) => dispatch(addCategory({
+    (value: string) => dispatch(CategoryActions.addCategory({
       id: Date.now(),
       name: value,
       parentId: categoryId,
@@ -60,11 +54,11 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
     [dispatch, categoryId, categoryType],
   )
   const editCategory = useCallback(
-    (name: string) => dispatch(updateCategory({ name, id: categoryId })),
+    (name: string) => dispatch(CategoryActions.updateCategory({ name, id: categoryId })),
     [dispatch, categoryId],
   )
   const removeCategory = useCallback(
-    () => dispatch(deleteCategory({ id: categoryId, type: categoryType })),
+    () => dispatch(CategoryActions.deleteCategory({ id: categoryId, type: categoryType })),
     [dispatch, categoryId, categoryType],
   )
 

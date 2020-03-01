@@ -3,7 +3,7 @@ import { Dropdown, DropdownProps } from 'semantic-ui-react'
 import { useSelector } from 'react-redux'
 import { useIntl } from 'react-intl'
 
-import { dropdownCategories } from '../../../../../categories'
+import { Selectors as CategorySelectors } from '../../../../../categories'
 
 export type CategoryFieldProps = {
   addField: (input: HTMLInputElement | null) => void
@@ -15,7 +15,7 @@ export type CategoryFieldProps = {
 
 export const CategoryField: FC<CategoryFieldProps> = ({ addField, onBlur, onChange, onKeyDown, value }) => {
   const intl = useIntl()
-  const categories = useSelector(dropdownCategories)
+  const categories = useSelector(CategorySelectors.dropdownCategories)
   const dropdownRef = useRef(null)
 
   const handleChange = (event: SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => {
