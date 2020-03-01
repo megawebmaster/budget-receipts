@@ -72,28 +72,32 @@ export const Budget = () => {
           <Responsive as={Button} fluid{...Responsive.onlyMobile}{...editCategoriesButtonProps} />
           <MessageList />
           <BudgetTable
-            color="green"
             categoryType="income"
+            color="green"
             editable={editable}
             label={intl.formatMessage({ id: 'budget.section.income' })}
+            loading={loading}
           />
           <BudgetTable
-            color="yellow"
             categoryType="expense"
+            color="yellow"
             editable={editable}
             label={intl.formatMessage({ id: 'budget.section.expense' })}
+            loading={loading}
           />
           <BudgetTable
-            color="blue"
             categoryType="irregular"
+            color="blue"
             editable={false}
             label={intl.formatMessage({ id: 'budget.section.irregular' })}
+            loading={loading}
           />
           <BudgetTable
-            color="red"
             categoryType="saving"
+            color="red"
             editable={editable}
             label={intl.formatMessage({ id: 'budget.section.saving' })}
+            loading={loading}
           />
         </GridColumn>
       </Grid>

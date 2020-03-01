@@ -68,10 +68,11 @@ export const IrregularBudget = () => {
           <Responsive as={Button} fluid{...Responsive.onlyMobile}{...editCategoriesButtonProps} />
           <MessageList />
           <BudgetTable
-            color="blue"
             categoryType="irregular"
+            color="blue"
             editable={editable}
             label={intl.formatMessage({ id: 'budget.section.irregular' })}
+            loading={false}
           />
         </GridColumn>
       </Grid>

@@ -3,22 +3,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
 
-import { Actions as CategoryActions, Selectors as CategorySelectors, CategoryType } from '../../../categories'
-import { budgetLoading, createSummarySelector } from '../../budget.selectors'
+import { Actions as CategoryActions, CategoryType, Selectors as CategorySelectors } from '../../../categories'
+import { createSummarySelector } from '../../budget.selectors'
 import { BudgetTableCategory } from '../budget-table-category'
 import { AddButton } from '../add-button'
 
 import styles from './budget-table.module.css'
 
 type BudgetTableProps = {
-  className?: string
-  color: SemanticCOLORS
   categoryType: CategoryType
+  color: SemanticCOLORS
   editable: boolean
   label: string
+  loading: boolean
 }
 
-export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, editable }) => {
+export const BudgetTable: FC<BudgetTableProps> = ({ categoryType, color, editable, label, loading }) => {
   const intl = useIntl()
   const formatCurrency = useCallback(
     (value: number) =>
@@ -35,14 +35,13 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
   const categories = useSelector(CategorySelectors.categories[categoryType])
   const plannedSummary = useSelector(plannedSelector)
   const realSummary = useSelector(realSelector)
-  const loading = useSelector(budgetLoading)
 
   const dispatch = useDispatch()
   const createCategory = useCallback(
     (value: string) => dispatch(CategoryActions.addCategory({
       id: Date.now(),
       name: value,
-      type: categoryType
+      type: categoryType,
     })),
     [dispatch, categoryType],
   )
@@ -73,6 +72,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ label, color, categoryType, 
             categoryId={category.id}
             categoryType={category.type}
             editable={editable}
+            loading={loading}
           />
         ))}
         {editable && (

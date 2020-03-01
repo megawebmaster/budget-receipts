@@ -5,12 +5,7 @@ import { useIntl } from 'react-intl'
 
 import { CurrencyInput } from '../../../currency-input'
 import { Actions as CategoryActions, CategoryType, Selectors as CategorySelectors } from '../../../categories'
-import {
-  budgetLoading,
-  createCategoryEntrySelector,
-  plannedValueDisabled,
-  realValueDisabled,
-} from '../../budget.selectors'
+import { createCategoryEntrySelector, plannedValueDisabled, realValueDisabled } from '../../budget.selectors'
 import { updateEntry } from '../../budget.actions'
 import { EditableText } from '../editable-text'
 
@@ -18,12 +13,13 @@ type BudgetTableSubcategoryProps = {
   categoryId: number
   categoryType: CategoryType
   editable: boolean
+  loading: boolean
   subcategoryId: number
 }
 
 // TODO: Navigable table
 export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
-  ({ categoryType, categoryId, editable, subcategoryId }) => {
+  ({ categoryType, categoryId, editable, loading, subcategoryId }) => {
     const intl = useIntl()
     const categorySelector = useMemo(() => CategorySelectors.createCategorySelector(categoryId), [categoryId])
     const subcategorySelector = useMemo(() => CategorySelectors.createCategorySelector(subcategoryId), [subcategoryId])
@@ -32,7 +28,6 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
     const category = useSelector(categorySelector)
     const subcategory = useSelector(subcategorySelector)
     const entry = useSelector(entrySelector)
-    const loading = useSelector(budgetLoading)
 
     const dispatch = useDispatch()
     const updatePlanned = useCallback(
