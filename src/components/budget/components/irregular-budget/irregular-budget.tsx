@@ -7,45 +7,41 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Menu } from '../menu'
 import { Selectors as RouteSelectors } from '../../../../routes'
 import { MessageList } from '../../../message-list'
-import { budgetLoading } from '../../budget.selectors'
 import { BudgetTable } from '../budget-table'
 import { hasVisibleCategories } from '../../../categories'
 
-import styles from './budget.module.css'
+import styles from './irregular-budget.module.css'
 
-export const Budget = () => {
+export const IrregularBudget = () => {
   const intl = useIntl()
-  const loading = useSelector(budgetLoading)
+  const loading = false // useSelector(budgetLoading)
   const hasCategories = useSelector(hasVisibleCategories)
   const [editable, setEditable] = useState(!loading && !hasCategories)
   const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
   const year = useSelector(RouteSelectors.year)
-  const month = useSelector(RouteSelectors.month)
 
   const editCategoriesButtonProps: ButtonProps = {
     color: editable ? 'red' : 'blue',
     icon: editable ? 'cancel' : 'pencil',
     onClick: toggleEditable,
     content: editable
-      ? intl.formatMessage({ id: 'budget.edit-categories-close' })
-      : intl.formatMessage({ id: 'budget.edit-categories' }),
+      ? intl.formatMessage({ id: 'irregular-budget.edit-categories-close' })
+      : intl.formatMessage({ id: 'irregular-budget.edit-categories' }),
     disabled: loading,
   }
 
-  const label = (year: string, month: string) => intl.formatMessage(
-    { id: 'month-list.dropdown-label' },
+  const label = (year: string) => intl.formatMessage(
+    { id: 'irregular-budget.dropdown-label' },
     {
       year,
-      month,
-      label: intl.formatMessage({ id: 'budget.month-header' }),
+      label: intl.formatMessage({ id: 'irregular-budget.month-header' }),
     },
   )
 
-  // TODO: Extract currency to a settings module
   return (
     <Fragment>
       <Helmet>
-        <title>{intl.formatMessage({ id: 'budget.title' })}</title>
+        <title>{intl.formatMessage({ id: 'irregular-budget.title' })}</title>
       </Helmet>
       <Grid className={styles.container}>
         <GridColumn mobile={16} tablet={16} computer={3}>
@@ -60,8 +56,8 @@ export const Budget = () => {
           <Responsive as={Segment} {...Responsive.onlyComputer} color="grey" className={styles.mainHeader}>
             <Header as="h3" className={styles.mainHeaderContent}>
               <FormattedMessage
-                id="budget.header"
-                values={{ month: intl.formatMessage({ id: `month-${month}` }), year }}
+                id="irregular-budget.header"
+                values={{ year }}
               />
               {loading && (
                 <Segment basic loading size="mini" floated="right" />
@@ -72,28 +68,10 @@ export const Budget = () => {
           <Responsive as={Button} fluid{...Responsive.onlyMobile}{...editCategoriesButtonProps} />
           <MessageList />
           <BudgetTable
-            color="green"
-            categoryType="income"
-            editable={editable}
-            label={intl.formatMessage({ id: 'budget.section.income' })}
-          />
-          <BudgetTable
-            color="yellow"
-            categoryType="expense"
-            editable={editable}
-            label={intl.formatMessage({ id: 'budget.section.expense' })}
-          />
-          <BudgetTable
             color="blue"
             categoryType="irregular"
-            editable={false}
-            label={intl.formatMessage({ id: 'budget.section.irregular' })}
-          />
-          <BudgetTable
-            color="red"
-            categoryType="saving"
             editable={editable}
-            label={intl.formatMessage({ id: 'budget.section.saving' })}
+            label={intl.formatMessage({ id: 'budget.section.irregular' })}
           />
         </GridColumn>
       </Grid>

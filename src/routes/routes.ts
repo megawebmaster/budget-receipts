@@ -14,6 +14,7 @@ const redirectToBudgetMonth = (dispatch: Dispatch, getState: StateGetter) => {
     payload: { budget, year, month },
   }))
 }
+
 const redirectToMonthExpenses = (dispatch: Dispatch, getState: StateGetter) => {
   const state: AppState = getState()
   const budget = budgetSelector(state)
@@ -24,6 +25,7 @@ const redirectToMonthExpenses = (dispatch: Dispatch, getState: StateGetter) => {
     payload: { budget, year, month },
   }))
 }
+
 export const routes: RoutesMap<{}, AppState> = {
   [AvailableRoutes.HOME]: '/',
   [AvailableRoutes.EXPENSES]: {
@@ -31,7 +33,7 @@ export const routes: RoutesMap<{}, AppState> = {
     thunk: redirectToMonthExpenses,
   },
   [AvailableRoutes.EXPENSES_MONTH]: {
-    path: '/:budget/:year/expenses/:month',
+    path: '/:budget/:year/expenses/month/:month',
     coerceNumbers: true,
   },
   [AvailableRoutes.BUDGET]: {
@@ -43,7 +45,11 @@ export const routes: RoutesMap<{}, AppState> = {
     thunk: redirectToBudgetMonth,
   },
   [AvailableRoutes.BUDGET_MONTH_ENTRIES]: {
-    path: '/:budget/:year/budget/:month',
+    path: '/:budget/:year/budget/month/:month',
+    coerceNumbers: true,
+  },
+  [AvailableRoutes.BUDGET_IRREGULAR]: {
+    path: '/:budget/:year/budget/irregular',
     coerceNumbers: true,
   },
 }

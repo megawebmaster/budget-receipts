@@ -6,26 +6,23 @@ import { times } from 'ramda'
 import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes'
 import { ResponsiveMenu } from '../../../responsive-menu'
 
-export const Menu: FC = ({ children }) => {
+type MenuProps = {
+  label: (year: string, month: string) => string
+}
+
+export const Menu: FC<MenuProps> = ({ label, children }) => {
   const intl = useIntl()
   const budget = useSelector(RouteSelectors.budget)
   const year = useSelector(RouteSelectors.year)
   const month = useSelector(RouteSelectors.month)
 
-  const dropdownLabel = intl.formatMessage(
-    { id: 'month-list.dropdown-label' },
-    {
-      year,
-      label: intl.formatMessage({ id: 'budget.month-header' }),
-      month: intl.formatMessage({ id: `month-${month}` }),
-    },
-  )
+  const dropdownLabel = label(year.toString(), intl.formatMessage({ id: `month-${month}` }))
   const items = [
     {
       id: 'first',
       items: [{
         id: 'irregular',
-        route: { type: AvailableRoutes.BUDGET_ENTRIES, payload: { budget, year } },
+        route: { type: AvailableRoutes.BUDGET_IRREGULAR, payload: { budget, year } },
         text: intl.formatMessage({ id: `budget.irregular.menu` }),
       }]
     },

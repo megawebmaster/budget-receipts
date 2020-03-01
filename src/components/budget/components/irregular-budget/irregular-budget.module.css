@@ -1,0 +1,30 @@
+.mainHeader.mainHeader.mainHeader {
+    padding: .5em .5em;
+    display: flex;
+}
+
+.mainHeaderContent.mainHeaderContent {
+    margin: 0;
+    padding: .5em .5em;
+    flex: 1 1;
+}
+
+.inlineLoader.inlineLoader.inlineLoader {
+    padding: 0 2.5em;
+}
+
+@media screen and (max-width: 991px) {
+    .container > [class*="sixteen wide mobile"]:not(:first-child) {
+        padding-top: 0 !important;
+    }
+
+    .inlineLoader.inlineLoader.inlineLoader {
+        padding: 0 1.5em;
+    }
+
+    .inlineLoader.inlineLoader.inlineLoader:after {
+        height: 2em;
+        width: 2em;
+        margin: -1.5em 0 0 -1em;
+    }
+}

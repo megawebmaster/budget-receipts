@@ -5,6 +5,7 @@ import { Home } from '../components/home'
 import { Budget } from '../components/budget'
 import { Expenses } from '../components/expenses'
 import { NotFound } from '../components/not-found'
+import { IrregularBudget } from '../components/budget/components/irregular-budget'
 
 type Page = {
   component: ComponentType
@@ -20,6 +21,11 @@ export const pages: Record<AvailableRoutes, Page> = {
   },
   'ROUTES/BudgetMonthEntries': {
     component: Budget,
+    requiresLogin: true,
+    requiresPassword: true
+  },
+  'ROUTES/BudgetIrregular': {
+    component: IrregularBudget,
     requiresLogin: true,
     requiresPassword: true
   },

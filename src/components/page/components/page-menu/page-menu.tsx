@@ -10,6 +10,9 @@ import * as PageSelectors from '../../page.selectors'
 
 import styles from './page-menu.module.css'
 
+const isMonthRoute = (location: AvailableRoutes) =>
+  [AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_MONTH].includes(location)
+
 export const PageMenu = () => {
   const intl = useIntl()
   const dispatch = useDispatch()
@@ -18,6 +21,7 @@ export const PageMenu = () => {
   const loadingYears = useSelector(PageSelectors.budgetYearsLoading)
   const availableBudgets = useSelector(PageSelectors.budgets)
   const years = useSelector(PageSelectors.budgetYears)
+  const location = useSelector(RouteSelectors.location)
   const year = useSelector(RouteSelectors.year)
   const month = useSelector(RouteSelectors.month)
   const budget = useSelector(RouteSelectors.budget)
@@ -25,6 +29,12 @@ export const PageMenu = () => {
   const isLoggedIn = useSelector(AuthSelectors.isLoggedIn)
 
   const [expanded, setExpanded] = useState(false)
+  const budgetRoute = isMonthRoute(location)
+    ? AvailableRoutes.BUDGET_MONTH_ENTRIES
+    : AvailableRoutes.BUDGET_ENTRIES
+  const expensesRoute = isMonthRoute(location)
+    ? AvailableRoutes.EXPENSES_MONTH
+    : AvailableRoutes.EXPENSES
 
   const toggleExpanded = () => setExpanded(value => !value)
   const onLogin = () => {
@@ -43,14 +53,14 @@ export const PageMenu = () => {
             <Fragment>
               <Menu.Item
                 as={NavLink}
-                to={{ type: AvailableRoutes.BUDGET_MONTH_ENTRIES, payload: { year, month, budget } }}
+                to={{ type: budgetRoute, payload: { year, month, budget } }}
                 activeClassName="active"
               >
                 <FormattedMessage id="menu.budget" />
               </Menu.Item>
               <Menu.Item
                 as={NavLink}
-                to={{ type: AvailableRoutes.EXPENSES_MONTH, payload: { year, month, budget } }}
+                to={{ type: expensesRoute, payload: { year, month, budget } }}
                 activeClassName="active"
               >
                 <FormattedMessage id="menu.expenses" />
@@ -126,7 +136,7 @@ export const PageMenu = () => {
           <Menu fixed="top" inverted vertical fluid className={styles.secondaryMenu}>
             <Menu.Item
               as={NavLink}
-              to={{ type: AvailableRoutes.BUDGET_ENTRIES, payload: { year, budget: 'domowy' } }}
+              to={{ type: budgetRoute, payload: { year, month, budget } }}
               activeClassName="active"
               onClick={toggleExpanded}
             >
@@ -134,7 +144,7 @@ export const PageMenu = () => {
             </Menu.Item>
             <Menu.Item
               as={NavLink}
-              to={{ type: AvailableRoutes.EXPENSES, payload: { year, budget: 'domowy' } }}
+              to={{ type: expensesRoute, payload: { year, month, budget } }}
               activeClassName="active"
               onClick={toggleExpanded}
             >
