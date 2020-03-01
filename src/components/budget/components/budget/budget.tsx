@@ -12,6 +12,7 @@ import { BudgetTable } from '../budget-table'
 import { Selectors as CategorySelectors } from '../../../categories'
 
 import styles from './budget.module.css'
+import { BudgetSummary } from '../budget-summary'
 
 export const Budget = () => {
   const intl = useIntl()
@@ -98,6 +99,7 @@ export const Budget = () => {
             label={intl.formatMessage({ id: 'budget.section.saving' })}
             loading={loading}
           />
+          <BudgetSummary color="teal" />
         </GridColumn>
       </Grid>
     </Fragment>

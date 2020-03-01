@@ -36,6 +36,8 @@
   "budget.add-button.add": "Dodaj",
   "budget.add-button.cancel": "Anuluj",
   "budget.irregular.menu": "Nieregularne",
+  "budget.summary.header": "Podsumowanie",
+  "budget.summary.left-to-use": "Do dyspozycji",
   "expenses.title": "Wydatki - Simply Budget Receipts",
   "expenses.month-header": "Wydatki",
   "expenses.header": "Wydatki: {month} {year}",

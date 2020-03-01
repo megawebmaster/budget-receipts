@@ -1,0 +1,7 @@
+.container.container.container {
+    bottom: 1rem;
+    position: -webkit-sticky;
+    position: sticky;
+    background-color: #ffffff;
+    z-index: 99;
+}
