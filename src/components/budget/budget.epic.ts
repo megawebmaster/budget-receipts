@@ -22,7 +22,7 @@ const decryptEntries = decryptAction({
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
-    ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES),
+    ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.BUDGET_IRREGULAR),
     filter(() => AuthSelectors.isLoggedIn(state$.value)),
     map(() => Actions.loadEntries()),
   )
@@ -30,7 +30,10 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
 const loadEntriesEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf([Actions.loadEntries, AuthActions.loggedIn])),
-    filter(() => RouteSelectors.location(state$.value) === AvailableRoutes.BUDGET_MONTH_ENTRIES),
+    filter(() =>
+      [AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.BUDGET_IRREGULAR]
+        .includes(RouteSelectors.location(state$.value))
+    ),
     map(() => {
       // TODO: Maybe it's worth to extract it to a separate selector?
       const budget = RouteSelectors.budget(state$.value)
@@ -54,9 +57,21 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
       const budget = RouteSelectors.budget(state$.value)
       const year = RouteSelectors.year(state$.value)
       const month = RouteSelectors.month(state$.value)
+      const url = `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}/${categoryId}`
+
+      if (entry.category.type === 'irregular' && type === 'plan') {
+        return {
+          url,
+          value: {
+            ...entry,
+            plan: value,
+            planMonthly: value / 10 // TODO: Support dividing irregular by 12
+          },
+        }
+      }
 
       return {
-        url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}/${categoryId}`,
+        url,
         value: {
           ...entry,
           [type]: value,
@@ -68,6 +83,7 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
       actionCreator: Actions.entryUpdated,
       fields: {
         plan: true,
+        planMonthly: true,
         real: true,
       },
     })),

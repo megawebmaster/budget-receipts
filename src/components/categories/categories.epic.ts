@@ -24,9 +24,9 @@ const decryptCategories = decryptAction({
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
-    ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_MONTH),
+    ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.BUDGET_IRREGULAR, AvailableRoutes.EXPENSES_MONTH),
     filter(() => AuthSelectors.isLoggedIn(state$.value)),
-    map(() => Actions.loadCategories())
+    map(() => Actions.loadCategories()),
   )
 
 const loadCategoriesEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
@@ -52,6 +52,7 @@ const addCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
       const parent = parentId ? createCategorySelector(parentId)(state$.value) : null
       const year = RouteSelectors.year(state$.value)
       const month = RouteSelectors.month(state$.value)
+      const isIrregular = type === 'irregular'
 
       return Actions.createCategory({
         id,
@@ -61,7 +62,7 @@ const addCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
         averageValues: [],
         createdAt: new Date().toString(),
         deletedAt: null,
-        startedAt: new Date(year, month - 1).toString(),
+        startedAt: new Date(year, isIrregular ? 0 : month - 1).toString(),
       })
     }),
   )

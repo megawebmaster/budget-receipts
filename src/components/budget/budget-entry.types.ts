@@ -7,6 +7,7 @@ export type BudgetEntry = {
   category: Pick<Category, 'id' | 'type' | 'parent'>
   month: number
   plan: number
+  planMonthly?: number
   real: number
   monthlyRealValues: string[]
 }

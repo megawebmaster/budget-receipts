@@ -64,6 +64,11 @@ const flattenCategories = (categories: Category[]): Category[] =>
     category.children && category.children.length > 0 ? category.children : [category]
   )
 
+export const hasIrregularCategories = createSelector(
+  [categories.irregular],
+  (irregularCategories) => irregularCategories.length > 0,
+)
+
 export const hasVisibleCategories = createSelector(
   [accessibleCategories, yearCategories],
   (regularCategories, yearlyCategories) => regularCategories.length > 0 || yearlyCategories.length > 0,

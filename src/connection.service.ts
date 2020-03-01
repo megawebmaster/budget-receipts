@@ -106,9 +106,9 @@ export class ConnectionService {
         }),
       }))
 
-      const result = await response.json()
-
       if (!response.ok) {
+        const result = await response.json()
+
         return pageError({
           sticky: false,
           text: Object.values(result).join('\n'),
@@ -117,6 +117,8 @@ export class ConnectionService {
       }
 
       if (actionCreator) {
+        const result = await response.json()
+
         return actionCreator({
           currentId: data.value?.id,
           value: result as TValue,
