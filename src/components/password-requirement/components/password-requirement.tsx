@@ -1,6 +1,7 @@
 import React, { Fragment, FC, ReactNode, useCallback, useState } from 'react'
 import { Button, Dimmer, Form, Header, Segment } from 'semantic-ui-react'
 import { useDispatch, useSelector } from 'react-redux'
+import { FormattedMessage } from 'react-intl'
 
 import { passwordRequired, processing } from '../password-requirement.selectors'
 import { setEncryptionPassword } from '../../../encryption'
@@ -37,7 +38,7 @@ export const PasswordRequirement: FC<PasswordRequirementProps> = ({ children, re
       <Dimmer inverted page active={requirePassword}>
         <Segment>
           <Header as="h2" color="teal" textAlign="center">
-            Please enter encryption password
+            <FormattedMessage id="encryption.header" />
           </Header>
           <Form size="large">
             <Form.Input
@@ -57,7 +58,7 @@ export const PasswordRequirement: FC<PasswordRequirementProps> = ({ children, re
               loading={isProcessing}
               disabled={isProcessing}
             >
-              Set password
+              <FormattedMessage id="encryption.confirm" />
             </Button>
           </Form>
         </Segment>

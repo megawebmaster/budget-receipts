@@ -42,6 +42,8 @@
   "expenses.category": "Select category…",
   "expenses.description": "Description",
   "expenses.shop": "Shop",
+  "encryption.header": "Please enter encryption password",
+  "encryption.confirm": "Set password",
   "login.error.invalid_request": "Application configuration error. We've sent notification to the administration.",
   "login.error.invalid_token": "Authentication error: please try again.",
   "login.error.access_denied": "Wrong email or password!",

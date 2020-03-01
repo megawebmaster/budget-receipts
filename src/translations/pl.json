@@ -42,6 +42,8 @@
   "expenses.category": "Wybierz kategorię…",
   "expenses.description": "Opis",
   "expenses.shop": "Sklep",
+  "encryption.header": "Podaj hasło szyfrujące",
+  "encryption.confirm": "Zapisz hasło",
   "login.error.invalid_request": "Błąd konfiguracji aplikacji. Powiadomienie zostało wysłane do administratora.",
   "login.error.invalid_token": "Wystąpił błąd logowania: spróbuj ponownie.",
   "login.error.access_denied": "Nieprawidłowy login i/lub hasło!",
