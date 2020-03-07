@@ -123,8 +123,8 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
       }
 
       return {
-        ...state,
-        [value.id]: state[currentId]
+        ...omit([currentId.toString()], state),
+        [value.id]: value.items
       }
     }
     case getType(Actions.receiptItemCreated): {

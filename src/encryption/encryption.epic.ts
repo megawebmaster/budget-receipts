@@ -1,6 +1,7 @@
 import { combineEpics, Epic } from 'redux-observable'
 import { filter, ignoreElements, mergeMap, tap } from 'rxjs/operators'
 import { isActionOf } from 'typesafe-actions'
+import { map, zip } from 'ramda'
 
 import { AppState } from '../app.store'
 import { AppAction } from '../app.actions'
@@ -59,6 +60,31 @@ const overFieldsOf = async <T extends { [k: string]: any }, K>(
   })
 
   return Object.fromEntries(await Promise.all(processed))
+}
+
+const mapFieldsOf = <T extends { [k: string]: any }, K>(
+  item: T,
+  original: T,
+  fields: Fields<T>,
+): any => {
+  const processed = Object.keys(fields).map(field => {
+    if (item[field] && typeof item[field] === 'object') {
+      const processedValue = map(([subitem, originalSubitem]) => ({
+        ...subitem,
+        ...mapFieldsOf(subitem, originalSubitem, fields[field] as Fields<any>),
+      }), zip(item[field], original[field]))
+
+      return [field, processedValue]
+    }
+
+    return [field, original[field] ? original[field] : '']
+  })
+
+  return {
+    ...original,
+    ...item,
+    ...Object.fromEntries(processed),
+  }
 }
 
 const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
@@ -121,10 +147,7 @@ const encryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
         if (actionCreator) {
           return await api(request, ({ currentId, value }) => actionCreator({
             currentId,
-            value: {
-              ...data.value,
-              id: value.id,
-            },
+            value: mapFieldsOf(value, data.value, fields || {}),
           }))
         }
 
