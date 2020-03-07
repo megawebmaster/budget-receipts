@@ -44,7 +44,10 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
           mergeRight,
           indexBy(
             pipe(path(['category', 'id']), toString),
-            map((category) => ({ category, plan: 0, real: 0 }), action.payload.value),
+            map(
+              (category) => ({ category, plan: 0, real: 0 }),
+              action.payload.value.filter((category) => category.children?.length === 0),
+            ),
           ),
           indexBy(pipe(path(['category', 'id']), toString), state),
         ),
@@ -55,7 +58,6 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
         assoc(action.payload.type, action.payload.value),
       )(state)
     case getType(Actions.updateEntries):
-      // TODO: Do not update the object if nothing changes: check `assoc`
       return values(
         mergeWith(
           mergeRight,
