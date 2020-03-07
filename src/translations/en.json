@@ -43,6 +43,7 @@
   "expenses.category": "Select category…",
   "expenses.description": "Description",
   "expenses.shop": "Shop",
+  "expenses.loading-new-items": "Loading new expenses…",
   "encryption.header": "Please enter encryption password",
   "encryption.confirm": "Set password",
   "irregular-budget.title": "Irregular expenses - Simply Budget Receipts",
