@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { Input, InputOnChangeData, Label, Responsive } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
+import { Parser } from 'expr-eval';
 import cx from 'classnames'
 
 import styles from './currency-input.module.css'
@@ -18,10 +19,64 @@ type CurrencyInputProps = {
   value: number | string
 }
 
-const getValueFromEvent = (event: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
-  const newValue = event.currentTarget?.value.replace(',', '.')
+const parser = new Parser({
+  allowMemberAccess: false,
+  operators: {
+    add: true,
+    comparison: false,
+    concatenate: false,
+    conditional: false,
+    divide: true,
+    factorial: false,
+    logical: false,
+    multiply: true,
+    power: false,
+    remainder: false,
+    subtract: true,
+    sin: false,
+    cos: false,
+    tan: false,
+    asin: false,
+    acos: false,
+    atan: false,
+    sinh: false,
+    cosh: false,
+    tanh: false,
+    asinh: false,
+    acosh: false,
+    atanh: false,
+    sqrt: false,
+    log: false,
+    ln: false,
+    lg: false,
+    log10: false,
+    abs: false,
+    ceil: false,
+    floor: false,
+    round: false,
+    trunc: false,
+    exp: false,
+    length: false,
+    in: false
+  }
+});
 
-  return parseFloat(newValue)
+const evaluateFormula = (value: string | undefined): number => {
+  const formula = value?.replace(/,/g, '.').replace(/ /g, '');
+
+  if (!formula) {
+    return 0;
+  }
+
+  try {
+    return parser.parse(formula).evaluate();
+  } catch(e) {
+    return 0;
+  }
+}
+
+const getValueFromEvent = (event: React.KeyboardEvent<HTMLInputElement> | React.ChangeEvent<HTMLInputElement>) => {
+  return evaluateFormula(event.currentTarget?.value)
 }
 
 export const CurrencyInput: FC<CurrencyInputProps> =
@@ -61,13 +116,13 @@ export const CurrencyInput: FC<CurrencyInputProps> =
     const handleFocus = () => {
       setFocus(true)
       if (price) {
-        setPrice(formatCurrency(parseFloat(price.replace(',', '.')), false))
+        setPrice(formatCurrency(evaluateFormula(price), false))
       }
       ref.current?.select()
     }
 
     const handleBlur = () => {
-      const numericValue = parseFloat(price.replace(',', '.'))
+      const numericValue = evaluateFormula(price)
       setFocus(false)
 
       if (!isNaN(numericValue)) {
