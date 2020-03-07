@@ -44,7 +44,7 @@
   "expenses.category": "Wybierz kategorię…",
   "expenses.description": "Opis",
   "expenses.shop": "Sklep",
-  "expenses.loading-new-items": "Ładowanie nowych wydatków…",
+  "expenses.loading-items": "Ładowanie wydatków…",
   "encryption.header": "Podaj hasło szyfrujące",
   "encryption.confirm": "Zapisz hasło",
   "irregular-budget.title": "Wydatki nieregularne - Simply Budget Receipts",

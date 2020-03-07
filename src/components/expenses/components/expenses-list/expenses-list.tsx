@@ -14,15 +14,15 @@ export const ExpensesList = () => {
 
   return (
     <Fragment>
+      <NewExpense />
       {loading && (
         <Divider horizontal>
           <Header as="h6">
             <Loader active inline className={styles.dividerLoader} size="tiny" />
-            <FormattedMessage id="expenses.loading-new-items" />
+            <FormattedMessage id="expenses.loading-items" />
           </Header>
         </Divider>
       )}
-      <NewExpense />
       {receipts.map(receipt => (
         <SavedExpense key={receipt.id} receipt={receipt} />
       ))}
