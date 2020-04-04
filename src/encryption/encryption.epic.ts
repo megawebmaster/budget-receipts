@@ -33,21 +33,22 @@ const overFieldsOf = async <T extends { [k: string]: any }, K>(
   item: T,
   fields: Fields<T>,
   process: (value: string) => Promise<any>,
-  parseValue: (value: string) => K = (v) => v as any as K,
+  defaultValue: K,
+  parseValue: (value: string) => K = (v) => v as any as K
 ): Promise<any> => {
   const processed = Object.keys(fields).map(async field => {
     if (item[field] && typeof item[field] === 'object') {
       const processedValue = await Promise.all(
         item[field].map(async (subitem: any) => ({
           ...subitem,
-          ...(await overFieldsOf(subitem, fields[field] as Fields<any>, process)),
+          ...(await overFieldsOf(subitem, fields[field] as Fields<any>, process, defaultValue, parseValue)),
         })),
       )
 
       return [field, processedValue]
     }
 
-    return [field, item[field] ? parseValue(await process(item[field].toString())) : '']
+    return [field, item[field] ? parseValue(await process(item[field].toString())) : defaultValue]
   })
 
   return Object.fromEntries(await Promise.all(processed))
@@ -57,18 +58,19 @@ const mapFieldsOf = <T extends { [k: string]: any }, K>(
   item: T,
   original: T,
   fields: Fields<T>,
+  defaultValue: K
 ): any => {
   const processed = Object.keys(fields).map(field => {
     if (item[field] && typeof item[field] === 'object') {
       const processedValue = mapItems(([subitem, originalSubitem]) => ({
         ...subitem,
-        ...mapFieldsOf(subitem, originalSubitem, fields[field] as Fields<any>),
+        ...mapFieldsOf(subitem, originalSubitem, fields[field] as Fields<any>, defaultValue),
       }), zip(item[field], original[field]))
 
       return [field, processedValue]
     }
 
-    return [field, original[field] ? original[field] : '']
+    return [field, original[field] ? original[field] : defaultValue]
   })
 
   return {
@@ -108,8 +110,8 @@ const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
               source: action.source,
               value: await Promise.all(action.value.map(async (item: any) => ({
                 ...item,
-                ...await overFieldsOf(item, fields || {}, decrypt),
-                ...await overFieldsOf(item, numericFields || {}, decrypt, parseFloat),
+                ...await overFieldsOf(item, fields || {}, decrypt, ''),
+                ...await overFieldsOf(item, numericFields || {}, decrypt, 0, parseFloat),
               }))),
             }) as ApiAction)(),
         ).pipe(
@@ -149,14 +151,14 @@ const encryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
           ...data,
           value: {
             ...data.value,
-            ...await overFieldsOf(data.value, fields || {}, encrypt),
+            ...await overFieldsOf(data.value, fields || {}, encrypt, ''),
           },
         }
 
         if (actionCreator) {
           return await api(request, ({ currentId, value }) => actionCreator({
             currentId,
-            value: mapFieldsOf(value, data.value, fields || {}),
+            value: mapFieldsOf(value, data.value, fields || {}, ''),
           }))
         }
 
