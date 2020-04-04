@@ -1,7 +1,8 @@
-import { combineEpics, Epic } from 'redux-observable'
-import { filter, ignoreElements, mergeMap, tap } from 'rxjs/operators'
+import { ActionsObservable, combineEpics, Epic } from 'redux-observable'
+import { concat, from, of } from 'rxjs'
+import { catchError, filter, ignoreElements, mergeMap, take, tap } from 'rxjs/operators'
 import { isActionOf } from 'typesafe-actions'
-import { map, zip } from 'ramda'
+import { map as mapItems, zip } from 'ramda'
 
 import { AppState } from '../app.store'
 import { AppAction } from '../app.actions'
@@ -13,27 +14,17 @@ import { ApiAction } from '../api.actions'
 import { requirePassword } from '../components/password-requirement'
 import { noop } from '../system.actions'
 
-// const retryStrategy = ({ maxAttempts, state }: { maxAttempts: number, state: AppState }) =>
-//   (attempts: Observable<any>) =>
-//     attempts.pipe(
-//       tap(() => Encryption.removePassword(budgetSelector(state))),
-//       mergeMap((error, i) => {
-//         const retryAttempt = i + 1
-//         console.log('retrying for: ', retryAttempt)
-//         if (retryAttempt > maxAttempts) {
-//           return throwError(error)
-//         }
-//
-//         // TODO: For a reason this is not retrying our calls...
-//         return timer(1)
-//       }),
-//       finalize(() => console.log('we need to log out - too many password attempts')),
-//     )
-
 const setPasswordEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
-    filter(isActionOf(Actions.setEncryptionPassword)),
+    filter(isActionOf(Actions.setPassword)),
     tap(({ payload }) => Encryption.setPassword(RouteSelectors.budget(state$.value), payload)),
+    ignoreElements(),
+  )
+
+const resetPasswordEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.resetPassword)),
+    tap(() => Encryption.removePassword(RouteSelectors.budget(state$.value))),
     ignoreElements(),
   )
 
@@ -69,7 +60,7 @@ const mapFieldsOf = <T extends { [k: string]: any }, K>(
 ): any => {
   const processed = Object.keys(fields).map(field => {
     if (item[field] && typeof item[field] === 'object') {
-      const processedValue = map(([subitem, originalSubitem]) => ({
+      const processedValue = mapItems(([subitem, originalSubitem]) => ({
         ...subitem,
         ...mapFieldsOf(subitem, originalSubitem, fields[field] as Fields<any>),
       }), zip(item[field], original[field]))
@@ -87,40 +78,56 @@ const mapFieldsOf = <T extends { [k: string]: any }, K>(
   }
 }
 
+const waitForPassword = (action$: ActionsObservable<AppAction>) =>
+  action$.pipe(
+    filter(isActionOf(Actions.setPassword)),
+    take(1),
+  )
+
+// TODO: Encryption and decryption should not block app
 const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf(Actions.decrypt)),
     mergeMap(
-      async (decryptionAction) => {
+      (decryptionAction) => {
         const budget = RouteSelectors.budget(state$.value)
         if (!Encryption.hasEncryptionPassword(budget)) {
-          return requirePassword(decryptionAction)
+          return concat(
+            of(requirePassword()),
+            waitForPassword(action$),
+            of(decryptionAction),
+          )
         }
 
-        const { payload: { action, actionCreator, fields, numericFields } } = decryptionAction
+        const { action, actionCreator, fields, numericFields } = decryptionAction.payload
         const decrypt = (value: string) => Encryption.decrypt(budget, value)
 
-        return actionCreator({
-          source: action.source,
-          value: await Promise.all(action.value.map(async (item: any) => ({
-            ...item,
-            ...await overFieldsOf(item, fields || {}, decrypt),
-            ...await overFieldsOf(item, numericFields || {}, decrypt, parseFloat),
-          }))),
-        }) as ApiAction
+        return from(
+          (async () =>
+            actionCreator({
+              source: action.source,
+              value: await Promise.all(action.value.map(async (item: any) => ({
+                ...item,
+                ...await overFieldsOf(item, fields || {}, decrypt),
+                ...await overFieldsOf(item, numericFields || {}, decrypt, parseFloat),
+              }))),
+            }) as ApiAction)(),
+        ).pipe(
+          catchError(() => concat(
+            of(Actions.resetPassword()),
+            of(requirePassword()),
+            waitForPassword(action$),
+            of(decryptionAction),
+          )),
+        )
       },
     ),
-    // retryWhen(retryStrategy({ maxAttempts: 3, state: state$.value }))
-    // catchError((error: Error) => {
-    //   if (error instanceof EncryptionError) {
-    //     console.log('decryption failed', error)
-    //
-    //     // TODO: Fix catching encryption/decryption errors and retry
-    //     return []
-    //   }
-    //
-    //   throw error
-    // }),
+  )
+
+const logoutAfterTooManyAttemptsEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.setPassword)),
+    ignoreElements(),
   )
 
 const encryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
@@ -130,7 +137,8 @@ const encryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
       async (encryptAction) => {
         const budget = RouteSelectors.budget(state$.value)
         if (!Encryption.hasEncryptionPassword(budget)) {
-          return requirePassword(encryptAction)
+          window.location.reload()
+          return noop()
         }
 
         const { payload: { api, actionCreator, data, fields } } = encryptAction
@@ -156,11 +164,12 @@ const encryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
         return noop()
       },
     ),
-    // retryWhen(retryStrategy({ maxAttempts: 3, state: state$.value }))
   )
 
 export const encryptionEpic = combineEpics(
   setPasswordEpic,
+  resetPasswordEpic,
+  logoutAfterTooManyAttemptsEpic,
   decryptValueEpic,
   encryptValueEpic,
 )

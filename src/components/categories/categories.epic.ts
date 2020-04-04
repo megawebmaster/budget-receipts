@@ -7,7 +7,7 @@ import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
 import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../../routes'
 import { ConnectionService } from '../../connection.service'
-import { decryptAction, encryptAction } from '../../encryption'
+import { Actions as EncryptionActions } from '../../encryption'
 import { ApiRequest } from '../../connection.types'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
 
@@ -15,7 +15,7 @@ import * as Actions from './categories.actions'
 import { Category } from './category.types'
 import { createCategorySelector } from './categories.selectors'
 
-const decryptCategories = decryptAction({
+const decryptCategories = EncryptionActions.decryptAction({
   actionCreator: Actions.updateCategories,
   fields: {
     name: true,
@@ -84,7 +84,7 @@ const createCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories`,
       }
     }),
-    map(encryptAction({
+    map(EncryptionActions.encryptAction({
       api: ConnectionService.create,
       actionCreator: Actions.categoryCreated,
       fields: {
@@ -117,7 +117,7 @@ const updateCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
       }
     }),
     filter((result: ApiRequest<Category> | null): result is ApiRequest<Category> => Boolean(result)),
-    map(encryptAction({
+    map(EncryptionActions.encryptAction({
       api: ConnectionService.update,
       actionCreator: Actions.categoryUpdated,
       fields: {

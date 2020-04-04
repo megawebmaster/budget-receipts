@@ -6,13 +6,13 @@ import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
 import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../../routes'
 import { ConnectionService } from '../../connection.service'
-import { decryptAction, encryptAction } from '../../encryption'
+import { Actions as EncryptionActions } from '../../encryption'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
 
 import * as Actions from './budget.actions'
 import { createCategoryEntrySelector } from './budget.selectors'
 
-const decryptEntries = decryptAction({
+const decryptEntries = EncryptionActions.decryptAction({
   actionCreator: Actions.updateEntries,
   numericFields: {
     plan: true,
@@ -73,7 +73,7 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
         },
       }
     }),
-    map(encryptAction({
+    map(EncryptionActions.encryptAction({
       api: ConnectionService.update,
       actionCreator: Actions.entryUpdated,
       fields: {

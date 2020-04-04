@@ -8,7 +8,7 @@ import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
 import { AvailableRoutes, ExpenseRouteAction, Selectors as RouteSelectors } from '../../routes'
 import { ConnectionService } from '../../connection.service'
-import { decryptAction, encryptAction } from '../../encryption'
+import { Actions as EncryptionActions } from '../../encryption'
 import { ApiRequest } from '../../connection.types'
 import { Selectors as CategorySelectors } from '../categories'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
@@ -18,13 +18,13 @@ import * as Actions from './expenses.actions'
 import { createCategorySpentSelector, createReceiptItemSelector, createReceiptSelector } from './expenses.selectors'
 import { ApiReceipt } from './receipt.types'
 
-const decryptReceipts = decryptAction({
+const decryptReceipts = EncryptionActions.decryptAction({
   actionCreator: Actions.updateReceipts,
   fields: {
     shop: true,
   },
 })
-const decryptReceiptItems = decryptAction({
+const decryptReceiptItems = EncryptionActions.decryptAction({
   actionCreator: Actions.updateReceiptItems,
   fields: {
     description: true,
@@ -86,7 +86,7 @@ const createReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}`,
       }
     }),
-    map(encryptAction({
+    map(EncryptionActions.encryptAction({
       api: ConnectionService.create,
       actionCreator: Actions.receiptCreated,
       fields: {
@@ -125,7 +125,7 @@ const updateReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
       }
     }),
     filter((result: ApiRequest<ApiReceipt> | null): result is ApiRequest<ApiReceipt> => Boolean(result)),
-    map(encryptAction({
+    map(EncryptionActions.encryptAction({
       api: ConnectionService.update,
       actionCreator: Actions.receiptUpdated,
       fields: {
@@ -153,7 +153,7 @@ const deleteReceiptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${id}`,
       }
     }),
-    map(encryptAction<ExpenseDeleted>({
+    map(EncryptionActions.encryptAction<ExpenseDeleted>({
       api: ConnectionService.delete,
       fields: {
         budgetValues: {
@@ -182,7 +182,7 @@ const createReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
         url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${payload.id}/items`,
       }
     }),
-    map(encryptAction({
+    map(EncryptionActions.encryptAction({
       api: ConnectionService.create,
       actionCreator: Actions.receiptItemCreated,
       fields: {
@@ -224,7 +224,7 @@ const updateReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
       }
     }),
     filter((result: ApiRequest<ReceiptItemCreated> | null): result is ApiRequest<ReceiptItemCreated> => Boolean(result)),
-    map(encryptAction({
+    map(EncryptionActions.encryptAction({
       api: ConnectionService.update,
       actionCreator: Actions.receiptItemUpdated,
       fields: {
@@ -256,7 +256,7 @@ const deleteReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
         },
       }
     }),
-    map(encryptAction<ExpenseDeleted>({
+    map(EncryptionActions.encryptAction<ExpenseDeleted>({
       api: ConnectionService.delete,
       fields: {
         budgetValues: {

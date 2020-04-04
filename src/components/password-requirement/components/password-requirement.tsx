@@ -3,8 +3,8 @@ import { Button, Dimmer, Form, Header, Segment } from 'semantic-ui-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
 
-import { passwordRequired, processing } from '../password-requirement.selectors'
-import { setEncryptionPassword } from '../../../encryption'
+import { passwordRequired } from '../password-requirement.selectors'
+import { Actions as EncryptionActions } from '../../../encryption'
 
 import '../password-requirement.css'
 
@@ -15,14 +15,13 @@ type PasswordRequirementProps = {
 
 export const PasswordRequirement: FC<PasswordRequirementProps> = ({ children, required }) => {
   const requirePassword = useSelector(passwordRequired)
-  const isProcessing = useSelector(processing)
   const [password, setPassword] = useState('')
   const updatePassword = useCallback((event) => {
     setPassword(event.target.value)
   }, [setPassword])
   const dispatch = useDispatch()
   const updateEncryptionPassword = useCallback(() => {
-    dispatch(setEncryptionPassword(password))
+    dispatch(EncryptionActions.setPassword(password))
   }, [password, dispatch])
 
   if (!required) {
@@ -48,15 +47,12 @@ export const PasswordRequirement: FC<PasswordRequirementProps> = ({ children, re
               iconPosition="left"
               onChange={updatePassword}
               value={password}
-              disabled={isProcessing}
             />
             <Button
               color="teal"
               fluid
               size="large"
               onClick={updateEncryptionPassword}
-              loading={isProcessing}
-              disabled={isProcessing}
             >
               <FormattedMessage id="encryption.confirm" />
             </Button>

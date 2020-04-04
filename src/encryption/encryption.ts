@@ -1,7 +1,4 @@
 import openpgp, { message, util } from 'openpgp'
-import { of } from 'rxjs'
-import { mergeAll } from 'rxjs/operators'
-import { AfterAction, requirePassword } from '../components/password-requirement'
 import { append, uniq } from 'ramda'
 
 export const initEncryption = () => {
@@ -43,8 +40,10 @@ export class Encryption {
     localStorage.removeItem('encryption-passwords-budgets')
   }
 
-  static removePassword(budget: string): void {
-    localStorage.removeItem(`encryption-password-${budget}`)
+  static removePassword(budget: string | undefined): void {
+    if (budget) {
+      localStorage.removeItem(`encryption-password-${budget}`)
+    }
   }
 
   static hasEncryptionPassword(budget: string | undefined): boolean {
@@ -97,23 +96,7 @@ export class Encryption {
 
       return plaintext.data as string
     } catch (e) {
-      throw new EncryptionError()
+      throw new Error('Invalid encryption password')
     }
   }
 }
-
-export const handleEncryptionError = (budget: string, action: AfterAction) =>
-  (error: Error) => {
-    if (error instanceof EncryptionError) {
-      Encryption.removePassword(budget)
-
-      return of([
-        // requirePasswordError('errors.invalid-encryption-password'),
-        requirePassword(action),
-      ]).pipe(
-        mergeAll(),
-      )
-    }
-
-    throw error
-  }

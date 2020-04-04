@@ -2,7 +2,7 @@ import { ActionType, createAction, getType, PayloadActionCreator } from 'typesaf
 import { ApiRequest, SaveValue, DownloadValue } from '../connection.types'
 import { ApiAction } from '../api.actions'
 
-export const setEncryptionPassword = createAction('ENCRYPTION/setPassword')<string>()
+export const setPassword = createAction('ENCRYPTION/setPassword')<string>()
 
 type TypeWithId = { id: number }
 type DecryptionActionCreator<TValue> = PayloadActionCreator<ActionType<ApiAction>, DownloadValue<TValue>>
@@ -48,6 +48,8 @@ export const encrypt = createAction(
     fields?: Fields<TValue>,
   ) => ({ api, actionCreator, data, fields }),
 )()
+
+export const resetPassword = createAction('ENCRYPTION/reset')()
 
 export const decryptAction =
   <TValue>({ actionCreator, fields, numericFields }: DecryptionActionParams<TValue>) =>
