@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react'
+import React, { FC, useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Header, Segment, SemanticCOLORS, Table } from 'semantic-ui-react'
@@ -10,6 +10,7 @@ import { CurrencyInput } from '../../../currency-input'
 import styles from './budget-summary.module.css'
 import budgetStyles from '../budget-table/budget-table.module.css'
 import tableStyles from '../budget-table-category/budget-table-category.module.css'
+import { createSummarySelector } from '../../budget.selectors'
 
 type BudgetSummaryProps = {
   color: SemanticCOLORS
@@ -27,11 +28,16 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
     [intl],
   )
 
+  const planIncomeSelector = useMemo(() => createSummarySelector('income', 'plan'), [])
+  const planExpenseSelector = useMemo(() => createSummarySelector(['expense', 'irregular', 'saving'], 'plan'), [])
+  const realIncomeSelector = useMemo(() => createSummarySelector('income', 'real'), [])
+  const realExpenseSelector = useMemo(() => createSummarySelector(['expense', 'irregular', 'saving'], 'real'), [])
+
   const hasCategories = useSelector(CategorySelectors.hasVisibleCategories)
-  const plannedIncome = 0 //useSelector(plannedSelector)
-  const plannedSummary = 0 //useSelector(plannedSelector)
-  const realIncome = 0 //useSelector(realSelector)
-  const realSummary = 0 //useSelector(realSelector)
+  const plannedIncome = useSelector(planIncomeSelector)
+  const plannedSummary = useSelector(planExpenseSelector)
+  const realIncome = useSelector(realIncomeSelector)
+  const realSummary = useSelector(realExpenseSelector)
 
   return !hasCategories ? null : (
     <Segment.Group className={styles.container}>

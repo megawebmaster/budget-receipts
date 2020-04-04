@@ -10,7 +10,7 @@ export const budgetEntries = (state: AppState) => state.budget.entries
 const createBudgetSelector = (type: CategoryType) =>
   createSelector(
     [budgetEntries],
-    entries => entries.filter(entry => entry.category.type === type)
+    entries => entries.filter(entry => entry.category.type === type),
   )
 
 const entries: Record<CategoryType, Selector<AppState, BudgetEntry[]>> = {
@@ -25,8 +25,15 @@ const reduceBudgetType = (type: BudgetEntryValueType, entries: BudgetEntry[]) =>
   entries.reduce((result, entry) => result + (typeof entry[type] === 'number' ? entry[type] : 0.0), 0.0)
 )
 
-export const createSummarySelector = (type: CategoryType, entryType: BudgetEntryValueType) =>
-  createSelector(entries[type], reduceBudgetType.bind(null, entryType))
+export const createSummarySelector = (type: CategoryType | CategoryType[], entryType: BudgetEntryValueType) => {
+  const types = Array.isArray(type) ? type : [type]
+  const reducer = reduceBudgetType.bind(null, entryType)
+
+  return createSelector(
+    types.map(t => entries[t]),
+    (...values) => values.reduce((result, value) => result + reducer(value), 0.0),
+  )
+}
 
 export const createCategoryEntrySelector = (categoryId: number): Selector<AppState, BudgetEntry> =>
   createSelector(
@@ -43,15 +50,15 @@ export const createCategoryEntrySelector = (categoryId: number): Selector<AppSta
           plan: 0,
           real: 0,
           category: {
-            id: categoryId
-          }
-        }
+            id: categoryId,
+          },
+        },
       ) as BudgetEntry,
   )
 
 export const createPlannedValueDisabledSelector = (type: CategoryType) => createSelector(
   [RouteSelectors.location],
-  (location) => location !== AvailableRoutes.BUDGET_IRREGULAR && type === 'irregular'
+  (location) => location !== AvailableRoutes.BUDGET_IRREGULAR && type === 'irregular',
 )
 export const createRealValueDisabledSelector = (type: CategoryType) =>
   () => type === 'irregular' || type === 'expense'
