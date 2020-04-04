@@ -4,6 +4,7 @@ import { useIntl } from 'react-intl'
 import { Parser } from 'expr-eval';
 import cx from 'classnames'
 
+import './currency-input.css'
 import styles from './currency-input.module.css'
 
 type CurrencyInputProps = {
@@ -176,7 +177,7 @@ export const CurrencyInput: FC<CurrencyInputProps> =
     return (
       <Input
         fluid
-        className={cx(styles.input, className, { [styles.narrowOnMobile]: narrowOnMobile })}
+        className={cx('currency-input', styles.input, className, { [styles.narrowOnMobile]: narrowOnMobile })}
         disabled={disabled}
         error={hasError}
         labelPosition="right"

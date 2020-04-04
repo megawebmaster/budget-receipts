@@ -1,0 +1,12 @@
+.ui.disabled.input.currency-input {
+    opacity: 1;
+}
+.ui.disabled.input.currency-input:hover {
+    cursor: not-allowed;
+}
+.ui.disabled.input.currency-input input {
+    background: #f8f8f8;
+}
+.ui.disabled.input.currency-input .ui.label {
+    background: #f8f8f8;
+}
