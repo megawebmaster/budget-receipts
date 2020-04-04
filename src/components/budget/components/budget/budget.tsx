@@ -13,6 +13,7 @@ import { Selectors as CategorySelectors } from '../../../categories'
 
 import styles from './budget.module.css'
 import { BudgetSummary } from '../budget-summary'
+import { IrregularSummary } from '../irregular-summary'
 
 export const Budget = () => {
   const intl = useIntl()
@@ -91,7 +92,9 @@ export const Budget = () => {
             editable={false}
             label={intl.formatMessage({ id: 'budget.section.irregular' })}
             loading={loading}
-          />
+          >
+            <IrregularSummary />
+          </BudgetTable>
           <BudgetTable
             categoryType="saving"
             color="red"

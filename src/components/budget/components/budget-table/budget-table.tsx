@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react'
+import React, { FC, ReactNode, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
@@ -12,13 +12,14 @@ import styles from './budget-table.module.css'
 
 type BudgetTableProps = {
   categoryType: CategoryType
+  children?: ReactNode
   color: SemanticCOLORS
   editable: boolean
   label: string
   loading: boolean
 }
 
-export const BudgetTable: FC<BudgetTableProps> = ({ categoryType, color, editable, label, loading }) => {
+export const BudgetTable: FC<BudgetTableProps> = ({ categoryType, children, color, editable, label, loading }) => {
   const intl = useIntl()
   const formatCurrency = useCallback(
     (value: number) =>
@@ -75,6 +76,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ categoryType, color, editabl
             loading={loading}
           />
         ))}
+        {children}
         {editable && (
           <AddButton
             className={styles.addCategory}
