@@ -5,7 +5,7 @@ import { Home } from '../components/home'
 import { Budget } from '../components/budget'
 import { Expenses } from '../components/expenses'
 import { NotFound } from '../components/not-found'
-import { IrregularBudget } from '../components/budget/components/irregular-budget'
+import { IrregularBudget } from '../components/irregular-budget'
 
 type Page = {
   component: ComponentType
