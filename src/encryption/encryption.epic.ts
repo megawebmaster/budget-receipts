@@ -11,7 +11,7 @@ import { Fields } from './encryption.actions'
 import { Encryption } from './encryption'
 import { Selectors as RouteSelectors } from '../routes'
 import { ApiAction } from '../api.actions'
-import { requirePassword } from '../components/password-requirement'
+import { requirePassword } from '../components/password-requirement/password-requirement.actions'
 import { noop } from '../system.actions'
 
 const setPasswordEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
@@ -113,6 +113,7 @@ const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
               }))),
             }) as ApiAction)(),
         ).pipe(
+          // TODO: Try password reset up to 3 times then logout
           catchError(() => concat(
             of(Actions.resetPassword()),
             of(requirePassword()),
