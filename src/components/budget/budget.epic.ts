@@ -22,7 +22,7 @@ const decryptEntries = EncryptionActions.decryptAction({
 
 const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
-    ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.BUDGET_IRREGULAR),
+    ofType<AppAction, RouteAction>(AvailableRoutes.BUDGET_MONTH_ENTRIES),
     filter(() => AuthSelectors.isLoggedIn(state$.value)),
     map(() => Actions.loadEntries()),
   )
@@ -30,10 +30,7 @@ const pageLoadEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
 const loadEntriesEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
   action$.pipe(
     filter(isActionOf([Actions.loadEntries, AuthActions.loggedIn])),
-    filter(() =>
-      [AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.BUDGET_IRREGULAR]
-        .includes(RouteSelectors.location(state$.value))
-    ),
+    filter(() => RouteSelectors.location(state$.value) === AvailableRoutes.BUDGET_MONTH_ENTRIES),
     map(() => {
       const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
 

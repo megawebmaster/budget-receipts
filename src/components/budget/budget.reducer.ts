@@ -30,6 +30,8 @@ export type BudgetState = {
 
 const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], action) => {
   switch (action.type) {
+    case AvailableRoutes.BUDGET_IRREGULAR:
+      return []
     case AvailableRoutes.BUDGET_MONTH_ENTRIES:
       return []
     case getType(CategoryActions.categoryCreated):
@@ -72,6 +74,8 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
 
 const loadingReducer: Reducer<BudgetState['loading'], AppAction> = (state = true, action) => {
   switch (action.type) {
+    case AvailableRoutes.BUDGET_IRREGULAR:
+      return true
     case AvailableRoutes.BUDGET_MONTH_ENTRIES:
       return true
     case getType(Actions.updateEntries):
