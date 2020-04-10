@@ -19,7 +19,7 @@
     "@types/react-transition-group": "^4.2.3",
     "@types/redux-first-router": "^2.1.4",
     "@types/redux-first-router-link": "^1.4.4",
-    "auth0-js": "^9.12.2",
+    "auth0-js": "^9.13.2",
     "classnames": "^2.2.6",
     "dotenv": "^8.2.0",
     "expr-eval": "^2.0.2",
