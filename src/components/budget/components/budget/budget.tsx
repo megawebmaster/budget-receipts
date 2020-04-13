@@ -42,7 +42,6 @@ export const Budget = () => {
     },
   )
 
-  // TODO: Extract currency to a settings module
   return (
     <Fragment>
       <Helmet>

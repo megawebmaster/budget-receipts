@@ -7,6 +7,8 @@ import { NewReceiptItem } from '../../../receipt.types'
 import { CategoryField } from './category-field'
 import { CurrencyInput } from '../../../../currency-input'
 import { ExpenseFields, FocusableExpenseFields, ReceiptItemFields } from '../../expense/expense.types'
+import { useSelector } from 'react-redux'
+import { Selectors as SettingsSelectors } from '../../../../settings'
 
 type ReceiptItemProps = {
   addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
@@ -23,6 +25,7 @@ type ReceiptItemProps = {
 export const ReceiptItem: FC<ReceiptItemProps> =
   ({ addField, categoryId, children, description, disabled, onBlur, onKeyDown, onUpdate, value }) => {
     const intl = useIntl()
+    const currency = useSelector(SettingsSelectors.currency)
 
     const addCategoryField = useCallback(
       (input: HTMLInputElement | null) => addField && addField('category', input),
@@ -85,7 +88,7 @@ export const ReceiptItem: FC<ReceiptItemProps> =
         <Grid.Column mobile={8} tablet={3} computer={3}>
           <CurrencyInput
             narrowOnMobile
-            currency="PLN"
+            currency={currency}
             disabled={disabled}
             onBlur={valueBlur}
             onKeyDown={valueKeyDown}

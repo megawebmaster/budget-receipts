@@ -11,6 +11,7 @@ import styles from './budget-summary.module.css'
 import budgetStyles from '../budget-table/budget-table.module.css'
 import tableStyles from '../budget-table-category/budget-table-category.module.css'
 import { createSummarySelector } from '../../budget.selectors'
+import { Selectors as SettingsSelectors } from '../../../settings'
 
 type BudgetSummaryProps = {
   color: SemanticCOLORS
@@ -42,6 +43,7 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
   const realIncome = useSelector(realIncomeSelector)
   const realIrregular = useSelector(realIrregularSelector)
   const realExpenses = useSelector(realExpensesSelector)
+  const currency = useSelector(SettingsSelectors.currency)
 
   return !hasCategories ? null : (
     <Segment.Group className={styles.container}>
@@ -54,13 +56,13 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
         <Segment basic color={color} className={budgetStyles.header}>
           <strong>
             <span className={budgetStyles.headerTitle}><FormattedMessage id="budget.table.planned" />:</span>
-            <span className={budgetStyles.headerValue}>{formatCurrency(plannedExpenses)} PLN</span>
+            <span className={budgetStyles.headerValue}>{formatCurrency(plannedExpenses)} {currency}</span>
           </strong>
         </Segment>
         <Segment basic color={color} className={budgetStyles.header}>
           <strong>
             <span className={budgetStyles.headerTitle}><FormattedMessage id="budget.table.real" />:</span>
-            <span className={budgetStyles.headerValue}>{formatCurrency(realExpenses)} PLN</span>
+            <span className={budgetStyles.headerValue}>{formatCurrency(realExpenses)} {currency}</span>
           </strong>
         </Segment>
       </Segment.Group>
@@ -77,7 +79,7 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
               </Table.HeaderCell>
               <Table.HeaderCell width={4}>
                 <CurrencyInput
-                  currency="PLN"
+                  currency={currency}
                   disabled={true}
                   label={intl.formatMessage({ id: 'budget.table.planned' })}
                   value={plannedIncome - plannedIrregular - plannedExpenses}
@@ -85,7 +87,7 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
               </Table.HeaderCell>
               <Table.HeaderCell width={4}>
                 <CurrencyInput
-                  currency="PLN"
+                  currency={currency}
                   disabled={true}
                   label={intl.formatMessage({ id: 'budget.table.real' })}
                   value={realIncome - realExpenses - Math.max(plannedIrregular, realIrregular)}

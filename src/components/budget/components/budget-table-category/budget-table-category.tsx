@@ -17,6 +17,7 @@ import { AddButton } from '../add-button'
 import { EditableText } from '../editable-text'
 
 import styles from './budget-table-category.module.css'
+import { Selectors as SettingsSelectors } from '../../../settings'
 
 type BudgetTableCategoryProps = {
   categoryId: number
@@ -37,6 +38,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
   const entry = useSelector(entrySelector)
   const plannedValueDisabled = useSelector(plannedValueDisabledSelector)
   const realValueDisabled = useSelector(realValueDisabledSelector)
+  const currency = useSelector(SettingsSelectors.currency)
 
   const dispatch = useDispatch()
   const updatePlanned = useCallback(
@@ -97,7 +99,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
             <CurrencyInput
-              currency="PLN"
+              currency={currency}
               disabled={hasChildren || loading || saving || plannedValueDisabled}
               label={intl.formatMessage({ id: 'budget.table.planned' })}
               value={entry.plan}
@@ -106,7 +108,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
             <CurrencyInput
-              currency="PLN"
+              currency={currency}
               disabled={hasChildren || loading || saving || realValueDisabled}
               label={intl.formatMessage({ id: 'budget.table.real' })}
               value={entry.real}

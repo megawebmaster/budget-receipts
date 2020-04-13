@@ -4,6 +4,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Header, Segment, SemanticCOLORS } from 'semantic-ui-react'
 
 import { Actions as CategoryActions, CategoryType, Selectors as CategorySelectors } from '../../../categories'
+import { Selectors as SettingsSelectors } from '../../../settings'
 import { createSummarySelector } from '../../budget.selectors'
 import { BudgetTableCategory } from '../budget-table-category'
 import { AddButton } from '../add-button'
@@ -36,6 +37,7 @@ export const BudgetTable: FC<BudgetTableProps> = ({ categoryType, children, colo
   const categories = useSelector(CategorySelectors.categories[categoryType])
   const plannedSummary = useSelector(plannedSelector)
   const realSummary = useSelector(realSelector)
+  const currency = useSelector(SettingsSelectors.currency)
 
   const dispatch = useDispatch()
   const createCategory = useCallback(
@@ -56,13 +58,13 @@ export const BudgetTable: FC<BudgetTableProps> = ({ categoryType, children, colo
         <Segment basic color={color} className={styles.header}>
           <strong>
             <span className={styles.headerTitle}><FormattedMessage id="budget.table.planned" />:</span>
-            <span className={styles.headerValue}>{formatCurrency(plannedSummary)} PLN</span>
+            <span className={styles.headerValue}>{formatCurrency(plannedSummary)} {currency}</span>
           </strong>
         </Segment>
         <Segment basic color={color} className={styles.header}>
           <strong>
             <span className={styles.headerTitle}><FormattedMessage id="budget.table.real" />:</span>
-            <span className={styles.headerValue}>{formatCurrency(realSummary)} PLN</span>
+            <span className={styles.headerValue}>{formatCurrency(realSummary)} {currency}</span>
           </strong>
         </Segment>
       </Segment.Group>

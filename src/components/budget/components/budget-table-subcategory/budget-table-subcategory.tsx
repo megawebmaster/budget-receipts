@@ -12,6 +12,7 @@ import {
 } from '../../budget.selectors'
 import { updateEntry } from '../../budget.actions'
 import { EditableText } from '../editable-text'
+import { Selectors as SettingsSelectors } from '../../../settings'
 
 type BudgetTableSubcategoryProps = {
   categoryId: number
@@ -36,6 +37,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
     const entry = useSelector(entrySelector)
     const plannedValueDisabled = useSelector(plannedValueDisabledSelector)
     const realValueDisabled = useSelector(realValueDisabledSelector)
+    const currency = useSelector(SettingsSelectors.currency)
 
     const dispatch = useDispatch()
     const updatePlanned = useCallback(
@@ -77,7 +79,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
         </Table.Cell>
         <Table.Cell>
           <CurrencyInput
-            currency="PLN"
+            currency={currency}
             disabled={loading || saving || plannedValueDisabled}
             label={intl.formatMessage({ id: 'budget.table.planned' })}
             value={entry.plan}
@@ -86,7 +88,7 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
         </Table.Cell>
         <Table.Cell>
           <CurrencyInput
-            currency="PLN"
+            currency={currency}
             disabled={loading || saving || realValueDisabled}
             label={intl.formatMessage({ id: 'budget.table.real' })}
             value={entry.real}

@@ -10,6 +10,7 @@ import { CurrencyInput } from '../../../currency-input'
 
 import styles from './irregular-summary.module.css'
 import tableStyles from '../budget-table-category/budget-table-category.module.css'
+import { Selectors as SettingsSelectors } from '../../../settings'
 
 export const IrregularSummary = () => {
   const spentSelector = useMemo(() => createSummarySelector('irregular', 'real'), [])
@@ -18,6 +19,7 @@ export const IrregularSummary = () => {
   const hasIrregularCategories = useSelector(CategorySelectors.hasIrregularCategories)
   const spent = useSelector(spentSelector)
   const planned = useSelector(plannedSelector)
+  const currency = useSelector(SettingsSelectors.currency)
   const addFunds = planned - spent
 
   if (!hasIrregularCategories) {
@@ -37,7 +39,7 @@ export const IrregularSummary = () => {
           </Table.HeaderCell>
           <Table.HeaderCell width={4}>
             <CurrencyInput
-              currency="PLN"
+              currency={currency}
               disabled
               value={addFunds}
             />

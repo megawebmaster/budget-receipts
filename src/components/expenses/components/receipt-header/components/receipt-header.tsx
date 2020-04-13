@@ -6,6 +6,8 @@ import styles from '../receipt-header.module.css'
 import { DayField } from './day-field'
 import { CurrencyInput } from '../../../../currency-input'
 import { ExpenseFields, FocusableExpenseFields, ReceiptFields } from '../../expense/expense.types'
+import { useSelector } from 'react-redux'
+import { Selectors as SettingsSelectors } from '../../../../settings'
 
 type ReceiptHeaderProps = {
   addField?: (field: FocusableExpenseFields, input: HTMLInputElement | null) => void
@@ -21,6 +23,7 @@ type ReceiptHeaderProps = {
 export const ReceiptHeader: FC<ReceiptHeaderProps> =
   ({ addField, children, day, onBlur, onKeyDown, onUpdate, shop, total }) => {
     const intl = useIntl()
+    const currency = useSelector(SettingsSelectors.currency)
     const updateDate = useCallback((day) => onUpdate('day', day), [onUpdate])
     const updateShop = useCallback((event) => onUpdate('shop', event.target.value), [onUpdate])
 
@@ -71,7 +74,7 @@ export const ReceiptHeader: FC<ReceiptHeaderProps> =
           <CurrencyInput
             narrowOnMobile
             className={styles.disabledInput}
-            currency="PLN"
+            currency={currency}
             disabled={true}
             value={total || 0}
           />
