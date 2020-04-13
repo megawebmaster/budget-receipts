@@ -8,6 +8,7 @@ import { AvailableRoutes, RouteAction, Selectors as RouteSelectors } from '../..
 import { ConnectionService } from '../../connection.service'
 import { Actions as EncryptionActions } from '../../encryption'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
+import { Selectors as SettingsSelectors } from '../settings'
 
 import * as Actions from './budget.actions'
 import { createCategoryEntrySelector } from './budget.selectors'
@@ -47,6 +48,7 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
   action$.pipe(
     filter(isActionOf(Actions.updateEntry)),
     map(({ payload: { categoryId, value, type } }) => {
+      const irregularDivisor = SettingsSelectors.irregularDivisor(state$.value)
       const entry = createCategoryEntrySelector(categoryId)(state$.value)
       const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
       const url = `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}/${categoryId}`
@@ -57,7 +59,7 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
           value: {
             ...entry,
             plan: value,
-            planMonthly: value / 10 // TODO: Support dividing irregular by 12
+            planMonthly: value / irregularDivisor
           },
         }
       }
