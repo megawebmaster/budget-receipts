@@ -29,15 +29,19 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
   )
 
   const planIncomeSelector = useMemo(() => createSummarySelector('income', 'plan'), [])
-  const planExpenseSelector = useMemo(() => createSummarySelector(['expense', 'irregular', 'saving'], 'plan'), [])
+  const planIrregularSelector = useMemo(() => createSummarySelector('irregular', 'plan'), [])
+  const planExpensesSelector = useMemo(() => createSummarySelector(['expense', 'saving'], 'plan'), [])
   const realIncomeSelector = useMemo(() => createSummarySelector('income', 'real'), [])
-  const realExpenseSelector = useMemo(() => createSummarySelector(['expense', 'irregular', 'saving'], 'real'), [])
+  const realIrregularSelector = useMemo(() => createSummarySelector('irregular', 'real'), [])
+  const realExpensesSelector = useMemo(() => createSummarySelector(['expense', 'saving'], 'real'), [])
 
   const hasCategories = useSelector(CategorySelectors.hasVisibleCategories)
   const plannedIncome = useSelector(planIncomeSelector)
-  const plannedSummary = useSelector(planExpenseSelector)
+  const plannedIrregular = useSelector(planIrregularSelector)
+  const plannedExpenses = useSelector(planExpensesSelector)
   const realIncome = useSelector(realIncomeSelector)
-  const realSummary = useSelector(realExpenseSelector)
+  const realIrregular = useSelector(realIrregularSelector)
+  const realExpenses = useSelector(realExpensesSelector)
 
   return !hasCategories ? null : (
     <Segment.Group className={styles.container}>
@@ -50,13 +54,13 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
         <Segment basic color={color} className={budgetStyles.header}>
           <strong>
             <span className={budgetStyles.headerTitle}><FormattedMessage id="budget.table.planned" />:</span>
-            <span className={budgetStyles.headerValue}>{formatCurrency(plannedSummary)} PLN</span>
+            <span className={budgetStyles.headerValue}>{formatCurrency(plannedExpenses)} PLN</span>
           </strong>
         </Segment>
         <Segment basic color={color} className={budgetStyles.header}>
           <strong>
             <span className={budgetStyles.headerTitle}><FormattedMessage id="budget.table.real" />:</span>
-            <span className={budgetStyles.headerValue}>{formatCurrency(realSummary)} PLN</span>
+            <span className={budgetStyles.headerValue}>{formatCurrency(realExpenses)} PLN</span>
           </strong>
         </Segment>
       </Segment.Group>
@@ -76,7 +80,7 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
                   currency="PLN"
                   disabled={true}
                   label={intl.formatMessage({ id: 'budget.table.planned' })}
-                  value={plannedIncome - plannedSummary}
+                  value={plannedIncome - plannedIrregular - plannedExpenses}
                 />
               </Table.HeaderCell>
               <Table.HeaderCell width={4}>
@@ -84,7 +88,7 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
                   currency="PLN"
                   disabled={true}
                   label={intl.formatMessage({ id: 'budget.table.real' })}
-                  value={realIncome - realSummary}
+                  value={realIncome - realExpenses - Math.max(plannedIrregular, realIrregular)}
                 />
               </Table.HeaderCell>
             </Table.Row>

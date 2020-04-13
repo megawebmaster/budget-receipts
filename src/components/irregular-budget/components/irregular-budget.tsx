@@ -13,6 +13,7 @@ import { budgetLoading } from '../../budget/budget.selectors'
 
 import styles from '../irregular-budget.module.css'
 
+// TODO: Create similar approach to Iwuć to avoid going below 0 in irregular fund
 export const IrregularBudget = () => {
   const intl = useIntl()
   const loading = useSelector(budgetLoading)
