@@ -9,6 +9,7 @@ import { ExpensesState, reducer as expensesReducer } from './components/expenses
 import { CategoriesState, reducer as categoriesReducer } from './components/categories'
 import { PageState, reducer as pageReducer } from './components/page'
 import { PasswordState, reducer as passwordReducer } from './components/password-requirement'
+import { SettingsState, reducer as settingsReducer } from './components/settings'
 import { routes } from './routes'
 import { appEpic } from './app.epic'
 import { AppAction } from './app.actions'
@@ -21,6 +22,7 @@ export type AppState = {
   location: LocationState<{}, any>
   page: PageState
   password: PasswordState
+  settings: SettingsState
 }
 
 export const configureStore = () => {
@@ -38,6 +40,7 @@ export const configureStore = () => {
     categories: categoriesReducer,
     page: pageReducer,
     password: passwordReducer,
+    settings: settingsReducer,
   })
 
   const composeEnhancers = composeWithDevTools({ trace: true })
