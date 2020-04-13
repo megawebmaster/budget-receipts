@@ -61,7 +61,7 @@ export const receiptCategories = createSelector(
 
 const flattenCategories = (categories: Category[]): Category[] =>
   categories.flatMap(category =>
-    category.children && category.children.length > 0 ? category.children : [category]
+    category.children && category.children.length > 0 ? category.children : [category],
   )
 
 export const hasIrregularCategories = createSelector(
@@ -93,11 +93,10 @@ const mapDropdownCategories = (categories: Category[], additionalLabel?: string)
       },
   )
 
-// TODO: How to make `Nieregularne` translatable?
-export const dropdownCategories = createSelector(
+export const createDropdownCategoriesSelector = (irregularLabel: string) => createSelector(
   [categories.expense, categories.irregular],
   (expenseCategories, irregularCategories): DropdownItemProps[] => [
     ...mapDropdownCategories(expenseCategories),
-    ...mapDropdownCategories(irregularCategories, 'Nieregularne'),
+    ...mapDropdownCategories(irregularCategories, irregularLabel),
   ].sort((a, b) => a.text.localeCompare(b.text)),
 )
