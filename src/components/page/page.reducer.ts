@@ -1,6 +1,6 @@
 import { combineReducers, Reducer } from 'redux'
 import { getType } from 'typesafe-actions'
-import { append, filter, propEq } from 'ramda'
+import { append, filter, propOr } from 'ramda'
 
 import { AppAction } from '../../app.actions'
 import { AppMessage, AppMessageType } from '../message-list'
@@ -63,7 +63,7 @@ const messagesReducer: Reducer<PageState['messages'], AppAction> = (state = [], 
     case getType(AuthActions.loginError):
       return append({ text: action.payload, translate: true, sticky: true, type: AppMessageType.ERROR }, state)
     case getType(Actions.clearPageMessages):
-      return filter(propEq('sticky', true), state)
+      return filter(propOr(false, 'sticky'), state)
     default:
       return state
   }
