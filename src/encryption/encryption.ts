@@ -106,10 +106,18 @@ export class Encryption {
 
   static async decrypt(budget: string | undefined, encryptedText: string): Promise<string> {
     if (budget) {
-      const password = this.getPassword(budget)
+      const password = this.getPassword(budget) || '';
 
-      if (password !== null) {
-        return this._decryptWithPassword(password, encryptedText)
+      try {
+        const source = util.b64_to_Uint8Array(encryptedText)
+        const plaintext = await openpgp.decrypt({
+          message: await message.read(source),
+          passwords: [password],
+        })
+
+        return plaintext.data as string
+      } catch (e) {
+        return await this.decrypt2(budget, encryptedText);
       }
     }
 
@@ -133,19 +141,5 @@ export class Encryption {
     }
 
     return encryptedText
-  }
-
-  private static async _decryptWithPassword(password: string, encryptedText: string): Promise<string> {
-    try {
-      const source = util.b64_to_Uint8Array(encryptedText)
-      const plaintext = await openpgp.decrypt({
-        message: await message.read(source),
-        passwords: [password],
-      })
-
-      return plaintext.data as string
-    } catch (e) {
-      throw new Error('Invalid encryption password')
-    }
   }
 }
