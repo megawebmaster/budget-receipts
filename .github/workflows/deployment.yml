@@ -1,0 +1,32 @@
+name: 'Deploy app'
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy:
+    name: 'App deployment'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout code'
+        uses: actions/checkout@v2
+      - name: 'Use Node 14.x'
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - name: 'Build app'
+        run: |
+          yarn install
+          yarn build
+        env:
+          REACT_APP_API_URL: ${{ secrets.API_URL }}
+          PUBLIC_URL: ${{ secrets.APP_URL }}
+      - name: 'Push to server'
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_KEY_PEM }}
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.SERVER_USERNAME }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+          TARGET: ${{ secrets.SERVER_APP_LOCATION }}
+          SOURCE: 'build/'
