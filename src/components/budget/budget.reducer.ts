@@ -55,8 +55,14 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
         ),
       )
     case getType(Actions.updateEntry):
+      const idx = findIndex(pathEq(['category', 'id'], action.payload.categoryId), state)
+
+      if (idx === -1) {
+        return state
+      }
+
       return over(
-        lensIndex(findIndex(pathEq(['category', 'id'], action.payload.categoryId), state)),
+        lensIndex(idx),
         assoc(action.payload.type, action.payload.value),
       )(state)
     case getType(Actions.updateEntries):
