@@ -9,9 +9,9 @@ import { ConnectionService } from '../../connection.service'
 import { Actions as EncryptionActions } from '../../encryption'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
 import { Selectors as SettingsSelectors } from '../settings'
+import { budgetEntries, createCategoryEntrySelector } from './budget.selectors'
 
 import * as Actions from './budget.actions'
-import { createCategoryEntrySelector } from './budget.selectors'
 
 const decryptEntries = EncryptionActions.decryptAction({
   actionCreator: Actions.updateEntries,
@@ -59,7 +59,7 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
           value: {
             ...entry,
             plan: value,
-            planMonthly: value / irregularDivisor
+            planMonthly: value / irregularDivisor,
           },
         }
       }
@@ -83,8 +83,36 @@ const updateEntryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) 
     })),
   )
 
+const reencryptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(() => state$.value.location.type === AvailableRoutes.BUDGET_MONTH_ENTRIES),
+    filter(isActionOf(EncryptionActions.updateEncryption)),
+    map(() => {
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
+
+      return budgetEntries(state$.value)
+        .filter(v => !v.webCrypto)
+        .filter(v => v.category.type !== 'irregular')
+        .map(v => ({
+          url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/entries/${month}/${v.category.id}`,
+          value: v,
+        }))
+    }),
+    mergeAll(),
+    map(EncryptionActions.encryptAction({
+      api: ConnectionService.update,
+      actionCreator: Actions.entryUpdated,
+      fields: {
+        plan: true,
+        planMonthly: true,
+        real: true,
+      },
+    })),
+  )
+
 export const budgetEpic = combineEpics(
   pageLoadEpic,
   loadEntriesEpic,
   updateEntryEpic,
+  reencryptEpic,
 )

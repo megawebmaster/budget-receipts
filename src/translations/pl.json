@@ -15,6 +15,7 @@
   "month-list.dropdown-label": "{label}: {month} {year}",
   "menu.budget": "Budżet",
   "menu.expenses": "Wydatki",
+  "menu.re-encrypt": "Zaktualizuj szyfrowanie",
   "menu.available-years": "Rok budżetu",
   "menu.your-budgets": "Twoje budżety",
   "menu.year": "Rok: {year}",

@@ -1,9 +1,10 @@
 import { AppState } from '../../app.store'
 import { flatten, prop, propEq, sum, values } from 'ramda'
 import { createSelector } from 'reselect'
+import { ReceiptItem } from './receipt.types'
 
 export const expensesReceipts = (state: AppState) => state.expenses.receipts
-export const expensesReceiptItems = (state: AppState) => state.expenses.items
+export const expensesReceiptItems = (state: AppState): { [key: string]: ReceiptItem[] } => state.expenses.items
 export const expensesLoading = (state: AppState) => state.expenses.loading
 
 export const createReceiptSelector = (id: number) =>

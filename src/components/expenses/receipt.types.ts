@@ -4,6 +4,7 @@ export type ReceiptItem = {
   value: number
   description?: string
   receiptId: number
+  webCrypto?: boolean
 }
 
 export type NewReceiptItem = {
@@ -24,6 +25,7 @@ export type Receipt = {
   shop?: string
   expanded?: boolean
   processing?: boolean
+  webCrypto?: boolean
 }
 
 export type ReceiptUpdateFields = {

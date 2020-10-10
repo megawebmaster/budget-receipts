@@ -15,6 +15,7 @@
   "month-list.dropdown-label": "{label}: {month} {year}",
   "menu.budget": "Budget",
   "menu.expenses": "Expenses",
+  "menu.re-encrypt": "Update encryption",
   "menu.available-years": "Available years",
   "menu.your-budgets": "Your budgets",
   "menu.year": "Year: {year}",

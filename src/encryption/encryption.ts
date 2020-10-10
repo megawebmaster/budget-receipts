@@ -125,7 +125,11 @@ export class Encryption {
         iv: unpack(iv),
       };
 
-      return decoder.decode(await window.crypto.subtle.decrypt(options, key, unpack(cipher)));
+      try {
+        return decoder.decode(await window.crypto.subtle.decrypt(options, key, unpack(cipher)));
+      } catch (e) {
+        throw new Error('Invalid encryption password')
+      }
     }
 
     return encryptedText

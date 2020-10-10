@@ -61,4 +61,4 @@ export const encryptAction =
     (data: ApiRequest<TValue>) =>
       encrypt(api, data, actionCreator ? getType(actionCreator) : 'noop', actionCreator, fields)
 
-
+export const updateEncryption = createAction('ENCRYPTION/update')()

@@ -2,7 +2,7 @@ import { combineEpics, Epic, ofType } from 'redux-observable'
 import { isActionOf } from 'typesafe-actions'
 import { concatMap, filter, map, mergeAll, mergeMap } from 'rxjs/operators'
 import { of } from 'rxjs'
-import { prop } from 'ramda'
+import { flatten, prop, values } from 'ramda'
 
 import { AppState } from '../../app.store'
 import { AppAction } from '../../app.actions'
@@ -13,10 +13,16 @@ import { ApiRequest } from '../../connection.types'
 import { Selectors as CategorySelectors } from '../categories'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
 
-import { ExpenseDeleted, ReceiptItemCreated } from './expenses.actions'
 import * as Actions from './expenses.actions'
-import { createCategorySpentSelector, createReceiptItemSelector, createReceiptSelector } from './expenses.selectors'
-import { ApiReceipt } from './receipt.types'
+import { ExpenseDeleted, ReceiptItemCreated } from './expenses.actions'
+import {
+  createCategorySpentSelector,
+  createReceiptItemSelector,
+  createReceiptSelector,
+  expensesReceiptItems,
+  expensesReceipts,
+} from './expenses.selectors'
+import { ApiReceipt, ReceiptItem } from './receipt.types'
 
 const decryptReceipts = EncryptionActions.decryptAction({
   actionCreator: Actions.updateReceipts,
@@ -266,6 +272,71 @@ const deleteReceiptItemEpic: Epic<AppAction, AppAction, AppState> = (action$, st
     })),
   )
 
+const reencryptReceiptsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(() => state$.value.location.type === AvailableRoutes.EXPENSES_MONTH),
+    filter(isActionOf(EncryptionActions.updateEncryption)),
+    map(() => {
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
+
+      const r = expensesReceipts(state$.value)
+        .filter(v => !v.webCrypto)
+        .map(v => ({
+          url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${v.id}`,
+          value: {
+            ...v,
+            items: [],
+          },
+        }))
+      console.log('expense receipts', r)
+
+      return r
+    }),
+    mergeAll(),
+    map(EncryptionActions.encryptAction({
+      api: ConnectionService.update,
+      actionCreator: Actions.receiptUpdated,
+      fields: {
+        shop: true,
+      },
+    })),
+  )
+
+const reencryptReceiptItemsEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
+  action$.pipe(
+    filter(() => state$.value.location.type === AvailableRoutes.EXPENSES_MONTH),
+    filter(isActionOf(EncryptionActions.updateEncryption)),
+    map(() => {
+      const { budget, year, month } = RouteSelectors.budgetParams(state$.value)
+      const updatedCategories = CategorySelectors.receiptCategories(state$.value).map(prop('id'))
+      const budgetValues = updatedCategories.map(
+        categoryId => ({ categoryId, value: createCategorySpentSelector(categoryId)(state$.value) }),
+      )
+
+      return flatten<ReceiptItem[][]>(values(expensesReceiptItems(state$.value)))
+        .filter(v => !v.webCrypto)
+        .map(v => ({
+          url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/${year}/receipts/${month}/${v.receiptId}/items/${v.id}`,
+          value: {
+            ...v,
+            budgetValues,
+          },
+        }))
+    }),
+    mergeAll(),
+    map(EncryptionActions.encryptAction({
+      api: ConnectionService.update,
+      actionCreator: Actions.receiptItemUpdated,
+      fields: {
+        value: true,
+        description: true,
+        budgetValues: {
+          value: true,
+        },
+      },
+    })),
+  )
+
 export const expensesEpic = combineEpics(
   pageLoadEpic,
   loadReceiptsEpic,
@@ -276,4 +347,6 @@ export const expensesEpic = combineEpics(
   createReceiptItemEpic,
   updateReceiptItemEpic,
   deleteReceiptItemEpic,
+  reencryptReceiptsEpic,
+  reencryptReceiptItemsEpic,
 )
