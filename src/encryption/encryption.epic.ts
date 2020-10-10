@@ -102,9 +102,7 @@ const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
         }
 
         const { action, actionCreator, fields, numericFields } = decryptionAction.payload
-        const decrypt = (item: any) => item.webCrypto ?
-          (value: string) => Encryption.decrypt2(budget, value) :
-          (value: string) => Encryption.decrypt(budget, value)
+        const decrypt = (value: string) => Encryption.decrypt(budget, value)
 
         return from(
           (async () =>
@@ -112,8 +110,8 @@ const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
               source: action.source,
               value: await Promise.all(action.value.map(async (item: any) => ({
                 ...item,
-                ...await overFieldsOf(item, fields || {}, decrypt(item), ''),
-                ...await overFieldsOf(item, numericFields || {}, decrypt(item), 0, parseFloat),
+                ...await overFieldsOf(item, fields || {}, decrypt, ''),
+                ...await overFieldsOf(item, numericFields || {}, decrypt, 0, parseFloat),
               }))),
             }) as ApiAction)(),
         ).pipe(

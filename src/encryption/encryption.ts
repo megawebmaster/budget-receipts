@@ -106,40 +106,49 @@ export class Encryption {
 
   static async decrypt(budget: string | undefined, encryptedText: string): Promise<string> {
     if (budget) {
-      const password = this.getPassword(budget) || '';
-
       try {
-        const source = util.b64_to_Uint8Array(encryptedText)
-        const plaintext = await openpgp.decrypt({
-          message: await message.read(source),
-          passwords: [password],
-        })
-
-        return plaintext.data as string
+        return await this._pgpDecrypt(budget, encryptedText);
       } catch (e) {
-        return await this.decrypt2(budget, encryptedText);
       }
+      try {
+        return await this._webCryptoDecrypt(budget, encryptedText);
+      } catch (e) {
+      }
+
+      throw new Error('Invalid encryption password')
     }
 
-    return encryptedText
+    return encryptedText;
   }
 
-  static async decrypt2(budget: string | undefined, encryptedText: string): Promise<string> {
-    if (budget) {
-      const { iv, cipher } = JSON.parse(encryptedText);
-      const key = await this.getKey(budget);
-      const options = {
-        name: 'AES-GCM',
-        iv: unpack(iv),
-      };
+  static async _pgpDecrypt(budget: string, encryptedText: string): Promise<string> {
+    const password = this.getPassword(budget) || '';
 
-      try {
-        return decoder.decode(await window.crypto.subtle.decrypt(options, key, unpack(cipher)));
-      } catch (e) {
-        throw new Error('Invalid encryption password')
-      }
+    try {
+      const source = util.b64_to_Uint8Array(encryptedText)
+      const plaintext = await openpgp.decrypt({
+        message: await message.read(source),
+        passwords: [password],
+      })
+
+      return plaintext.data as string
+    } catch (e) {
+      throw new Error('Invalid encryption password')
     }
+  }
 
-    return encryptedText
+  static async _webCryptoDecrypt(budget: string, encryptedText: string): Promise<string> {
+    const { iv, cipher } = JSON.parse(encryptedText);
+    const key = await this.getKey(budget);
+    const options = {
+      name: 'AES-GCM',
+      iv: unpack(iv),
+    };
+
+    try {
+      return decoder.decode(await window.crypto.subtle.decrypt(options, key, unpack(cipher)));
+    } catch (e) {
+      throw new Error('Invalid encryption password')
+    }
   }
 }
