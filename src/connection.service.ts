@@ -97,6 +97,7 @@ export class ConnectionService {
         method,
         body: JSON.stringify(decamelizeKeys({
           ...data.params,
+          webCrypto: data.webCrypto,
           value: data.value
         })),
         headers: new Headers({

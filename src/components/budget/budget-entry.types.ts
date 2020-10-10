@@ -10,4 +10,5 @@ export type BudgetEntry = {
   planMonthly?: number
   real: number
   monthlyRealValues: string[]
+  webCrypto?: boolean
 }

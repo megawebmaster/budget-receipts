@@ -1,6 +1,28 @@
 import openpgp, { message, util } from 'openpgp'
 import { append, uniq } from 'ramda'
 
+const ALGORITHM = 'AES-GCM'
+const encoder = new TextEncoder()
+const decoder = new TextDecoder()
+const generateIv = (): Uint8Array => {
+  return window.crypto.getRandomValues(new Uint8Array(12))
+}
+const pack = (buffer: ArrayBuffer): string => {
+  // @ts-ignore
+  return window.btoa(String.fromCharCode.apply(null, new Uint8Array(buffer)))
+}
+const unpack = (packed: string): ArrayBuffer => {
+  const string = window.atob(packed)
+  const buffer = new ArrayBuffer(string.length)
+  const bufferView = new Uint8Array(buffer)
+
+  for (let i = 0; i < string.length; i++) {
+    bufferView[i] = string.charCodeAt(i)
+  }
+
+  return buffer
+}
+
 export const initEncryption = () => {
   openpgp.initWorker({
     n: 2,
@@ -60,18 +82,26 @@ export class Encryption {
 
   static async encrypt(budget: string | undefined, text: string): Promise<string> {
     if (budget) {
-      const password = this.getPassword(budget)
-      const encrypted = await openpgp.encrypt({
-        message: message.fromText(text),
-        passwords: [password],
-        armor: false,
-      })
-      const result = encrypted.message.packets.write() as Uint8Array
+      const key = await this.getKey(budget)
+      const iv = generateIv()
+      const options = {
+        name: ALGORITHM,
+        iv,
+      }
 
-      return util.Uint8Array_to_b64(result)
+      return JSON.stringify({
+        cipher: pack(await window.crypto.subtle.encrypt(options, key, encoder.encode(text))),
+        iv: pack(iv),
+      })
     }
 
     return ''
+  }
+
+  static async getKey(budget: string) {
+    const password = this.getPassword(budget)
+    const digest = await window.crypto.subtle.digest({ name: 'SHA-256' }, encoder.encode(password!))
+    return await window.crypto.subtle.importKey('raw', digest, ALGORITHM, false, ['encrypt', 'decrypt'])
   }
 
   static async decrypt(budget: string | undefined, encryptedText: string): Promise<string> {
@@ -81,6 +111,21 @@ export class Encryption {
       if (password !== null) {
         return this._decryptWithPassword(password, encryptedText)
       }
+    }
+
+    return encryptedText
+  }
+
+  static async decrypt2(budget: string | undefined, encryptedText: string): Promise<string> {
+    if (budget) {
+      const { iv, cipher } = JSON.parse(encryptedText);
+      const key = await this.getKey(budget);
+      const options = {
+        name: 'AES-GCM',
+        iv: unpack(iv),
+      };
+
+      return decoder.decode(await window.crypto.subtle.decrypt(options, key, unpack(cipher)));
     }
 
     return encryptedText

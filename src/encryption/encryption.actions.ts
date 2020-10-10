@@ -1,5 +1,5 @@
 import { ActionType, createAction, getType, PayloadActionCreator } from 'typesafe-actions'
-import { ApiRequest, SaveValue, DownloadValue } from '../connection.types'
+import { ApiRequest, DownloadValue, SaveValue } from '../connection.types'
 import { ApiAction } from '../api.actions'
 
 export const setPassword = createAction('ENCRYPTION/setPassword')<string>()

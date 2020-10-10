@@ -34,7 +34,7 @@ const overFieldsOf = async <T extends { [k: string]: any }, K>(
   fields: Fields<T>,
   process: (value: string) => Promise<any>,
   defaultValue: K,
-  parseValue: (value: string) => K = (v) => v as any as K
+  parseValue: (value: string) => K = (v) => v as any as K,
 ): Promise<any> => {
   const processed = Object.keys(fields).map(async field => {
     if (item[field] && typeof item[field] === 'object') {
@@ -58,7 +58,7 @@ const mapFieldsOf = <T extends { [k: string]: any }, K>(
   item: T,
   original: T,
   fields: Fields<T>,
-  defaultValue: K
+  defaultValue: K,
 ): any => {
   const processed = Object.keys(fields).map(field => {
     if (item[field] && typeof item[field] === 'object') {
@@ -102,7 +102,9 @@ const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
         }
 
         const { action, actionCreator, fields, numericFields } = decryptionAction.payload
-        const decrypt = (value: string) => Encryption.decrypt(budget, value)
+        const decrypt = (item: any) => item.webCrypto ?
+          (value: string) => Encryption.decrypt2(budget, value) :
+          (value: string) => Encryption.decrypt(budget, value)
 
         return from(
           (async () =>
@@ -110,8 +112,8 @@ const decryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
               source: action.source,
               value: await Promise.all(action.value.map(async (item: any) => ({
                 ...item,
-                ...await overFieldsOf(item, fields || {}, decrypt, ''),
-                ...await overFieldsOf(item, numericFields || {}, decrypt, 0, parseFloat),
+                ...await overFieldsOf(item, fields || {}, decrypt(item), ''),
+                ...await overFieldsOf(item, numericFields || {}, decrypt(item), 0, parseFloat),
               }))),
             }) as ApiAction)(),
         ).pipe(
@@ -149,6 +151,7 @@ const encryptValueEpic: Epic<AppAction, AppAction, AppState> = (action$, state$)
 
         const request = {
           ...data,
+          webCrypto: true,
           value: {
             ...data.value,
             ...await overFieldsOf(data.value, fields || {}, encrypt, ''),

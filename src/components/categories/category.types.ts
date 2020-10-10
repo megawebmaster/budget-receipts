@@ -11,4 +11,5 @@ export type Category = {
   averageValues: string[]
   children?: Category[]
   saving?: boolean
+  webCrypto?: boolean
 }
