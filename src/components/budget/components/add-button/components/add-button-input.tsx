@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
-import { Button, Icon, Input, InputOnChangeData, Responsive } from 'semantic-ui-react'
+import { Button, Icon, Input, InputOnChangeData, SemanticCOLORS } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 
 import styles from '../add-button.module.css'
@@ -11,6 +11,23 @@ type AddButtonInputProps = {
   onSave: (value: string) => void
   onClose: () => void
 }
+
+type IconButtonProps = {
+  color: SemanticCOLORS
+  icon: 'plus' | 'close'
+  onClick: () => void
+  size: AddButtonInputProps['size']
+  text: string
+}
+
+const IconButton: FC<IconButtonProps> = ({ color, icon, onClick, size, text }) => (
+  <Button color={color} onClick={onClick} size={size}>
+    <Icon className={styles.icon} name={icon} />
+    <span className={styles.text}>
+      <FormattedMessage id={text} />
+    </span>
+  </Button>
+)
 
 export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size, onSave, onClose }) => {
   const ref = useRef<Input>(null)
@@ -53,18 +70,8 @@ export const AddButtonInput: FC<AddButtonInputProps> = ({ className, label, size
       value={value}
     >
       <input />
-      <Button color="teal" onClick={saveInput} size={size}>
-        <Icon className={styles.icon} name="plus" />
-        <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-          <FormattedMessage id="budget.add-button.add" />
-        </Responsive>
-      </Button>
-      <Button color="red" onClick={onClose} size={size}>
-        <Icon className={styles.icon} name="close" />
-        <Responsive minWidth={Responsive.onlyTablet.minWidth}>
-          <FormattedMessage id="budget.add-button.cancel" />
-        </Responsive>
-      </Button>
+      <IconButton color="teal" icon="plus" onClick={saveInput} size={size} text="budget.add-button.add" />
+      <IconButton color="red" icon="close" onClick={onClose} size={size} text="budget.add-button.cancel" />
     </Input>
   )
 }

@@ -1,6 +1,6 @@
-import React, { FC, Fragment, useCallback, useMemo } from 'react'
+import React, { FC, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Responsive, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
 
 import { CurrencyInput } from '../../../currency-input'
@@ -13,6 +13,8 @@ import {
 import { updateEntry } from '../../budget.actions'
 import { EditableText } from '../editable-text'
 import { Selectors as SettingsSelectors } from '../../../settings'
+
+import styles from './budget-table-subcategory.module.css'
 
 type BudgetTableSubcategoryProps = {
   categoryId: number
@@ -73,7 +75,9 @@ export const BudgetTableSubcategory: FC<BudgetTableSubcategoryProps> =
             onDelete={removeCategory}
             onSave={editCategory}
           >
-            <Responsive as={Fragment} {...Responsive.onlyMobile}>{category.name} - </Responsive>
+            <span className={styles.category}>
+              {category.name} -{' '}
+            </span>
             {subcategory.name}
           </EditableText>
         </Table.Cell>

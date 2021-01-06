@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react'
-import { Input, InputOnChangeData, Label, Responsive } from 'semantic-ui-react'
+import { Input, InputOnChangeData, Label } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
-import { Parser } from 'expr-eval';
+import { Parser } from 'expr-eval'
 import cx from 'classnames'
 
 import './currency-input.css'
@@ -58,21 +58,21 @@ const parser = new Parser({
     trunc: false,
     exp: false,
     length: false,
-    in: false
-  }
-});
+    in: false,
+  },
+})
 
 const evaluateFormula = (value: string | undefined): number => {
-  const formula = value?.replace(/,/g, '.').replace(/ /g, '');
+  const formula = value?.replace(/,/g, '.').replace(/ /g, '')
 
   if (!formula) {
-    return 0;
+    return 0
   }
 
   try {
-    return parser.parse(formula).evaluate();
-  } catch(e) {
-    return 0;
+    return parser.parse(formula).evaluate()
+  } catch (e) {
+    return 0
   }
 }
 
@@ -91,8 +91,8 @@ export const CurrencyInput: FC<CurrencyInputProps> =
      onKeyDown,
      onUpdate,
      placeholder = '0.00',
-     value
-  }) => {
+     value,
+   }) => {
     const intl = useIntl()
     const formatCurrency = useCallback(
       (value: number | string, useGrouping = true) =>
@@ -190,14 +190,14 @@ export const CurrencyInput: FC<CurrencyInputProps> =
         value={focused ? price : formattedPrice}
       >
         {label && (
-          <Responsive {...Responsive.onlyMobile} as={Label} basic className={styles.phoneLabel}>
+          <Label basic className={styles.phoneLabel}>
             {label}:
-          </Responsive>
+          </Label>
         )}
         <input />
-        <Responsive minWidth={narrowOnMobile ? Responsive.onlyTablet.minWidth : 0} as={Label} basic>
+        <Label className={cx({ [styles.labelNarrowOnMobile]: narrowOnMobile })} basic>
           {currency.toUpperCase()}
-        </Responsive>
+        </Label>
       </Input>
     )
   }

@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useCallback } from 'react'
-import { Grid, Input, Responsive } from 'semantic-ui-react'
+import { Grid, Input } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
 
 import styles from '../receipt-header.module.css'
@@ -42,11 +42,11 @@ export const ReceiptHeader: FC<ReceiptHeaderProps> =
 
     const dayBlur = useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => onBlur && onBlur('day', event.currentTarget.value),
-      [onBlur]
+      [onBlur],
     )
     const shopBlur = useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => onBlur && onBlur('shop', event.currentTarget.value),
-      [onBlur]
+      [onBlur],
     )
 
     return (
@@ -79,9 +79,9 @@ export const ReceiptHeader: FC<ReceiptHeaderProps> =
             value={total || 0}
           />
         </Grid.Column>
-        <Responsive minWidth={Responsive.onlyTablet.minWidth} as={Grid.Column} width={4}>
+        <Grid.Column className={styles.buttons} width={4}>
           {children(day, shop)}
-        </Responsive>
+        </Grid.Column>
       </Grid.Row>
     )
   }

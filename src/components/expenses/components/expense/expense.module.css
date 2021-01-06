@@ -17,3 +17,21 @@
 .hideButton {
     padding-top: 0 !important;
 }
+
+.computerButton {
+    display: none;
+}
+
+@media screen and (min-width: 768px) {
+    .hideButton {
+        display: none;
+    }
+}
+@media screen and (min-width: 992px) {
+    .mobileButtons {
+        display: none;
+    }
+    .computerButton {
+        display: block;
+    }
+}

@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, ButtonProps, Grid, GridColumn, Header, Responsive, Segment } from 'semantic-ui-react'
+import { Button, ButtonProps, Grid, GridColumn, Header, Segment } from 'semantic-ui-react'
 import Helmet from 'react-helmet'
 import { FormattedMessage, useIntl } from 'react-intl'
 
@@ -48,14 +48,14 @@ export const IrregularBudget = () => {
       <Grid className={styles.container}>
         <GridColumn mobile={16} tablet={16} computer={3}>
           <Menu label={label}>
-            <Responsive as={Button} {...Responsive.onlyTablet} {...editCategoriesButtonProps} />
+            <Button className={styles.tabletEditCategories} {...editCategoriesButtonProps} />
             {loading && (
               <Segment basic loading size="tiny" className={styles.inlineLoader} />
             )}
           </Menu>
         </GridColumn>
         <GridColumn mobile={16} tablet={16} computer={13}>
-          <Responsive as={Segment} {...Responsive.onlyComputer} color="grey" className={styles.mainHeader}>
+          <Segment color="grey" className={styles.mainHeader}>
             <Header as="h3" className={styles.mainHeaderContent}>
               <FormattedMessage
                 id="irregular-budget.header"
@@ -66,8 +66,8 @@ export const IrregularBudget = () => {
               )}
             </Header>
             <Button floated="right" {...editCategoriesButtonProps} />
-          </Responsive>
-          <Responsive as={Button} fluid{...Responsive.onlyMobile}{...editCategoriesButtonProps} />
+          </Segment>
+          <Button className={styles.mobileEditCategories} {...editCategoriesButtonProps} />
           <MessageList />
           <BudgetTable
             categoryType="irregular"

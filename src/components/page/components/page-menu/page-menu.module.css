@@ -12,3 +12,18 @@
     width: 2em;
     margin: -1em 0 0 -1em;
 }
+
+.appMenu {
+    display: none !important;
+}
+.mobileMenu {}
+
+@media screen and (min-width: 992px) {
+    .appMenu {
+        display: flex !important;
+    }
+
+    .mobileMenu {
+        display: none !important;
+    }
+}

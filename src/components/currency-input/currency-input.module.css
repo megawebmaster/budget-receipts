@@ -17,4 +17,13 @@
     .input.input.input.narrowOnMobile > input:focus {
         border-right-color: #85B7D9 !important
     }
+    .labelNarrowOnMobile {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .phoneLabel {
+        display: none;
+    }
 }

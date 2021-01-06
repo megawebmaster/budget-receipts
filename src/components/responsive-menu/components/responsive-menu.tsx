@@ -1,6 +1,6 @@
 import React, { FC, Fragment, ReactNode } from 'react'
 import { NavLink } from 'redux-first-router-link'
-import { Dropdown, DropdownDivider, DropdownItem, DropdownMenu, Menu, MenuItem, Responsive } from 'semantic-ui-react'
+import { Dropdown, DropdownDivider, DropdownItem, DropdownMenu, Menu, MenuItem } from 'semantic-ui-react'
 import { Action as RouterAction } from 'redux-first-router'
 
 import styles from './responsive-menu.module.css'
@@ -44,11 +44,7 @@ const Items: FC<ItemsProps> = ({ items, as: Item }) => (
 
 export const ResponsiveMenu: FC<ResponsiveMenuProps> = ({ items, label, children }) => (
   <Fragment>
-    <Responsive
-      as="div"
-      maxWidth={Responsive.onlyTablet.maxWidth}
-      className={styles.dropdownContainer}
-    >
+    <div className={styles.dropdownContainer}>
       <Dropdown
         button
         fluid
@@ -68,16 +64,11 @@ export const ResponsiveMenu: FC<ResponsiveMenuProps> = ({ items, label, children
         </DropdownMenu>
       </Dropdown>
       {children}
-    </Responsive>
-    <Responsive
-      as={Fragment}
-      {...Responsive.onlyComputer}
-    >
-      {items.map(menu => (
-        <Menu vertical fluid key={menu.id}>
-          <Items items={menu.items} as={MenuItem} />
-        </Menu>
-      ))}
-    </Responsive>
+    </div>
+    {items.map(menu => (
+      <Menu className={styles.appMenu} vertical fluid key={menu.id}>
+        <Items items={menu.items} as={MenuItem} />
+      </Menu>
+    ))}
   </Fragment>
 )

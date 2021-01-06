@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useState } from 'react'
-import { Button, ButtonGroup, Responsive } from 'semantic-ui-react'
+import { Button, ButtonGroup } from 'semantic-ui-react'
 import { useDispatch } from 'react-redux'
 import { pick } from 'ramda'
 
@@ -9,6 +9,8 @@ import { Expense } from './expense'
 import { addReceipt, DeleteReceiptItem, UpdateReceiptItem } from '../../../expenses.actions'
 import { ExpenseFields, FocusableExpenseFields } from '../expense.types'
 import { createItem } from '../expense.helpers'
+
+import styles from '../expense.module.css'
 
 const emptyReceipt = (): Receipt => ({
   id: Date.now(),
@@ -37,7 +39,7 @@ export const NewExpense = () => {
 
   const updateItem = useCallback((item: UpdateReceiptItem) => {
     setItems(items => items.map(currentItem =>
-      currentItem.id === item.itemId ? { ...currentItem, ...item.value } : currentItem
+      currentItem.id === item.itemId ? { ...currentItem, ...item.value } : currentItem,
     ))
   }, [])
 
@@ -51,8 +53,8 @@ export const NewExpense = () => {
       receipt: {
         ...receipt,
         ...pick(['day', 'shop'], values),
-        expanded: false
-      }
+        expanded: false,
+      },
     }))
     setReceipt(emptyReceipt())
     setItems([])
@@ -90,14 +92,13 @@ export const NewExpense = () => {
     const onSave = () => saveReceipt({ ...receipt, day, shop })
     return (
       <Fragment>
-        <Responsive maxWidth={Responsive.onlyTablet.maxWidth} as={ButtonGroup} fluid>
+        <ButtonGroup className={styles.mobileButtons} fluid>
           <PhotoButton />
           <Button.Or />
           <Button color="green" icon="plus" tabIndex={-1} onClick={onSave} />
-        </Responsive>
-        <Responsive
-          {...Responsive.onlyComputer}
-          as={Button}
+        </ButtonGroup>
+        <Button
+          className={styles.computerButton}
           fluid
           color="green"
           icon="plus"

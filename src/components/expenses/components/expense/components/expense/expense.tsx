@@ -1,5 +1,5 @@
 import React, { FC, Fragment, ReactNode, useCallback, useEffect, useState } from 'react'
-import { Divider, Grid, Responsive, Segment } from 'semantic-ui-react'
+import { Divider, Grid, Segment } from 'semantic-ui-react'
 import { sum } from 'ramda'
 import cx from 'classnames'
 
@@ -121,10 +121,10 @@ export const Expense: FC<ExpenseProps> =
             ))}
           </Fragment>
         )}
-        <Responsive {...Responsive.onlyMobile} as={Grid.Column} width={16} className={styles.hideButton}>
+        <Grid.Column width={16} className={styles.hideButton}>
           {expanded && <Divider className={styles.innerDivider} />}
           {children(day, shop)}
-        </Responsive>
+        </Grid.Column>
       </Grid>
     )
   }

@@ -13,6 +13,27 @@
     padding: 0 2.5em;
 }
 
+.tabletEditCategories, .mobileEditCategories, .mainHeader {
+    display: none !important;
+}
+
+@media screen and (max-width: 767px) {
+    .mobileEditCategories {
+        display: inline-block !important;
+        width: 100%;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    .tabletEditCategories {
+        display: block !important;
+    }
+}
+@media screen and (min-width: 992px) {
+    .mainHeader {
+        display: flex !important;
+    }
+}
+
 @media screen and (max-width: 991px) {
     .container > [class*="sixteen wide mobile"]:not(:first-child) {
         padding-top: 0 !important;

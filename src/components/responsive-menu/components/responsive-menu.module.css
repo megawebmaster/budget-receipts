@@ -5,3 +5,17 @@
 .dropdown.dropdown.dropdown {
     flex: 1 1;
 }
+
+.appMenu.appMenu.appMenu {
+    display: none;
+}
+
+@media screen and (min-width: 992px) {
+    .dropdownContainer {
+        display: none !important;
+    }
+
+    .appMenu.appMenu.appMenu {
+        display: block;
+    }
+}

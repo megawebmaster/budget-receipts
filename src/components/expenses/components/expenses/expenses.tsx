@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import Helmet from 'react-helmet'
 import { useSelector } from 'react-redux'
-import { Grid, GridColumn, Header, Responsive, Segment } from 'semantic-ui-react'
+import { Grid, GridColumn, Header, Segment } from 'semantic-ui-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 
 import { MonthList } from '../month-list'
@@ -31,7 +31,7 @@ export const Expenses = () => {
           </MonthList>
         </GridColumn>
         <GridColumn mobile={16} tablet={16} computer={13}>
-          <Responsive as={Segment} {...Responsive.onlyComputer}>
+          <Segment className={styles.computerHeader}>
             <Header as="h3">
               <FormattedMessage
                 id="expenses.header"
@@ -39,7 +39,7 @@ export const Expenses = () => {
               />
               {loading && <Segment basic loading size="mini" floated="right" />}
             </Header>
-          </Responsive>
+          </Segment>
           <MessageList />
           <ExpensesList />
         </GridColumn>

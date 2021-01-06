@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Responsive, Table } from 'semantic-ui-react'
+import { Table } from 'semantic-ui-react'
 import { useIntl } from 'react-intl'
 import cx from 'classnames'
 
@@ -81,10 +81,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
       compact
       className={cx(styles.table, { [styles.single]: !editable && !hasChildren })}
     >
-      <Responsive
-        as={Table.Header}
-        minWidth={hasChildren ? Responsive.onlyTablet.minWidth : Responsive.onlyMobile.minWidth}
-      >
+      <Table.Header className={hasChildren ? styles.tableHeaderChildren : ''}>
         <Table.Row>
           <Table.HeaderCell width={4}>
             <EditableText
@@ -116,7 +113,7 @@ export const BudgetTableCategory: FC<BudgetTableCategoryProps> = ({ categoryType
             />
           </Table.HeaderCell>
         </Table.Row>
-      </Responsive>
+      </Table.Header>
       {category.children && (
         <Table.Body>
           {category.children.map(subcategory => (

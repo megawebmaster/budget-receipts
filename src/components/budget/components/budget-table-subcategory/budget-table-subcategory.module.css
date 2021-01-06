@@ -1,0 +1,12 @@
+.category {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: none !important;
+}
+
+@media screen and (max-width: 767px) {
+    .category {
+        display: inline !important;
+    }
+}

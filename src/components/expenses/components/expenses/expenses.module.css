@@ -2,6 +2,10 @@
     padding: 0 2.5em;
 }
 
+.computerHeader {
+    display: none;
+}
+
 @media screen and (max-width: 991px) {
     .container > [class*="sixteen wide mobile"]:not(:first-child) {
         padding-top: 0 !important;
@@ -15,5 +19,11 @@
         height: 2em;
         width: 2em;
         margin: -1.5em 0 0 -1em;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .computerHeader {
+        display: block;
     }
 }
