@@ -17,5 +17,12 @@
 
     .appMenu.appMenu.appMenu {
         display: block;
+        position: sticky;
+        top: 54px;
+        margin: 0;
+    }
+    .appMenu.appMenu.appMenu + .appMenu {
+        top: 110px;
+        margin-top: 14px;
     }
 }

@@ -13,6 +13,19 @@
     padding: 0 2.5em;
 }
 
+.container.container.container {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.container > [class*="sixteen wide mobile"]:first-child {
+    position: sticky !important;
+    top: 40px;
+    z-index: 1;
+    background: #fff;
+    padding-top: 1.5rem;
+}
+
 .tabletEditCategories, .mobileEditCategories, .mainHeader {
     display: none !important;
 }
