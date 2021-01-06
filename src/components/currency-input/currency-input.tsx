@@ -7,7 +7,7 @@ import cx from 'classnames'
 import './currency-input.css'
 import styles from './currency-input.module.css'
 
-type CurrencyInputProps = {
+export type CurrencyInputProps = {
   className?: string
   currency: string
   disabled?: boolean
