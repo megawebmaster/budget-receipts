@@ -1,6 +1,6 @@
 import { Action } from 'redux-first-router'
 
-export type AvailableRoutes =
+export type Route =
   'ROUTES/Home'
   | 'ROUTES/Expenses'
   | 'ROUTES/ExpensesMonth'
@@ -10,7 +10,7 @@ export type AvailableRoutes =
   | 'ROUTES/BudgetIrregular'
   | '@@redux-first-router/NOT_FOUND'
 
-export const AvailableRoutes: Record<string, AvailableRoutes> = {
+export const AvailableRoutes: Record<string, Route> = {
   HOME: 'ROUTES/Home',
   EXPENSES: 'ROUTES/Expenses',
   EXPENSES_MONTH: 'ROUTES/ExpensesMonth',
@@ -33,12 +33,12 @@ export type ExpensesRoutePayload = {
 } & CommonRoutePayload
 
 export type ExpenseRouteAction = Action & {
-  type: AvailableRoutes,
+  type: Route,
   payload: ExpensesRoutePayload
 }
 
 export type BudgetRouteAction = Action & {
-  type: AvailableRoutes,
+  type: Route,
   payload: BudgetRoutePayload
 }
 

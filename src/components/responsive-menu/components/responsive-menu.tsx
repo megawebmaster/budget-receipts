@@ -5,7 +5,7 @@ import { Action as RouterAction } from 'redux-first-router'
 
 import styles from './responsive-menu.module.css'
 
-type MenuItem = {
+type MenuItemType = {
   id: string
   items: Item[]
 }
@@ -17,7 +17,7 @@ type Item = {
 }
 
 type ResponsiveMenuProps = {
-  items: MenuItem[]
+  items: MenuItemType[]
   label: string
   children?: ReactNode
 }

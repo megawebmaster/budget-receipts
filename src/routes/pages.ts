@@ -1,4 +1,4 @@
-import { AvailableRoutes } from './routes.types'
+import { Route } from './routes.types'
 import { ComponentType } from 'react'
 import { NOT_FOUND } from 'redux-first-router'
 import { Home } from '../components/home'
@@ -13,7 +13,7 @@ type Page = {
   requiresPassword: boolean
 }
 
-export const pages: Record<AvailableRoutes, Page> = {
+export const pages: Record<Route, Page> = {
   'ROUTES/Home': {
     component: Home,
     requiresLogin: false,

@@ -5,14 +5,14 @@ import { Button, Dropdown, Icon, Menu, Segment } from 'semantic-ui-react'
 import { FormattedMessage, useIntl } from 'react-intl'
 import cx from 'classnames'
 
-import { AvailableRoutes, Selectors as RouteSelectors } from '../../../../routes'
+import { AvailableRoutes, Route, Selectors as RouteSelectors } from '../../../../routes'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../../../auth'
 import { Actions as EncryptionActions } from '../../../../encryption'
 import * as PageSelectors from '../../page.selectors'
 
 import styles from './page-menu.module.css'
 
-const isMonthRoute = (location: AvailableRoutes) =>
+const isMonthRoute = (location: Route) =>
   [AvailableRoutes.BUDGET_MONTH_ENTRIES, AvailableRoutes.EXPENSES_MONTH].includes(location)
 
 export const PageMenu = () => {

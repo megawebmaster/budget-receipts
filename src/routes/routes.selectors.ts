@@ -1,13 +1,13 @@
 import { createSelector } from 'reselect'
 
 import { AppState } from '../app.store'
-import { AvailableRoutes, CommonRoutePayload } from './routes.types'
+import { AvailableRoutes, CommonRoutePayload, Route } from './routes.types'
 
-export const location = (state: AppState) => state.location.type as AvailableRoutes
+export const location = (state: AppState) => state.location.type as Route
 
 export const yearByLocation = createSelector(
   [location],
-  (route: AvailableRoutes) =>
+  (route: Route) =>
     route.indexOf('Budget') !== -1
       ? AvailableRoutes.BUDGET_ENTRIES
       : AvailableRoutes.EXPENSES
