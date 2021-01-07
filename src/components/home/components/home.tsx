@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react'
-import { Header } from 'semantic-ui-react'
+import { Container, Header } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import Helmet from 'react-helmet'
 
 import { MessageList } from '../../message-list'
+
+import styles from './home.module.css'
 
 export const Home = () => (
   <Fragment>
@@ -11,9 +13,13 @@ export const Home = () => (
       <title>Home - Simply Budget Receipts</title>
     </Helmet>
     <MessageList />
-    <Header as="h1">
-      <FormattedMessage id="app.header" />
-    </Header>
-    <p>This is a home page, loaded by default</p>
+    <Container text className={styles.container}>
+      <Header as="h1">
+        <FormattedMessage id="landing.header" />
+      </Header>
+      <p>
+        <FormattedMessage id="landing.text" />
+      </p>
+    </Container>
   </Fragment>
 )

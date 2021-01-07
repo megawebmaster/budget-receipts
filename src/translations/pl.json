@@ -1,5 +1,6 @@
 {
-  "app.header": "Cześć, jestem pies!",
+  "landing.header": "Witaj w aplikacji SimplyBudget!",
+  "landing.text": "Pomoże Ci ona w kontrolowaniu Twoich pieniędzy - niech każda złotówka ma swój cel.",
   "month-1": "Styczeń",
   "month-2": "Luty",
   "month-3": "Marzec",
