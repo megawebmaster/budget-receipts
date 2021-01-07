@@ -31,9 +31,8 @@ export type BudgetState = {
 const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], action) => {
   switch (action.type) {
     case AvailableRoutes.BUDGET_IRREGULAR:
-      return []
     case AvailableRoutes.BUDGET_MONTH_ENTRIES:
-      return []
+      return state.map(({ category }) => ({ category, plan: 0, real: 0 }))
     case getType(CategoryActions.categoryCreated):
       return append({
         category: action.payload.value,
@@ -54,7 +53,7 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
           indexBy(pipe(path(['category', 'id']), toString), state),
         ),
       )
-    case getType(Actions.updateEntry):
+    case getType(Actions.updateEntry): {
       const idx = findIndex(pathEq(['category', 'id'], action.payload.categoryId), state)
 
       if (idx === -1) {
@@ -65,6 +64,19 @@ const entriesReducer: Reducer<BudgetState['entries'], AppAction> = (state = [], 
         lensIndex(idx),
         assoc(action.payload.type, action.payload.value),
       )(state)
+    }
+    case getType(Actions.entryUpdated): {
+      const idx = findIndex(pathEq(['category', 'id'], action.payload.value.category.id), state)
+
+      if (idx === -1) {
+        return state
+      }
+
+      return over(
+        lensIndex(idx),
+        assoc('id', action.payload.value.id),
+      )(state)
+    }
     case getType(Actions.updateEntries):
       return values(
         mergeWith(

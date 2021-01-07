@@ -14,9 +14,10 @@ import { Actions as AuthActions, Selectors as AuthSelectors } from '../../auth'
 import * as Actions from './categories.actions'
 import { Category } from './category.types'
 import { createCategorySelector } from './categories.selectors'
+import { parseChildrenCategories } from './categories.helpers'
 
 const decryptCategories = EncryptionActions.decryptAction({
-  actionCreator: Actions.updateCategories,
+  actionCreator: Actions.decryptedCategories,
   fields: {
     name: true,
   },
@@ -43,6 +44,15 @@ const loadCategoriesEpic: Epic<AppAction, AppAction, AppState> = (action$, state
       ConnectionService.loadFromCache(url, decryptCategories),
     ]),
     mergeAll(),
+  )
+
+const parseCategoriesEpic: Epic<AppAction, AppAction, AppState> = (action$) =>
+  action$.pipe(
+    filter(isActionOf(Actions.decryptedCategories)),
+    map(({ payload: { source, value } }) => Actions.updateCategories({
+      source,
+      value: parseChildrenCategories(value),
+    })),
   )
 
 const addCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
@@ -169,6 +179,7 @@ const reencryptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
 export const categoriesEpic = combineEpics(
   pageLoadEpic,
   loadCategoriesEpic,
+  parseCategoriesEpic,
   addCategoryEpic,
   createCategoryEpic,
   updateCategoryEpic,

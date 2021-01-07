@@ -22,6 +22,7 @@ export type DeleteCategory = {
 }
 
 export const loadCategories = createAction('CATEGORIES/loadCategories')()
+export const decryptedCategories = createAction('CATEGORIES/decrypted')<DownloadValue<Category>>()
 export const updateCategories = createAction('CATEGORIES/updateAll')<DownloadValue<Category>>()
 export const addCategory = createAction('CATEGORIES/addCategory')<CreateCategory>()
 export const createCategory = createAction('CATEGORIES/createCategory')<Category>()

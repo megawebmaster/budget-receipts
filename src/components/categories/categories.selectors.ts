@@ -31,19 +31,11 @@ const yearCategories = createSelector(
   }),
 )
 
-const parseChildrenCategories = (categories: Category[]) => {
-  const mainCategories = categories.filter(category => category.parent === null)
-  mainCategories.forEach(category => {
-    category.children = categories.filter(c => c.parent && c.parent.id === category.id)
-  })
-  return mainCategories
-}
-
 const createCategoriesSelector =
   (categoriesSelector: Selector<AppState, Category[]>, type: CategoryType): Selector<AppState, Category[]> =>
     createSelector(
       [categoriesSelector],
-      (categories) => parseChildrenCategories(categories.filter(category => category.type === type)),
+      (categories) => categories.filter(category => !category.parent && category.type === type),
     )
 
 export const categories: Record<CategoryType, Selector<AppState, Category[]>> = {
