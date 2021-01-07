@@ -48,7 +48,7 @@ export const Budget = () => {
         <title>{intl.formatMessage({ id: 'budget.title' })}</title>
       </Helmet>
       <Grid className={styles.container}>
-        <GridColumn mobile={16} tablet={16} computer={3}>
+        <GridColumn mobile={16} tablet={16} computer={3} className={styles.menu}>
           <Menu label={label}>
             <Button className={styles.tabletEditCategories} {...editCategoriesButtonProps} />
             {loading && (
@@ -56,7 +56,7 @@ export const Budget = () => {
             )}
           </Menu>
         </GridColumn>
-        <GridColumn mobile={16} tablet={16} computer={13}>
+        <GridColumn mobile={16} tablet={16} computer={13} className={styles.content}>
           <Segment color="grey" className={styles.mainHeader}>
             <Header as="h3" className={styles.mainHeaderContent}>
               <FormattedMessage

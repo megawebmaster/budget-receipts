@@ -17,13 +17,18 @@
     .input.input.input.narrowOnMobile > input:focus {
         border-right-color: #85B7D9 !important
     }
-    .labelNarrowOnMobile {
+    .labelNarrowOnMobile.labelNarrowOnMobile.labelNarrowOnMobile {
         display: none;
     }
 }
 
 @media screen and (min-width: 768px) {
-    .phoneLabel {
+    .phoneLabel.phoneLabel.phoneLabel {
         display: none;
+    }
+    .phoneLabel.phoneLabel.phoneLabel.phoneLabel.phoneLabel:first-child + input {
+        border-left-color: rgba(34, 36, 38, 0.15);
+        border-top-left-radius: 0.28571429rem;
+        border-bottom-left-radius: 0.28571429rem;
     }
 }

@@ -9,7 +9,7 @@
 .disabledInput {
     opacity: 1!important;
 }
-.buttons {
+.buttons.buttons.buttons.buttons.buttons {
     display: none;
 }
 
@@ -45,7 +45,7 @@
     .header [class*="four wide tablet"]:last-child {
         padding-right: 1rem !important;
     }
-    .buttons {
+    .buttons.buttons.buttons.buttons.buttons {
         display: block;
     }
 }

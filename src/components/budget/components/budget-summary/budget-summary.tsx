@@ -44,57 +44,61 @@ export const BudgetSummary: FC<BudgetSummaryProps> = ({ color }) => {
   const currency = useSelector(SettingsSelectors.currency)
 
   return !hasCategories ? null : (
-    <Segment.Group className={styles.container}>
-      <Segment.Group horizontal className={budgetStyles.headerContainer}>
-        <Segment basic color={color} className={budgetStyles.header}>
-          <Header as="h3">
-            <FormattedMessage id="budget.summary.header" />
-          </Header>
-        </Segment>
-        <Segment basic color={color} className={budgetStyles.header}>
-          <strong>
-            <span className={budgetStyles.headerTitle}><FormattedMessage id="budget.table.planned" />:</span>
-            <span className={budgetStyles.headerValue}>{formatCurrency(plannedExpenses + plannedIrregular)} {currency}</span>
-          </strong>
-        </Segment>
-        <Segment basic color={color} className={budgetStyles.header}>
-          <strong>
-            <span className={budgetStyles.headerTitle}><FormattedMessage id="budget.table.real" />:</span>
-            <span className={budgetStyles.headerValue}>{formatCurrency(realExpenses + plannedIrregular)} {currency}</span>
-          </strong>
+    <div className={styles.container}>
+      <Segment.Group>
+        <Segment.Group horizontal className={budgetStyles.headerContainer}>
+          <Segment basic color={color} className={budgetStyles.header}>
+            <Header as="h3">
+              <FormattedMessage id="budget.summary.header" />
+            </Header>
+          </Segment>
+          <Segment basic color={color} className={budgetStyles.header}>
+            <strong>
+              <span className={budgetStyles.headerTitle}><FormattedMessage id="budget.table.planned" />:</span>
+              <span
+                className={budgetStyles.headerValue}>{formatCurrency(plannedExpenses + plannedIrregular)} {currency}</span>
+            </strong>
+          </Segment>
+          <Segment basic color={color} className={budgetStyles.header}>
+            <strong>
+              <span className={budgetStyles.headerTitle}><FormattedMessage id="budget.table.real" />:</span>
+              <span
+                className={budgetStyles.headerValue}>{formatCurrency(realExpenses + plannedIrregular)} {currency}</span>
+            </strong>
+          </Segment>
+        </Segment.Group>
+        <Segment className={budgetStyles.content}>
+          <Table
+            singleLine
+            compact
+            className={cx(tableStyles.table, tableStyles.single)}
+          >
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell width={4}>
+                  <FormattedMessage id="budget.summary.left-to-use" />
+                </Table.HeaderCell>
+                <Table.HeaderCell width={4}>
+                  <CurrencyInput
+                    currency={currency}
+                    disabled={true}
+                    label={intl.formatMessage({ id: 'budget.table.planned' })}
+                    value={plannedIncome - plannedIrregular - plannedExpenses}
+                  />
+                </Table.HeaderCell>
+                <Table.HeaderCell width={4}>
+                  <CurrencyInput
+                    currency={currency}
+                    disabled={true}
+                    label={intl.formatMessage({ id: 'budget.table.real' })}
+                    value={realIncome - plannedIrregular - realExpenses}
+                  />
+                </Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+          </Table>
         </Segment>
       </Segment.Group>
-      <Segment className={budgetStyles.content}>
-        <Table
-          singleLine
-          compact
-          className={cx(tableStyles.table, tableStyles.single)}
-        >
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell width={4}>
-                <FormattedMessage id="budget.summary.left-to-use" />
-              </Table.HeaderCell>
-              <Table.HeaderCell width={4}>
-                <CurrencyInput
-                  currency={currency}
-                  disabled={true}
-                  label={intl.formatMessage({ id: 'budget.table.planned' })}
-                  value={plannedIncome - plannedIrregular - plannedExpenses}
-                />
-              </Table.HeaderCell>
-              <Table.HeaderCell width={4}>
-                <CurrencyInput
-                  currency={currency}
-                  disabled={true}
-                  label={intl.formatMessage({ id: 'budget.table.real' })}
-                  value={realIncome - plannedIrregular - realExpenses}
-                />
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-        </Table>
-      </Segment>
-    </Segment.Group>
+    </div>
   )
 }

@@ -1,37 +1,40 @@
-.divider {
-    margin-top: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+.divider.divider.divider {
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
 }
 
-.innerDivider {
-    margin-top: 0 !important;
-    margin-left: -1rem !important;
-    margin-right: -1rem !important;
+.innerDivider.innerDivider.innerDivider {
+    margin-top: 0;
+    margin-left: -1rem;
+    margin-right: -1rem;
 }
 
-.container {
-    margin-top: 0 !important;
+.container.container.container {
+    margin-top: 0;
 }
 
-.hideButton {
-    padding-top: 0 !important;
+.hideButton.hideButton.hideButton {
+    padding-top: 0;
 }
 
-.computerButton {
+.mobileButtons.mobileButtons.mobileButtons {
+    width: 100%;
+}
+.computerButton.computerButton.computerButton {
     display: none;
 }
 
 @media screen and (min-width: 768px) {
-    .hideButton {
+    .hideButton.hideButton.hideButton {
         display: none;
     }
 }
 @media screen and (min-width: 992px) {
-    .mobileButtons {
+    .mobileButtons.mobileButtons.mobileButtons {
         display: none;
     }
-    .computerButton {
+    .computerButton.computerButton.computerButton {
         display: block;
     }
 }

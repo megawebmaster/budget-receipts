@@ -18,12 +18,16 @@
     margin-bottom: 0;
 }
 
-.container > [class*="sixteen wide mobile"]:first-child {
+.menu.menu.menu {
     position: sticky !important;
     top: 40px;
     z-index: 1;
     background: #fff;
     padding-top: 1.5rem;
+}
+
+.content.content.content.content {
+    padding-bottom: 0;
 }
 
 .tabletEditCategories, .mobileEditCategories, .mainHeader {
@@ -50,7 +54,7 @@
 }
 
 @media screen and (max-width: 991px) {
-    .container > [class*="sixteen wide mobile"]:not(:first-child) {
+    .content.content.content {
         padding-top: 0 !important;
     }
 
