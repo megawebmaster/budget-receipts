@@ -14,7 +14,7 @@
     margin-top: 0;
 }
 
-.hideButton.hideButton.hideButton {
+.hideButton.hideButton.hideButton.hideButton {
     padding-top: 0;
 }
 
@@ -26,7 +26,7 @@
 }
 
 @media screen and (min-width: 768px) {
-    .hideButton.hideButton.hideButton {
+    .hideButton.hideButton.hideButton.hideButton {
         display: none;
     }
 }

@@ -1,10 +1,9 @@
 .header {
     background: #f9fafb;
     border-bottom: 1px solid rgba(34,36,38,.1);
-    margin-bottom: 1rem;
 }
-.header:last-child {
-    margin-bottom: 0;
+.header + div {
+    margin-top: 1rem;
 }
 .disabledInput {
     opacity: 1!important;
