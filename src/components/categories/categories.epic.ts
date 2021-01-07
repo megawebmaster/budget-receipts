@@ -153,29 +153,6 @@ const deleteCategoryEpic: Epic<AppAction, AppAction, AppState> = (action$, state
     }),
   )
 
-const reencryptEpic: Epic<AppAction, AppAction, AppState> = (action$, state$) =>
-  action$.pipe(
-    filter(isActionOf(EncryptionActions.updateEncryption)),
-    map(() => {
-      const { budget } = RouteSelectors.budgetParams(state$.value)
-
-      return state$.value.categories.categories
-        .filter(v => !v.webCrypto)
-        .map(v => ({
-          url: `${process.env.REACT_APP_API_URL}/v2/budgets/${budget}/categories/${v.id}`,
-          value: v,
-        }))
-    }),
-    mergeAll(),
-    map(EncryptionActions.encryptAction({
-      api: ConnectionService.update,
-      actionCreator: Actions.categoryUpdated,
-      fields: {
-        name: true,
-      },
-    })),
-  )
-
 export const categoriesEpic = combineEpics(
   pageLoadEpic,
   loadCategoriesEpic,
@@ -184,5 +161,4 @@ export const categoriesEpic = combineEpics(
   createCategoryEpic,
   updateCategoryEpic,
   deleteCategoryEpic,
-  reencryptEpic,
 )

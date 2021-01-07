@@ -7,7 +7,6 @@ import cx from 'classnames'
 
 import { AvailableRoutes, Route, Selectors as RouteSelectors } from '../../../../routes'
 import { Actions as AuthActions, Selectors as AuthSelectors } from '../../../../auth'
-import { Actions as EncryptionActions } from '../../../../encryption'
 import * as PageSelectors from '../../page.selectors'
 
 import styles from './page-menu.module.css'
@@ -66,9 +65,6 @@ export const PageMenu = () => {
               <FormattedMessage id="menu.expenses" />
             </Menu.Item>
             <Menu.Menu position="right">
-              <Menu.Item onClick={() => dispatch(EncryptionActions.updateEncryption())}>
-                <FormattedMessage id="menu.re-encrypt" />
-              </Menu.Item>
               <Dropdown
                 item
                 loading={loadingYears}
