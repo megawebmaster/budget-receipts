@@ -4,9 +4,9 @@ import Rollbar from 'rollbar'
 
 // Intl polyfills for IE11, Edge and Safari
 import '@formatjs/intl-pluralrules/polyfill'
-import '@formatjs/intl-pluralrules/dist/locale-data/pl'
+import '@formatjs/intl-pluralrules/locale-data/pl'
 import '@formatjs/intl-relativetimeformat/polyfill'
-import '@formatjs/intl-relativetimeformat/dist/locale-data/pl'
+import '@formatjs/intl-relativetimeformat/locale-data/pl'
 
 import 'semantic-ui-css/semantic.css'
 
