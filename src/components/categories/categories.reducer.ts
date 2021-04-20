@@ -22,7 +22,13 @@ const categoriesReducer: Reducer<CategoriesState['categories'], AppAction> = (st
     case getType(Actions.categoryCreated): {
       const { currentId, value } = action.payload
       // TODO: Ramdify it
-      return state.map(category => category.id === currentId ? value : category)
+      const updated = state.map(category => category.id === currentId ? value : category)
+      if (value.parent !== null) {
+        const parentId = value.parent.id
+        return updated.map(category => category.id === parentId ? { ...category, children: [...(category.children || []), value] } : category)
+      }
+
+      return updated
     }
     case getType(Actions.updateCategory): {
       const { id, ...values } = action.payload
