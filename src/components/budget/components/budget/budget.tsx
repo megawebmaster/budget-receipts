@@ -20,7 +20,7 @@ export const Budget = () => {
   const loading = useSelector(budgetLoading)
   const hasCategories = useSelector(CategorySelectors.hasVisibleCategories)
   const [editable, setEditable] = useState(!loading && !hasCategories)
-  const toggleEditable = useCallback(() => setEditable(value => !value), [setEditable])
+  const toggleEditable = useCallback(() => setEditable(value => !value), [])
   const { year, month } = useSelector(RouteSelectors.budgetParams)
 
   const editCategoriesButtonProps: ButtonProps = {
