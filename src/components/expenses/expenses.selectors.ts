@@ -40,3 +40,8 @@ export const createCategorySpentSelector = (categoryId: number) =>
     [createCategoryItemsSelector(categoryId)],
     items => sum(items.map(prop('value'))),
   )
+
+export const allExpensesExpandedSelector = createSelector(
+  [expensesReceipts],
+  items => items.every(item => item.expanded)
+)

@@ -1,3 +1,14 @@
+.mainHeader.mainHeader.mainHeader {
+    padding: .5em .5em;
+    display: flex;
+}
+
+.mainHeaderContent.mainHeaderContent {
+    margin: 0;
+    padding: .5em .5em;
+    flex: 1 1;
+}
+
 .inlineLoader.inlineLoader.inlineLoader {
     padding: 0 2.5em;
 }

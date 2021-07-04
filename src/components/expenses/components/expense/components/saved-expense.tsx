@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from 'react'
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { omit, pick } from 'ramda'
 
@@ -76,6 +76,10 @@ export const SavedExpense: FC<SavedExpenseProps> = ({ receipt }) => {
       setExpanded={setExpanded}
     />
   ), [receipt.id, receipt.processing, expanded])
+
+  useEffect(() => {
+    setExpanded(receipt.expanded || false)
+  }, [receipt.expanded])
 
   return (
     <Expense

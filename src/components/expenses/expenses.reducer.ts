@@ -67,6 +67,10 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
     }
     case getType(Actions.deleteReceipt):
       return filter(complement(propEq('id', action.payload)), state)
+    case getType(Actions.contractAllReceipts):
+      return map(item => ({ ...item, expanded: false }), state)
+    case getType(Actions.expandAllReceipts):
+      return map(item => ({ ...item, expanded: true }), state)
     case getType(Actions.processParsedImage): {
       const { id, parsingResult } = action.payload
       const date = new Date(parsingResult.date)
