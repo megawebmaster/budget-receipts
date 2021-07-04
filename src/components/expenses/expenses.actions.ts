@@ -38,6 +38,16 @@ export type DeleteReceiptItem = {
   itemId: number
 }
 
+export type Filter = {
+  field: 'day' | 'shop'
+  value: string | number
+}
+
+export type ItemFilter = {
+  field: 'categoryId'
+  value: (string | number)[]
+}
+
 type ImageProcessingRequest = {
   id: number,
   categories: any[],
@@ -63,6 +73,10 @@ export const receiptItemUpdated = createAction('EXPENSES/receiptItemUpdated')<Sa
 export const deleteReceiptItem = createAction('EXPENSES/deleteReceiptItem')<DeleteReceiptItem>()
 export const expandAllReceipts = createAction('EXPENSES/expandAllReceipts')()
 export const contractAllReceipts = createAction('EXPENSES/contractAllReceipts')()
+
+export const setFilter = createAction('EXPENSES/setFilter')<Filter>()
+export const setItemFilter = createAction('EXPENSES/setItemFilter')<ItemFilter>()
+export const resetFilters = createAction('EXPENSES/resetFilters')()
 
 export const processReceiptImage = createAction('EXPENSES/processReceiptImage')<Blob>()
 export const checkProcessingStatus = createAction('EXPENSES/checkProcessingStatus')<string>()

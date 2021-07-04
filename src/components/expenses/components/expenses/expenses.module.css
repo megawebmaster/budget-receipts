@@ -1,12 +1,24 @@
 .mainHeader.mainHeader.mainHeader {
     padding: .5em .5em;
-    display: flex;
+    display: block;
 }
 
 .mainHeaderContent.mainHeaderContent {
     margin: 0;
     padding: .5em .5em;
     flex: 1 1;
+}
+
+@media screen and (min-width: 768px) {
+    .mainHeader.mainHeader.mainHeader {
+        display: flex;
+    }
+}
+@media screen and (max-width: 767px) {
+    .mainHeaderButtons.mainHeaderButtons.mainHeaderButtons {
+        display: block;
+        text-align: center;
+    }
 }
 
 .inlineLoader.inlineLoader.inlineLoader {

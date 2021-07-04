@@ -26,7 +26,9 @@ import {
   values,
   when,
 } from 'ramda'
+
 import * as Actions from './expenses.actions'
+import { Filter, ItemFilter } from './expenses.actions'
 import { Receipt, ReceiptItem } from './receipt.types'
 import { AppAction } from '../../app.actions'
 import { AvailableRoutes } from '../../routes'
@@ -35,6 +37,8 @@ export type ExpensesState = {
   items: {
     [key: string]: ReceiptItem[]
   }
+  filters: Record<Filter['field'], string | number>
+  itemFilters: Record<ItemFilter['field'], (string | number)[]>
   loading: boolean,
   receipts: Receipt[]
 }
@@ -54,10 +58,10 @@ const receiptsReducer: Reducer<ExpensesState['receipts'], AppAction> = (state = 
       return set(
         lensPath([
           findIndex(propEq('id', currentId), state),
-          'id'
+          'id',
         ]),
         value.id,
-        state
+        state,
       )
     }
     case getType(Actions.updateReceipt): {
@@ -128,7 +132,7 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
 
       return {
         ...omit([currentId.toString()], state),
-        [value.id]: value.items
+        [value.id]: value.items,
       }
     }
     case getType(Actions.receiptItemCreated): {
@@ -139,10 +143,10 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
         lensPath([
           receiptId,
           findIndex(propEq('id', currentId), state[receiptId]),
-          'id'
+          'id',
         ]),
         value.id,
-        state
+        state,
       )
     }
     case getType(Actions.deleteReceipt): {
@@ -158,7 +162,7 @@ const itemsReducer: Reducer<ExpensesState['items'], AppAction> = (state = {}, ac
 
       return over(
         lensProp(id.toString()),
-        map(when(propEq('id', itemId), mergeLeft(value))),
+        map(when<ReceiptItem, ReceiptItem>(propEq('id', itemId), mergeLeft(value))),
         state,
       )
     }
@@ -183,8 +187,42 @@ const loadingReducer: Reducer<ExpensesState['loading'], AppAction> = (state = tr
   }
 }
 
+const EMPTY_FILTERS = { day: '', shop: '' }
+const filtersReducer: Reducer<ExpensesState['filters'], AppAction> = (state = EMPTY_FILTERS, action) => {
+  switch (action.type) {
+    case getType(Actions.setFilter):
+      return set(
+        lensProp(action.payload.field),
+        action.payload.value,
+        state,
+      )
+    case getType(Actions.resetFilters):
+      return EMPTY_FILTERS
+    default:
+      return state
+  }
+}
+
+const EMPTY_ITEM_FILTERS = { categoryId: [] }
+const itemFiltersReducer: Reducer<ExpensesState['itemFilters'], AppAction> = (state = EMPTY_ITEM_FILTERS, action) => {
+  switch (action.type) {
+    case getType(Actions.setItemFilter):
+      return set(
+        lensProp(action.payload.field),
+        action.payload.value,
+        state,
+      )
+    case getType(Actions.resetFilters):
+      return EMPTY_ITEM_FILTERS
+    default:
+      return state
+  }
+}
+
 export const reducer = combineReducers({
   receipts: receiptsReducer,
   items: itemsReducer,
+  filters: filtersReducer,
+  itemFilters: itemFiltersReducer,
   loading: loadingReducer,
 })

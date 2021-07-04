@@ -22,7 +22,7 @@ export type ChangeReceiptItem = {
 export type Receipt = {
   id: number
   day: number
-  shop?: string
+  shop: string
   expanded?: boolean
   processing?: boolean
   webCrypto?: boolean
@@ -37,7 +37,7 @@ export type ReceiptUpdateFields = {
 export type ApiReceipt = {
   id: number
   day: number
-  shop?: string
+  shop: string
   items: ReceiptItem[]
 }
 
